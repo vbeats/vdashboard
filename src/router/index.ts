@@ -7,14 +7,32 @@ import {
     RouteRecordRaw
 } from 'vue-router'
 import NProgress from 'nprogress'
-import storage from '../utils/storage'
+import storage from '@/utils/storage'
+import Login from '../views/login/index.vue'
 import Base from '../views/base/index.vue'
 
 const routes: Array<RouteRecordRaw> = [
     {
+        path: '/login',
+        name: 'Login',
+        component: Login
+    },
+    {
         path: '/',
-        name: 'Home',
-        component: Base
+        name: 'base',
+        component: Base,
+        redirect: '/index',
+        children: [
+            {
+                path: 'index',
+                name: 'index',
+                component: () => import('../views/index/index.vue')
+            }
+        ]
+    },
+    {
+        path: '/:pathMatch(.*)*', // 404
+        redirect: '/index'
     }
 ]
 
@@ -26,21 +44,10 @@ const router: Router = createRouter({
 /*全局路由拦截*/
 router.beforeEach((to: RouteLocationNormalized, from: RouteLocationNormalized, next: NavigationGuardNext) => {
     NProgress.start()
-    console.log(to, from, next)
-    console.log(storage)
-    const user = storage.get('test')
-    console.log(user)
 
-    storage.set('xx', 'oo', new Date().getTime() + 3000)
-
-    setTimeout(() => {
-        console.log(storage.get('xx'))
-        next()
-    }, 4000)
-    // next()
-    /*const user = localStorage.getItem('user') || '';
-    if (user === '' || (new Date().getTime() - user.time) <= 5 * 24 * 3600 * 1000) {  // 上次登录获取到的refresh_token最长7天有效
-        localStorage.removeItem('user');
+    const expire: number = storage.getExpiration('refresh_token') || -1
+    if (expire <= 0) {  // refresh_token过期
+        storage.remove('user')
         if (to.path === '/login') {
             next();
         } else {
@@ -53,8 +60,8 @@ router.beforeEach((to: RouteLocationNormalized, from: RouteLocationNormalized, n
         } else {
             next();
         }
-    }*/
-});
+    }
+})
 
 router.afterEach(() => {
     NProgress.done()
