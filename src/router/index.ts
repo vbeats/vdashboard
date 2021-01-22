@@ -48,6 +48,8 @@ router.beforeEach((to: RouteLocationNormalized, from: RouteLocationNormalized, n
     const expire: number = storage.getExpiration('refresh_token') || -1
     if (expire <= 0) {  // refresh_token过期
         storage.remove('user')
+        storage.remove('access_token')
+        storage.remove('refresh_token')
         if (to.path === '/login') {
             next();
         } else {

@@ -8,7 +8,13 @@ import {defineComponent} from 'vue'
 export default defineComponent({
   name: "Base",
   setup() {
-    console.log(111)
+    const checkToken = () => {
+      console.log('checkToken...' + new Date())
+      setTimeout(checkToken, 3000)
+    }
+    checkToken()
+
+    return {}
   }
 })
 </script>

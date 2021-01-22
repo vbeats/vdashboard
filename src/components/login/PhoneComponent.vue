@@ -1,15 +1,15 @@
 <template>
-  index......
+  phone....
 </template>
 
 <script lang="ts">
 import {defineComponent} from 'vue'
 
 export default defineComponent({
-  name: "Index"
+  name: "PhoneComponent"
 })
 </script>
 
-<style scoped>
+<style scoped lang="stylus">
 
 </style>
