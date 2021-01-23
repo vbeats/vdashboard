@@ -1,8 +1,8 @@
-import request, {AxiosRequestConfig, AxiosResponse} from 'axios'
+import request, {AxiosInstance, AxiosRequestConfig, AxiosResponse} from 'axios'
 import store from '@/store'
 import {message} from "ant-design-vue"
 
-const axios = request.create({
+const axios: AxiosInstance = request.create({
     baseURL: process.env.VUE_APP_API,
     headers: {
         'Content-Type': 'application/json'
@@ -19,18 +19,17 @@ const errorHandler = (error: any): any => {
 
 // 请求拦截器
 axios.interceptors.request.use((config: AxiosRequestConfig) => {
-    const user = ''//store.state.user.user
+    // const user = ''//store.state.user.user
     // config.headers.common['token'] = user.access_token
     return config;
 }, errorHandler)
 
 // 响应拦截器
 axios.interceptors.response.use((response: AxiosResponse): Promise<AxiosResponse> | AxiosResponse => {
-    console.log("响应: " + response)
     if (response.data.code && response.data.code === 401) {
         store.dispatch('toLogin').then()
     }
-    return response;
-}, errorHandler);
+    return response.data;
+}, errorHandler)
 
-export default axios;
+export default axios

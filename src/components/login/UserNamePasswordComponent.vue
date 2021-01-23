@@ -1,8 +1,20 @@
 <template>
   <a-form
+      ref="formRef"
       :model="form"
       :rules="rules"
+      label-align="left"
+      layout="horizontal"
   >
+
+    <a-form-item name="tenant" :v-show="showTenant">
+      <a-input v-model:value="form.tenant" size="large" placeholder="租户编号">
+        <template #prefix>
+          <ShopOutlined style="color:rgba(0,0,0,.25)"/>
+        </template>
+      </a-input>
+    </a-form-item>
+
     <a-form-item name="username">
       <a-input v-model:value="form.username" size="large" placeholder="账号">
         <template #prefix>
@@ -18,32 +30,89 @@
         </template>
       </a-input-password>
     </a-form-item>
+
+    <a-form-item name="captcha">
+      <a-row>
+        <a-col :span="14">
+          <a-input v-model:value="form.captcha" size="large" placeholder="验证码"/>
+        </a-col>
+        <a-col :span="8" :offset="2">
+          <img :src="form.img" alt="" style="width: 100%;height: 60px"/>
+        </a-col>
+      </a-row>
+    </a-form-item>
+
+    <a-form-item>
+      <a-button type="primary" block size="large" @click="submit">登 录</a-button>
+    </a-form-item>
   </a-form>
 </template>
 
 <script lang="ts">
-import {defineComponent, reactive} from 'vue'
-import {LockOutlined, UserOutlined} from '@ant-design/icons-vue'
+import {DefineComponent, defineComponent, onMounted, reactive, ref} from 'vue'
+import {LockOutlined, ShopOutlined, UserOutlined} from '@ant-design/icons-vue'
+import {getCaptcha} from '@/api/user'
 
 export default defineComponent({
   name: "UserNamePasswordComponent",
-  components: {UserOutlined, LockOutlined},
-  setup() {
+  components: {UserOutlined, LockOutlined, ShopOutlined},
+  setup(props, {emit}) {
     const data: any = reactive({
       form: {
+        tenant: '',
         username: '',
-        password: ''
+        password: '',
+        captcha: '',
+        key: '',
+        img: ''
       },
-      rules: []
+      rules: {
+        tenant: [
+          {required: true, message: '租户编号必填', trigger: 'blur'},
+        ],
+        username: [
+          {required: true, message: '请输入账号', trigger: 'blur'},
+        ],
+        password: [
+          {required: true, message: '请输入密码', trigger: 'blur'},
+        ],
+        captcha: [
+          {required: true, message: '验证码', trigger: 'blur'},
+          {len: 5, message: "5位验证码", trigger: 'blur'}
+        ],
+      },
+      showTenant: process.env.VUE_APP_TENANT === 'show'
+    })
+
+    const formRef = ref<DefineComponent | null>(null)
+
+    const submit = () => {
+      formRef.value && formRef.value
+          .validate()
+          .then(() => {
+            emit('login', {...data.form, type: 0})
+          })
+    }
+
+    onMounted(() => {
+      getCaptcha().then(res => {
+        data.form.img = res.data.image
+        data.form.key = res.data.key
+      })
     })
 
     return {
-      ...data
+      ...data,
+      submit,
+      formRef
     }
   }
 })
 </script>
 
 <style scoped lang="stylus">
-
+#captcha
+  display flex
+  flex-direction row
+  align-items center
 </style>

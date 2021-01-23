@@ -12,16 +12,12 @@
       <div class="form">
         <a-tabs>
           <a-tab-pane key="1" tab="账户密码登录">
-            <UserNamePasswordComponent/>
+            <UserNamePasswordComponent @login="login"/>
           </a-tab-pane>
           <a-tab-pane key="2" tab="手机号登录">
             <PhoneComponent/>
           </a-tab-pane>
         </a-tabs>
-      </div>
-
-      <div class="submit">
-        <a-button type="primary" block size="large">登 录</a-button>
       </div>
 
       <div class="footer">
@@ -41,8 +37,12 @@ export default defineComponent({
   name: "Login",
   components: {CopyRight, PhoneComponent, UserNamePasswordComponent},
   setup() {
-
-    return {}
+    const login = (params: any): void => {
+      console.log(params)
+    }
+    return {
+      login
+    }
   }
 })
 </script>
