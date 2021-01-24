@@ -15,7 +15,7 @@
             <UserNamePasswordComponent @login="login"/>
           </a-tab-pane>
           <a-tab-pane key="2" tab="手机号登录">
-            <PhoneComponent/>
+            <PhoneComponent @login="login"/>
           </a-tab-pane>
         </a-tabs>
       </div>
@@ -29,16 +29,43 @@
 
 <script lang="ts">
 import {defineComponent} from 'vue'
-import UserNamePasswordComponent from "@/components/login/UserNamePasswordComponent.vue";
-import PhoneComponent from "@/components/login/PhoneComponent.vue";
-import CopyRight from "@/components/copyright/index.vue";
+import UserNamePasswordComponent from "@/components/login/UserNamePasswordComponent.vue"
+import PhoneComponent from "@/components/login/PhoneComponent.vue"
+import CopyRight from "@/components/copyright/index.vue"
+import {Credentials} from '@/interface'
 
 export default defineComponent({
   name: "Login",
   components: {CopyRight, PhoneComponent, UserNamePasswordComponent},
   setup() {
     const login = (params: any): void => {
-      console.log(params)
+      let credentials: Credentials = {
+        tenant_code: '',
+        type: -1
+      }
+
+      switch (params.type) {
+        case 0:
+          credentials = {
+            tenant_code: params.tenant,
+            username: params.username,
+            password: params.password,
+            key: params.key,
+            code: params.captcha,
+            type: 0,
+          }
+          break
+        case 1:
+          credentials = {
+            tenant_code: params.tenant,
+            phone: params.phone,
+            code: params.code,
+            type: 1,
+          }
+          break
+      }
+
+      //todo login处理
     }
     return {
       login

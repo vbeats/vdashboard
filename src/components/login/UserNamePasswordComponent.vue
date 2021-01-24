@@ -3,8 +3,6 @@
       ref="formRef"
       :model="form"
       :rules="rules"
-      label-align="left"
-      layout="horizontal"
   >
 
     <a-form-item name="tenant" :v-show="showTenant">
@@ -34,7 +32,7 @@
     <a-form-item name="captcha">
       <a-row>
         <a-col :span="14">
-          <a-input v-model:value="form.captcha" size="large" placeholder="验证码"/>
+          <a-input v-model:value="form.captcha" size="large" placeholder="验证码" @blur="checkCaptcha"/>
         </a-col>
         <a-col :span="8" :offset="2">
           <img :src="form.img" alt="" style="width: 100%;height: 60px"/>
@@ -71,14 +69,14 @@ export default defineComponent({
           {required: true, message: '租户编号必填', trigger: 'blur'},
         ],
         username: [
-          {required: true, message: '请输入账号', trigger: 'blur'},
+          {required: true, message: '账号必填', trigger: 'blur'},
         ],
         password: [
-          {required: true, message: '请输入密码', trigger: 'blur'},
+          {required: true, message: '密码必填', trigger: 'blur'},
         ],
         captcha: [
-          {required: true, message: '验证码', trigger: 'blur'},
-          {len: 5, message: "5位验证码", trigger: 'blur'}
+          {required: true, message: '验证码必填', trigger: 'blur'},
+          {len: 5, message: "验证码错误", trigger: 'blur'}
         ],
       },
       showTenant: process.env.VUE_APP_TENANT === 'show'
@@ -94,6 +92,10 @@ export default defineComponent({
           })
     }
 
+    const checkCaptcha = () => {
+      formRef.value && formRef.value.validateFields('captcha')
+    }
+
     onMounted(() => {
       getCaptcha().then(res => {
         data.form.img = res.data.image
@@ -104,7 +106,8 @@ export default defineComponent({
     return {
       ...data,
       submit,
-      formRef
+      formRef,
+      checkCaptcha
     }
   }
 })

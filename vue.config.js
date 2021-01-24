@@ -40,7 +40,7 @@ const assetsCDN = {
         '//cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js',
         '//cdn.jsdelivr.net/npm/ant-design-vue@2.0.0-rc.8/dist/antd-with-locales.min.js',
         '//cdn.jsdelivr.net/npm/lodash@4.17.20/lodash.min.js',
-        '//cdn.jsdelivr.net/npm/dayjs@1.10.3/dayjs.min.js'
+        '//cdn.jsdelivr.net/npm/dayjs@1.10.4/dayjs.min.js'
     ]
 }
 

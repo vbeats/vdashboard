@@ -17,6 +17,8 @@ const state: any = {
 const user: any = {
     toLogin: (state: any): void => {
         storage.remove('user')
+        storage.remove('access_token')
+        storage.remove('refresh_token')
         state.user = {}
         router.replace('/login').then()
     },

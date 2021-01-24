@@ -12,6 +12,7 @@ const axios: AxiosInstance = request.create({
 
 // 异常处理
 const errorHandler = (error: any): any => {
+    console.log(error, '--------------------------')
     // error.response.data
     message.error(error.toString(), 10)
     return Promise.reject(error)
@@ -26,10 +27,23 @@ axios.interceptors.request.use((config: AxiosRequestConfig) => {
 
 // 响应拦截器
 axios.interceptors.response.use((response: AxiosResponse): Promise<AxiosResponse> | AxiosResponse => {
-    if (response.data.code && response.data.code === 401) {
-        store.dispatch('toLogin').then()
+
+    if (response.data.code) {
+        switch (response.data.code) {
+            case 400:
+                message.error('参数错误', 3)
+                break
+            case 401:
+                store.dispatch('toLogin').then()
+                break
+            case 200:
+                return response.data
+        }
+
+        throw new Error()
     }
-    return response.data;
+
+    return response
 }, errorHandler)
 
 export default axios
