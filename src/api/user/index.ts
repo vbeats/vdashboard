@@ -1,5 +1,6 @@
 import axios from '@/utils/request'
 import querystring from 'query-string'
+import {Credentials} from "@/interface";
 
 const key: string = querystring.stringify({
     appid: process.env.VUE_APP_APPID,
@@ -18,4 +19,11 @@ export function getCaptcha(): Promise<any> {
 * */
 export function getSmsCode(phone: string, tenant_code: string): Promise<any> {
     return axios.post('/auth/oauth/sms?' + key, {phone, tenant_code})
+}
+
+/*
+*  认证获取token
+* */
+export function getToken(credentials: Credentials): Promise<any> {
+    return axios.post('/auth/oauth/token?' + key, credentials)
 }

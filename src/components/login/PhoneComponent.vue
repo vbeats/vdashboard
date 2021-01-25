@@ -33,13 +33,13 @@
     </a-form-item>
 
     <a-form-item>
-      <a-button type="primary" block size="large" @click="submit">登 录</a-button>
+      <a-button type="primary" block size="large" @click="submit" :disabled="disLogin">登 录</a-button>
     </a-form-item>
   </a-form>
 </template>
 
 <script lang="ts">
-import {DefineComponent, defineComponent, reactive, ref, toRefs} from 'vue'
+import {DefineComponent, defineComponent, reactive, ref, toRef, toRefs, watch} from 'vue'
 import {message} from "ant-design-vue"
 import {ShopOutlined} from '@ant-design/icons-vue'
 import {getSmsCode as getSmsCodeApi} from '@/api/user'
@@ -74,37 +74,54 @@ export default defineComponent({
         ],
       },
       showTenant: process.env.VUE_APP_TENANT === 'show',
-      disabled: false,
+      disabled: true,
       btText: '获取验证码',
-      smsTime: 60
+      smsTime: 60,
+      disLogin: false
     })
 
     const formRef = ref<DefineComponent | null>(null)
 
+    // 表单提交
     const submit = () => {
       formRef.value && formRef.value
           .validate()
           .then(() => {
+            data.disLogin = true
             emit('login', {...data.form, type: 1})
           })
     }
 
+    // 校验输入
     const checkCode = () => {
       formRef.value && formRef.value.validateFields('code')
     }
 
+    watch([toRef(data.form, 'tenant'), toRef(data.form, 'phone')], (newValue, oldValue) => {
+      if (newValue[0].length === 6 && newValue[1].length === 11) {
+        data.disabled = false
+      }
+    })
+
+    // 获取短信验证码
     const getSmsCode = () => {
       if (!data.form.phone || !data.form.tenant || data.form.tenant.length !== 6 || data.form.phone.length !== 11) {
-        message.error('参数错误', 3)
-        return;
+        return
       }
 
       getSmsCodeApi(data.form.phone, data.form.tenant).then(() => {
         message.success('短信已发送')
         data.disabled = true
         data.btText = data.smsTime + ' s'
-        setInterval(() => {
-          data.btText = (data.smsTime--) + ' s'
+        const timer = setInterval(() => {
+          if (data.smsTime <= 0) {
+            clearInterval(timer)
+            data.disabled = false
+            data.btText = '获取验证码'
+            data.smsTime = 60
+            return
+          }
+          data.btText = (data.smsTime--) + ' s';
         }, 1000)
       })
     }

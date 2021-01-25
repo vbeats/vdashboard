@@ -35,13 +35,13 @@
           <a-input v-model:value="form.captcha" size="large" placeholder="验证码" @blur="checkCaptcha"/>
         </a-col>
         <a-col :span="8" :offset="2">
-          <img :src="form.img" alt="" style="width: 100%;height: 60px"/>
+          <img :src="form.img" alt="" style="width: 100%;height: 60px;cursor: pointer" @click="refreshCaptcha"/>
         </a-col>
       </a-row>
     </a-form-item>
 
     <a-form-item>
-      <a-button type="primary" block size="large" @click="submit">登 录</a-button>
+      <a-button type="primary" block size="large" @click="submit" :disabled="disabled">登 录</a-button>
     </a-form-item>
   </a-form>
 </template>
@@ -79,35 +79,50 @@ export default defineComponent({
           {len: 5, message: "验证码错误", trigger: 'blur'}
         ],
       },
-      showTenant: process.env.VUE_APP_TENANT === 'show'
+      showTenant: process.env.VUE_APP_TENANT === 'show',
+      disabled: false
     })
 
     const formRef = ref<DefineComponent | null>(null)
 
+    // 提交表单
     const submit = () => {
       formRef.value && formRef.value
           .validate()
           .then(() => {
+            data.disabled = true
             emit('login', {...data.form, type: 0})
           })
     }
 
+    // 校验
     const checkCaptcha = () => {
       formRef.value && formRef.value.validateFields('captcha')
     }
 
-    onMounted(() => {
+    // 获取验证码
+    const getCaptchaImg = () => {
       getCaptcha().then(res => {
         data.form.img = res.data.image
         data.form.key = res.data.key
       })
+    }
+
+    onMounted(() => {
+      getCaptchaImg()
     })
+
+    // 刷新验证码
+    const refreshCaptcha = () => {
+      getCaptchaImg()
+    }
 
     return {
       ...data,
       submit,
       formRef,
-      checkCaptcha
+      checkCaptcha,
+      refreshCaptcha
     }
   }
 })

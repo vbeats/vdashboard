@@ -6,6 +6,8 @@ import {
     Router,
     RouteRecordRaw
 } from 'vue-router'
+import store from '@/store'
+import * as types from '@/store/actionTypes'
 import NProgress from 'nprogress'
 import storage from '@/utils/storage'
 import Login from '../views/login/index.vue'
@@ -42,14 +44,12 @@ const router: Router = createRouter({
 })
 
 /*全局路由拦截*/
-router.beforeEach((to: RouteLocationNormalized, from: RouteLocationNormalized, next: NavigationGuardNext) => {
+router.beforeEach(async (to: RouteLocationNormalized, from: RouteLocationNormalized, next: NavigationGuardNext) => {
     NProgress.start()
 
     const expire: number = storage.getExpiration('refresh_token') || -1
     if (expire <= 0) {  // refresh_token过期
-        storage.remove('user')
-        storage.remove('access_token')
-        storage.remove('refresh_token')
+        await store.dispatch(types.LOGOUT).then()
         if (to.path === '/login') {
             next();
         } else {
