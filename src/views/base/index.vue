@@ -20,7 +20,7 @@ export default defineComponent({
     // 校验token
     const checkToken = async () => {
       console.log('check token......', new Date())
-      setTimeout(checkToken, 5 * 60 * 1000)
+      const timer = setTimeout(checkToken, 5 * 60 * 1000)
 
       // user access_token refresh_token都存在的  校验有效时间  否则logout
       const user: Token = storage.get('user')
@@ -29,14 +29,15 @@ export default defineComponent({
       const access_token_expire: number = storage.getExpiration('access_token') || -1
       const refresh_token_expire: number = storage.getExpiration('refresh_token') || -1
 
-      if (!user || !access_token || !refresh_token || refresh_token_expire <= 0) {
+      if (!user || !refresh_token || refresh_token_expire <= 0) {
+        clearTimeout(timer)
         await store.dispatch(types.LOGOUT).then()
         router.replace('/login').then()
         return
       }
 
       // access_token如果到期了 刷新; 未到期, 直接用
-      if (access_token_expire - new Date().getTime() > 300) { // 剩余时间大于300s
+      if (access_token && access_token_expire - new Date().getTime() >= 320) { // 剩余时间大于一次检查周期320s>5分钟
         return
       }
 
