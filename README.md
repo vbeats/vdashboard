@@ -10,6 +10,8 @@
 
 初次访问时, `localStorage`中已存在的`access_token`或`refresh_token`, 直接复用
 
+具体逻辑查看: `router`路由拦截处理 与 `Base`组件 `checkToken`方法
+
 ## ~~store.js~~
 
 `expire`插件 set/getExpiration: 秒时间戳
@@ -27,3 +29,11 @@
 `简体中文`: `zh-CN`
 
 `英文`: `en`
+
+## todo
+
+- [ ] Base组件模块拆分
+
+- [ ] 多语言
+
+- [ ] Nuxt香不香
