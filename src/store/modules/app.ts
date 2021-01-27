@@ -1,9 +1,12 @@
-const state = {
+import {LOAD_LANGUAGE} from '../actionTypes'
+import {SLanguage} from '../interface'
+
+const state = <SLanguage>{
     lang: 'zh-CN'
 }
 
 const app: any = {
-    setLang: (state: any, lang: string) => {
+    [LOAD_LANGUAGE]: (state: SLanguage, lang: string) => {
         state.lang = lang
     }
 }

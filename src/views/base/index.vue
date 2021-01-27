@@ -53,9 +53,9 @@
         <MenuUnfoldOutlined
             v-if="collapsed"
             class="trigger"
-            @click="changeCollapsed"
+            @click="changeCollapsed(!collapsed)"
         />
-        <MenuFoldOutlined v-else class="trigger" @click="changeCollapsed"/>
+        <MenuFoldOutlined v-else class="trigger" @click="changeCollapsed(!collapsed)"/>
       </a-layout-header>
       <!-- 内容区 -->
       <a-layout-content class="content">
@@ -74,7 +74,7 @@ import {defineComponent, onMounted, reactive, toRefs, watchEffect} from 'vue'
 import {useStore} from 'vuex'
 import {MenuFoldOutlined, MenuUnfoldOutlined, UserOutlined} from '@ant-design/icons-vue'
 import router from '@/router'
-import * as types from '@/store/actionTypes'
+import {LOGOUT, UPDATE_TOKEN} from '@/store/actionTypes'
 import storage from '@/utils/storage'
 import {Token} from '@/interface'
 import {getToken} from '@/api/user'
@@ -100,7 +100,7 @@ export default defineComponent({
 
       if (!user || !refresh_token || refresh_token_expire - new Date().getTime() <= 320) { // refresh_token有效时间不足一次检查周期5分钟
         clearTimeout(timer)
-        await store.dispatch(types.LOGOUT).then()
+        await store.dispatch(LOGOUT).then()
         router.replace('/login').then()
         return
       }
@@ -112,7 +112,7 @@ export default defineComponent({
 
       // 获取新的token
       getToken({type: 2, refresh_token}).then(async res => {
-        await store.dispatch(types.UPDATE_TOKEN, res.data).then()
+        await store.dispatch(UPDATE_TOKEN, res.data).then()
       })
 
     }

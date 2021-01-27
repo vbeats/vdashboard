@@ -1,6 +1,6 @@
 import request, {AxiosInstance, AxiosRequestConfig, AxiosResponse} from 'axios'
 import store from '@/store'
-import * as types from '@/store/actionTypes'
+import {LOGOUT} from '@/store/actionTypes'
 import {message} from "ant-design-vue"
 
 const axios: AxiosInstance = request.create({
@@ -35,7 +35,7 @@ axios.interceptors.response.use((response: AxiosResponse): Promise<AxiosResponse
                 message.error(response.data.msg, 3)
                 break
             case 401:
-                store.dispatch(types.LOGOUT).then()
+                store.dispatch(LOGOUT).then()
                 break
             case 200:
                 return response.data

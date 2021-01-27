@@ -31,7 +31,7 @@
 import {DefineComponent, defineComponent, ref} from 'vue'
 import {useStore} from 'vuex'
 import router from '@/router'
-import * as types from '@/store/actionTypes'
+import {UPDATE_TOKEN} from '@/store/actionTypes'
 import UserNamePasswordComponent from "@/components/login/UserNamePasswordComponent.vue"
 import PhoneComponent from "@/components/login/PhoneComponent.vue"
 import CopyRight from "@/components/copyright/index.vue"
@@ -74,7 +74,7 @@ export default defineComponent({
       }
 
       getToken(credentials).then(async res => {
-        await store.dispatch(types.UPDATE_TOKEN, res.data).then()
+        await store.dispatch(UPDATE_TOKEN, res.data).then()
         router.replace('/index').then()
       }).catch(() => {
         unRef.value && unRef.value.refreshCaptcha()

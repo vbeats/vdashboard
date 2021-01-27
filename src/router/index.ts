@@ -7,9 +7,8 @@ import {
     RouteRecordRaw
 } from 'vue-router'
 import store from '@/store'
-import * as types from '@/store/actionTypes'
+import {LOGOUT} from '@/store/actionTypes'
 import NProgress from 'nprogress'
-import storage from '@/utils/storage'
 import Login from '../views/login/index.vue'
 import Base from '../views/base/index.vue'
 
@@ -47,9 +46,9 @@ const router: Router = createRouter({
 router.beforeEach(async (to: RouteLocationNormalized, from: RouteLocationNormalized, next: NavigationGuardNext) => {
     NProgress.start()
 
-    const expire: number = storage.getExpiration('refresh_token') || -1
+    const expire: number = store.state.user.refresh_token_expire
     if (expire <= 0) {  // refresh_token过期
-        await store.dispatch(types.LOGOUT).then()
+        await store.dispatch(LOGOUT).then()
         if (to.path === '/login') {
             next();
         } else {
