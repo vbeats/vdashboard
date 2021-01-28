@@ -16,18 +16,23 @@ class DefaultUser implements Token {
     tenant_code = ''
 }
 
-const state: SUser = {
-    user: new DefaultUser(),
-    access_token_expire: -1,    // 过期时间 秒时间戳
-    refresh_token_expire: -1
+class defaultState implements SUser {
+    access_token_expire = -1;
+    refresh_token_expire = -1; // 过期时间 秒时间戳
+    user = new DefaultUser();
 }
+
+const state: SUser = new defaultState()
+
 
 const user: any = {
     [LOGOUT]: (state: SUser): void => {
+        state.user = new DefaultUser()
+        state.access_token_expire = -1
+        state.refresh_token_expire = -1
         storage.remove('user')
         storage.remove('access_token')
         storage.remove('refresh_token')
-        state.user = new DefaultUser()
     },
     [UPDATE_TOKEN]: (state: SUser, token: Token): void => {
         const accessTokenExpire = new Date().getTime() + 7200 * 1000

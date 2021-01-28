@@ -2,6 +2,7 @@ import request, {AxiosInstance, AxiosRequestConfig, AxiosResponse} from 'axios'
 import store from '@/store'
 import {LOGOUT} from '@/store/actionTypes'
 import {message} from "ant-design-vue"
+import router from "@/router";
 
 const axios: AxiosInstance = request.create({
     baseURL: process.env.VUE_APP_API,
@@ -13,16 +14,13 @@ const axios: AxiosInstance = request.create({
 
 // 异常处理
 const errorHandler = (error: any): any => {
-    console.log(error, '--------------------------')
-    // error.response.data
     message.error(error.toString(), 10)
     return Promise.reject(error)
 }
 
 // 请求拦截器
 axios.interceptors.request.use((config: AxiosRequestConfig) => {
-    // const user = ''//store.state.user.user
-    // config.headers.common['token'] = user.access_token
+    config.headers.common['token'] = store.getters.getUserInfo.user.access_token
     return config;
 }, errorHandler)
 
@@ -31,14 +29,14 @@ axios.interceptors.response.use((response: AxiosResponse): Promise<AxiosResponse
 
     if (response.data.code) {
         switch (response.data.code) {
-            case 400:
-                message.error(response.data.msg, 3)
-                break
             case 401:
                 store.dispatch(LOGOUT).then()
+                router.replace('/login').then()
                 break
             case 200:
                 return response.data
+            default:
+                message.error(response.data.msg, 8)
         }
 
         throw new Error()

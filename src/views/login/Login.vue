@@ -15,7 +15,7 @@
             <UserNamePasswordComponent @login="login" ref="unRef"/>
           </a-tab-pane>
           <a-tab-pane key="2" tab="手机号登录">
-            <PhoneComponent @login="login"/>
+            <PhoneComponent @login="login" ref="phRef"/>
           </a-tab-pane>
         </a-tabs>
       </div>
@@ -30,11 +30,11 @@
 <script lang="ts">
 import {DefineComponent, defineComponent, ref} from 'vue'
 import {useStore} from 'vuex'
-import router from '@/router'
+import {useRouter} from 'vue-router'
 import {UPDATE_TOKEN} from '@/store/actionTypes'
 import UserNamePasswordComponent from "@/components/login/UserNamePasswordComponent.vue"
 import PhoneComponent from "@/components/login/PhoneComponent.vue"
-import CopyRight from "@/components/copyright/index.vue"
+import CopyRight from "@/components/copyright/CopyRight.vue"
 import {Credentials} from '@/interface'
 import {getToken} from '@/api/user'
 
@@ -44,7 +44,9 @@ export default defineComponent({
   setup() {
 
     const unRef = ref<DefineComponent | null>()
+    const phRef = ref<DefineComponent | null>()
     const store = useStore()
+    const router = useRouter()
 
     // 用户认证
     const login = (params: any): void => {
@@ -78,11 +80,12 @@ export default defineComponent({
         router.replace('/index').then()
       }).catch(() => {
         unRef.value && unRef.value.refreshCaptcha()
+        phRef.value && phRef.value.enableLoginButton()
       })
     }
     return {
       login,
-      unRef
+      unRef, phRef
     }
   }
 })

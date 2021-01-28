@@ -1,5 +1,15 @@
 # vdashboard
 
+[后端接口参考](https://github.com/vbeats/vcloud)
+
+- vue3
+- vue-router@4 vuex@4 vue-i18n-next antV@2
+- vue3学习用 忽略项目本身的意义 多关注vue3新特性
+
+## Mock
+
+暂时没有 , 后端接口需要自己跑[后端项目](https://github.com/vbeats/vcloud)
+
 ## token验证
 
 `localStorage`存储: `user` `access_token` `refresh_token`
@@ -10,7 +20,7 @@
 
 初次访问时, `localStorage`中已存在的`access_token`或`refresh_token`, 直接复用
 
-具体逻辑查看: `router`路由拦截处理 与 `Base`组件 `checkToken`方法
+具体逻辑查看: `router`路由拦截处理 与 `layouts`下相关组件 `checkToken`方法
 
 ## ~~store.js~~
 
@@ -28,12 +38,31 @@
 
 `简体中文`: `zh-CN`
 
-`英文`: `en`
+`英文`: `en-US`
+
+使用: `setup`中 `userI18n`
+
+## 布局
+
+`layout`: 导航菜单已适配屏幕 可以自动展开收起
 
 ## todo
 
-- [ ] Base组件模块拆分
-
-- [ ] 多语言
-
 - [ ] Nuxt香不香
+
+## Demo
+
+<table>
+    <tr>
+        <td><img src="https://github.com/boot-vue/pics/blob/main/vdashboard/1.png?raw=true"></td>
+        <td><img src="https://github.com/boot-vue/pics/blob/main/vdashboard/2.png?raw=true"></td>
+    </tr>
+    <tr>
+        <td><img src="https://github.com/boot-vue/pics/blob/main/vdashboard/4.png?raw=true"></td>
+        <td><img src="https://github.com/boot-vue/pics/blob/main/vdashboard/5.png?raw=true"></td>
+    </tr>
+    <tr>
+        <td><img src="https://github.com/boot-vue/pics/blob/main/vdashboard/6.png?raw=true"></td>
+        <td><img src="https://github.com/boot-vue/pics/blob/main/vdashboard/7.png?raw=true"></td>
+    </tr>
+</table>

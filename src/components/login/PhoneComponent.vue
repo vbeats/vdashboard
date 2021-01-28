@@ -97,7 +97,7 @@ export default defineComponent({
       formRef.value && formRef.value.validateFields('code')
     }
 
-    watch([toRef(data.form, 'tenant'), toRef(data.form, 'phone')], (newValue, oldValue) => {
+    watch([toRef(data.form, 'tenant'), toRef(data.form, 'phone')], (newValue) => {
       if (newValue[0].length === 6 && newValue[1].length === 11) {
         data.disabled = false
       }
@@ -126,8 +126,15 @@ export default defineComponent({
       })
     }
 
+    // 激活登录按钮
+    const enableLoginButton = () => {
+      setTimeout(() => {
+        data.disLogin = false
+      }, 2000)
+    }
+
     return {
-      ...toRefs(data), formRef, submit, checkCode, getSmsCode
+      ...toRefs(data), formRef, submit, checkCode, getSmsCode, enableLoginButton
     }
   }
 })

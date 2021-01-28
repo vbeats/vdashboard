@@ -9,8 +9,8 @@ import {
 import store from '@/store'
 import {LOGOUT} from '@/store/actionTypes'
 import NProgress from 'nprogress'
-import Login from '../views/login/index.vue'
-import Base from '../views/base/index.vue'
+import Login from '../views/login/Login.vue'
+import Layout from '../layouts/BasicLayout.vue'
 
 const routes: Array<RouteRecordRaw> = [
     {
@@ -20,14 +20,19 @@ const routes: Array<RouteRecordRaw> = [
     },
     {
         path: '/',
-        name: 'base',
-        component: Base,
+        name: 'layout',
+        component: Layout,
         redirect: '/index',
         children: [
             {
                 path: 'index',
                 name: 'index',
-                component: () => import('../views/index/index.vue')
+                component: () => import('../views/index/Index.vue')
+            },
+            {
+                path: 'test',
+                name: 'test',
+                component: () => import('../views/test/Test.vue')
             }
         ]
     },
@@ -46,7 +51,7 @@ const router: Router = createRouter({
 router.beforeEach(async (to: RouteLocationNormalized, from: RouteLocationNormalized, next: NavigationGuardNext) => {
     NProgress.start()
 
-    const expire: number = store.state.user.refresh_token_expire
+    const expire: number = store.getters.getUserInfo.refresh_token_expire
     if (expire <= 0) {  // refresh_token过期
         await store.dispatch(LOGOUT).then()
         if (to.path === '/login') {
