@@ -28,7 +28,7 @@ const checkToken = async (): Promise<void> => {
     }
 
     // 获取新的token
-    getToken({type: 2, refresh_token}).then(async res => {
+    getToken({type: 0, refresh_token}).then(async res => {
         await store.dispatch(UPDATE_TOKEN, res.data).then()
     })
 

@@ -37,6 +37,7 @@ import PhoneComponent from "@/components/login/PhoneComponent.vue"
 import CopyRight from "@/components/copyright/CopyRight.vue"
 import {Credentials} from '@/interface'
 import {getToken} from '@/api/user'
+import encrypt from '@/utils/crypto'
 
 export default defineComponent({
   name: "Login",
@@ -51,7 +52,7 @@ export default defineComponent({
     // 用户认证
     const login = (params: any): void => {
       let credentials: Credentials = {
-        type: -1
+        type: -1,
       }
 
       switch (params.type) {
@@ -59,10 +60,11 @@ export default defineComponent({
           credentials = {
             tenant_code: params.tenant,
             username: params.username,
-            password: params.password,
+            password: encrypt(params.password),
             key: params.key,
             code: params.captcha,
-            type: 0,
+            type: 1,
+            platform: 0
           }
           break
         case 1:
@@ -70,7 +72,8 @@ export default defineComponent({
             tenant_code: params.tenant,
             phone: params.phone,
             code: params.code,
-            type: 1,
+            type: 2,
+            platform: 0
           }
           break
       }

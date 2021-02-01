@@ -10,6 +10,10 @@
 
 暂时没有 , 后端接口需要自己跑[后端项目](https://github.com/vbeats/vcloud)
 
+## crypto
+
+`utils`包下`crypto.ts` `encrypt`RSA非对称加密 公钥加密 需要替换
+
 ## token验证
 
 `localStorage`存储: `user` `access_token` `refresh_token`

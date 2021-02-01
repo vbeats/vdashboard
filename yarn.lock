@@ -1144,6 +1144,13 @@
   resolved "https://registry.npm.taobao.org/@types/mockjs/download/@types/mockjs-1.0.3.tgz#bd8ee3c7cbbd9a18788ab677b9e4f97c8d0bb0bf"
   integrity sha1-vY7jx8u9mhh4irZ3ueT5fI0LsL8=
 
+"@types/node-rsa@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.npm.taobao.org/@types/node-rsa/download/@types/node-rsa-1.0.0.tgz#4432df6227c5de734f5f0fbea2420ffb51c51e44"
+  integrity sha1-RDLfYifF3nNPXw++okIP+1HFHkQ=
+  dependencies:
+    "@types/node" "*"
+
 "@types/node@*":
   version "14.14.22"
   resolved "https://registry.npm.taobao.org/@types/node/download/@types/node-14.14.22.tgz?cache=0&sync_timestamp=1611098059129&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2F%40types%2Fnode%2Fdownload%2F%40types%2Fnode-14.14.22.tgz#0d29f382472c4ccf3bd96ff0ce47daf5b7b84b18"
@@ -2106,7 +2113,7 @@ asn1.js@^5.2.0:
     minimalistic-assert "^1.0.0"
     safer-buffer "^2.1.0"
 
-asn1@~0.2.3:
+asn1@^0.2.4, asn1@~0.2.3:
   version "0.2.4"
   resolved "https://registry.npm.taobao.org/asn1/download/asn1-0.2.4.tgz#8d2475dfab553bb33e77b54e59e880bb8ce23136"
   integrity sha1-jSR136tVO7M+d7VOWeiAu4ziMTY=
@@ -6343,6 +6350,13 @@ node-releases@^1.1.69:
   version "1.1.70"
   resolved "https://registry.npm.taobao.org/node-releases/download/node-releases-1.1.70.tgz?cache=0&sync_timestamp=1611010392902&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fnode-releases%2Fdownload%2Fnode-releases-1.1.70.tgz#66e0ed0273aa65666d7fe78febe7634875426a08"
   integrity sha1-ZuDtAnOqZWZtf+eP6+djSHVCagg=
+
+node-rsa@^1.1.1:
+  version "1.1.1"
+  resolved "https://registry.npm.taobao.org/node-rsa/download/node-rsa-1.1.1.tgz#efd9ad382097782f506153398496f79e4464434d"
+  integrity sha1-79mtOCCXeC9QYVM5hJb3nkRkQ00=
+  dependencies:
+    asn1 "^0.2.4"
 
 normalize-package-data@^2.5.0:
   version "2.5.0"

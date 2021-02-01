@@ -7,7 +7,8 @@ export interface Credentials {
     key?: string,
     code?: string,
     type: number,
-    refresh_token?: string
+    refresh_token?: string,
+    platform?: number
 }
 
 // token相关信息
