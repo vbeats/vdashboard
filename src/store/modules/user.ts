@@ -18,7 +18,7 @@ class DefaultUser implements Token {
 
 class defaultState implements SUser {
     access_token_expire = -1;
-    refresh_token_expire = -1; // 过期时间 秒时间戳
+    refresh_token_expire = -1; // 过期时间 毫秒时间戳
     user = new DefaultUser();
 }
 

@@ -28,7 +28,7 @@
 
 ## ~~store.js~~
 
-`expire`插件 set/getExpiration: 秒时间戳
+`expire`插件 set/getExpiration: 毫秒时间戳
 
 后期替换掉
 

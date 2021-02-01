@@ -6,7 +6,7 @@ export interface SLanguage {
 
 export interface SUser {
     user: Token,
-    access_token_expire: number,    // 过期时间 秒时间戳
+    access_token_expire: number,    // 过期时间 毫秒时间戳
     refresh_token_expire: number
 }
 

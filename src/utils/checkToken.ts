@@ -14,8 +14,8 @@ const checkToken = async (): Promise<void> => {
     const refresh_token: string = storage.get('refresh_token')
     const access_token_expire: number = storage.getExpiration('access_token') || -1
     const refresh_token_expire: number = storage.getExpiration('refresh_token') || -1
-
-    if (!user || !refresh_token || refresh_token_expire - new Date().getTime() <= 320) { // refresh_token有效时间不足一次检查周期5分钟
+    console.log("test....", access_token_expire - new Date().getTime(), access_token_expire)
+    if (!user || !refresh_token || (refresh_token_expire - new Date().getTime()) / 1000 <= 320) { // refresh_token有效时间不足一次检查周期5分钟
         clearTimeout(timer)
         await store.dispatch(LOGOUT).then()
         router.replace('/login').then()
@@ -23,7 +23,7 @@ const checkToken = async (): Promise<void> => {
     }
 
     // access_token如果到期了 刷新; 未到期, 直接用
-    if (access_token && access_token_expire - new Date().getTime() >= 320) { // 剩余时间大于一次检查周期320s>5分钟
+    if (access_token && (access_token_expire - new Date().getTime()) / 1000 >= 320) { // 剩余时间大于一次检查周期320s>5分钟
         return
     }
 
