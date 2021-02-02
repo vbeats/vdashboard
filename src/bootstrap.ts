@@ -9,9 +9,7 @@ const loadUserInfo = () => {
 
 // 默认语言
 const loadLanguage = () => {
-    const sLang = storage.get('lang')
-    const nLang = navigator.language === 'zh-CN' ? 'zh-CN' : 'en-US'
-    store.dispatch(LOAD_LANGUAGE, sLang || nLang).then()
+    store.dispatch(LOAD_LANGUAGE, storage.get('lang') || (navigator.language === 'zh-CN' ? 'zh-CN' : 'en-US')).then()
 }
 
 export default (): void => {
