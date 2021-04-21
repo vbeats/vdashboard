@@ -2,7 +2,7 @@
   <a-drawer :closable="false"
             :get-container="false" :visible="drawerVisible"
             @close="hideDrawerMenu"
-            placement="left" :body-style="{padding:0,width:'256px'}">
+            placement="left" :body-style="{padding:0,width:$menuWidth}">
     <a-layout-sider class="menu-sider" width="256">
       <Menu/>
     </a-layout-sider>

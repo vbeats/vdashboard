@@ -4,7 +4,6 @@
 
 - vue3
 - vue-router@4 vuex@4 vue-i18n-next antV@2
-- vue3学习用 忽略项目本身的意义 多关注vue3新特性
 
 ## Mock
 
@@ -52,7 +51,8 @@
 
 ## todo
 
-- [ ] Nuxt香不香
+- [ ] tailwindcss
+- [ ] menu菜单改造
 
 ## Demo
 

@@ -1,7 +1,9 @@
 const path = require('path')
 const webpack = require('webpack')
 const CompressionPlugin = require('compression-webpack-plugin')
-const resolve = dir => path.join(__dirname, dir);
+const resolve = dir => path.join(__dirname, dir)
+const StatsPlugin = require('stats-webpack-plugin')
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
 const addStylusResource = rule => {
     rule
         .use("style-resouce")
@@ -30,23 +32,23 @@ const assetsCDN = {
         }
     },
     css: [
-        '//cdn.jsdelivr.net/npm/ant-design-vue@2.0.0-rc.9/dist/antd.min.css'
+        '//cdn.jsdelivr.net/npm/ant-design-vue@2.1.2/dist/antd.min.css'
     ],
     js: [
-        '//cdn.jsdelivr.net/npm/vue@3.0.5/dist/vue.global.min.js',
-        '//cdn.jsdelivr.net/npm/vue-router@4.0.3/dist/vue-router.global.min.js',
-        '//cdn.jsdelivr.net/npm/vuex@4.0.0-rc.2/dist/vuex.global.min.js',
-        '//cdn.jsdelivr.net/npm/axios@0.21.0/dist/axios.min.js',
+        '//cdn.jsdelivr.net/npm/vue@3.0.11/dist/vue.global.min.js',
+        '//cdn.jsdelivr.net/npm/vue-router@4.0.6/dist/vue-router.global.min.js',
+        '//cdn.jsdelivr.net/npm/vuex@4.0.0/dist/vuex.global.min.js',
+        '//cdn.jsdelivr.net/npm/axios@0.21.1/dist/axios.min.js',
         '//cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js',
-        '//cdn.jsdelivr.net/npm/ant-design-vue@2.0.0-rc.9/dist/antd-with-locales.min.js',
-        '//cdn.jsdelivr.net/npm/lodash@4.17.20/lodash.min.js',
+        '//cdn.jsdelivr.net/npm/ant-design-vue@2.1.2/dist/antd-with-locales.min.js',
+        '//cdn.jsdelivr.net/npm/lodash@4.17.21/lodash.min.js',
         '//cdn.jsdelivr.net/npm/dayjs@1.10.4/dayjs.min.js'
     ]
 }
 
 const assetsDevCDN = {
     css: [
-        '//cdn.jsdelivr.net/npm/ant-design-vue@1.6.4/dist/antd.min.css'
+        '//cdn.jsdelivr.net/npm/ant-design-vue@2.1.2/dist/antd.min.css'
     ]
 }
 
@@ -84,6 +86,27 @@ module.exports = {
                 algorithm: 'gzip',
                 threshold: 10240,
                 minRatio: 0.8
+            }),
+            new StatsPlugin('stats.json', {
+                chunkModules: true,
+                chunks: true,
+                assets: false,
+                modules: true,
+                children: true,
+                chunksSort: true,
+                assetsSort: true
+            }),
+            new BundleAnalyzerPlugin({
+                analyzerMode: 'server',
+                analyzerHost: '127.0.0.1',
+                analyzerPort: 8888,
+                reportFilename: 'report.html',
+                defaultSizes: 'parsed',
+                openAnalyzer: true,
+                generateStatsFile: false,
+                statsFilename: 'stats.json',
+                statsOptions: null,
+                logLevel: 'info'
             })
         ],
         externals: isProd ? assetsCDN.externals : ''

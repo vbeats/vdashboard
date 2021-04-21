@@ -5,7 +5,6 @@ import store from './store'
 import i18n from './locale'
 import Antd from 'ant-design-vue'
 import bootstrap from "./bootstrap"
-import './mock'
 
 bootstrap() // 初始化数据
 
