@@ -54,15 +54,15 @@
 
 <table>
     <tr>
-        <td><img src="https://github.com/boot-vue/pics/blob/main/vdashboard/1.png?raw=true"></td>
-        <td><img src="https://github.com/boot-vue/pics/blob/main/vdashboard/2.png?raw=true"></td>
+        <td><img src="https://cdn.jsdelivr.net/gh/boot-vue/pics@main/vdashboard/1.png"></td>
+        <td><img src="https://cdn.jsdelivr.net/gh/boot-vue/pics@main/vdashboard/2.png"></td>
     </tr>
     <tr>
-        <td><img src="https://github.com/boot-vue/pics/blob/main/vdashboard/4.png?raw=true"></td>
-        <td><img src="https://github.com/boot-vue/pics/blob/main/vdashboard/5.png?raw=true"></td>
+        <td><img src="https://cdn.jsdelivr.net/gh/boot-vue/pics@main/vdashboard/3.png"></td>
+        <td><img src="https://cdn.jsdelivr.net/gh/boot-vue/pics@main/vdashboard/4.png"></td>
     </tr>
     <tr>
-        <td><img src="https://github.com/boot-vue/pics/blob/main/vdashboard/6.png?raw=true"></td>
-        <td><img src="https://github.com/boot-vue/pics/blob/main/vdashboard/7.png?raw=true"></td>
+        <td><img src="https://cdn.jsdelivr.net/gh/boot-vue/pics@main/vdashboard/5.png"></td>
+        <td><img src="https://cdn.jsdelivr.net/gh/boot-vue/pics@main/vdashboard/6.png"></td>
     </tr>
 </table>
