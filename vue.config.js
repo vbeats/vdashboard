@@ -58,6 +58,7 @@ module.exports = {
         port: 80,
         disableHostCheck: true,
         open: false,
+        proxy: 'http://localhost:8080'
     },
 
     /*css: {
@@ -97,7 +98,7 @@ module.exports = {
                 assetsSort: true
             }),
             new BundleAnalyzerPlugin({
-                analyzerMode: 'server',
+                analyzerMode: 'build',
                 analyzerHost: '127.0.0.1',
                 analyzerPort: 8888,
                 reportFilename: 'report.html',

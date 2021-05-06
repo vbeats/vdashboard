@@ -3,6 +3,7 @@
       ref="formRef"
       :model="form"
       :rules="rules"
+      :wrapperCol="wrapperCol"
   >
 
     <a-form-item name="tenant" :v-show="showTenant">
@@ -64,24 +65,25 @@ export default defineComponent({
         key: '',
         img: ''
       },
-      rules: {
-        tenant: [
-          {required: true, message: '租户编号必填', trigger: 'blur'},
-        ],
-        username: [
-          {required: true, message: '账号必填', trigger: 'blur'},
-        ],
-        password: [
-          {required: true, message: '密码必填', trigger: 'blur'},
-        ],
-        captcha: [
-          {required: true, message: '验证码必填', trigger: 'blur'},
-          {len: 5, message: "验证码错误", trigger: 'blur'}
-        ],
-      },
       showTenant: process.env.VUE_APP_TENANT === 'show',
       disabled: false
     })
+
+    const rules = {
+      tenant: [
+        {required: true, message: '租户编号必填', trigger: 'blur'},
+      ],
+      username: [
+        {required: true, message: '账号必填', trigger: 'blur'},
+      ],
+      password: [
+        {required: true, message: '密码必填', trigger: 'blur'},
+      ],
+      captcha: [
+        {required: true, message: '验证码必填', trigger: 'blur'},
+        {len: 5, message: "验证码错误", trigger: 'blur'}
+      ],
+    }
 
     const formRef = ref<DefineComponent | null>(null)
 
@@ -119,10 +121,12 @@ export default defineComponent({
 
     return {
       ...data,
+      rules,
       submit,
       formRef,
       checkCaptcha,
-      refreshCaptcha
+      refreshCaptcha,
+      wrapperCol: {span: 24},
     }
   }
 })

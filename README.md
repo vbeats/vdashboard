@@ -1,13 +1,9 @@
 # vdashboard
 
-[后端接口参考](https://github.com/vbeats/vcloud)
+[后端接口参考](https://github.com/vbeats/vboot)
 
 - vue3
 - vue-router@4 vuex@4 vue-i18n-next antV@2
-
-## Mock
-
-暂时没有 , 后端接口需要自己跑[后端项目](https://github.com/vbeats/vcloud)
 
 ## crypto
 

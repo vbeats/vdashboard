@@ -3,6 +3,7 @@
       ref="formRef"
       :model="form"
       :rules="rules"
+      :wrapperCol="wrapperCol"
   >
 
     <a-form-item name="tenant" :v-show="showTenant">
@@ -55,30 +56,31 @@ export default defineComponent({
         phone: '',
         code: ''
       },
-      rules: {
-        tenant: [
-          {required: true, message: '租户编号必填', trigger: 'blur'},
-          {len: 6, message: '租户编号错误', trigger: 'blur'},
-        ],
-        phone: [
-          {required: true, message: '手机号必填', trigger: 'blur'},
-          {
-            pattern: '^(?:(?:\\+|00)86)?1(?:(?:3[\\d])|(?:4[5-79])|(?:5[0-35-9])|(?:6[5-7])|(?:7[0-8])|(?:8[\\d])|(?:9[189]))\\d{8}$',
-            message: '手机号错误',
-            trigger: 'blur'
-          },
-        ],
-        code: [
-          {required: true, message: '验证码必填', trigger: 'blur'},
-          {len: 6, message: '验证码错误', trigger: 'blur'},
-        ],
-      },
       showTenant: process.env.VUE_APP_TENANT === 'show',
       disabled: true,
       btText: '获取验证码',
       smsTime: 60,
       disLogin: false
     })
+
+    const rules = {
+      tenant: [
+        {required: true, message: '租户编号必填', trigger: 'blur'},
+        {len: 6, message: '租户编号错误', trigger: 'blur'},
+      ],
+      phone: [
+        {required: true, message: '手机号必填', trigger: 'blur'},
+        {
+          pattern: '^(?:(?:\\+|00)86)?1(?:(?:3[\\d])|(?:4[5-79])|(?:5[0-35-9])|(?:6[5-7])|(?:7[0-8])|(?:8[\\d])|(?:9[189]))\\d{8}$',
+          message: '手机号错误',
+          trigger: 'blur'
+        },
+      ],
+      code: [
+        {required: true, message: '验证码必填', trigger: 'blur'},
+        {len: 6, message: '验证码错误', trigger: 'blur'},
+      ],
+    }
 
     const formRef = ref<DefineComponent | null>(null)
 
@@ -134,7 +136,9 @@ export default defineComponent({
     }
 
     return {
-      ...toRefs(data), formRef, submit, checkCode, getSmsCode, enableLoginButton
+      ...toRefs(data), formRef, submit,
+      checkCode, getSmsCode, enableLoginButton,
+      wrapperCol: {span: 24}, rules
     }
   }
 })
