@@ -31,11 +31,11 @@
 import {DefineComponent, defineComponent, ref} from 'vue'
 import {useStore} from 'vuex'
 import {useRouter} from 'vue-router'
-import {UPDATE_TOKEN} from '@/store/actionTypes'
+import {UPDATE_USER_INFO} from '@/store/actionTypes'
 import UserNamePasswordComponent from "@/components/login/UserNamePasswordComponent.vue"
 import PhoneComponent from "@/components/login/PhoneComponent.vue"
 import CopyRight from "@/components/copyright/CopyRight.vue"
-import {Credentials} from '@/interface'
+import {Credentials} from '@/interface/user'
 import {getToken} from '@/api/user'
 import encrypt from '@/utils/crypto'
 
@@ -79,8 +79,8 @@ export default defineComponent({
       }
 
       getToken(credentials).then(async res => {
-        await store.dispatch(UPDATE_TOKEN, res.data).then()
-        router.replace('/index').then()
+        await store.dispatch(UPDATE_USER_INFO, res.data).then()
+        router.replace({name: 'index'}).then()
       }).catch(() => {
         unRef.value && unRef.value.refreshCaptcha()
         phRef.value && phRef.value.enableLoginButton()

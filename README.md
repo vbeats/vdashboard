@@ -45,6 +45,69 @@
 
 `layout`: 导航菜单已适配屏幕 可以自动展开收起
 
+## 菜单权限
+
+## 菜单权限
+
+> 一个用户只能属于一个role角色, 我定的, 咋的了
+
+> permissions 字段格式 ["按钮:add,list,update,delete"]或["list"] (菜单是否可以查看)
+
+> 按钮非特指, 对应前端当前页面下同类型的所有按钮, 需要前后端约定好
+
+- 非后台管理员类型用户 `user role_id`为0
+
+- 二级菜单 父一级 `permissions` ["list"]或者没有, 对应 `role_menu_action actions`字段, 0(有查看权限)/-1(没有查看权限)
+
+```json
+{
+  "menus": [
+    {
+      "key": "index",
+      "icon": "HomeOutlined",
+      "title": "首页",
+      "default_select": true,
+      "default_open": false,
+      "permissions": [
+        "index:list"
+      ]
+    },
+    {
+      "key": "setting",
+      "icon": "SettingOutlined",
+      "title": "系统设置",
+      "default_select": false,
+      "default_open": true,
+      "permissions": [
+        "list"
+      ],
+      "children": [
+        {
+          "key": "user",
+          "title": "用户管理",
+          "default_select": false,
+          "default_open": false,
+          "permissions": [
+            "role:update,list",
+            "user:add,update,list,delete"
+          ]
+        },
+        {
+          "key": "role",
+          "title": "角色管理",
+          "default_select": false,
+          "default_open": false,
+          "permissions": [
+            "action:update,list",
+            "role:add,update,list,delete"
+          ]
+        }
+      ]
+    }
+  ]
+}
+```
+
 ## todo
 
 - [ ] tailwindcss
@@ -58,11 +121,11 @@
         <td><img src="https://cdn.jsdelivr.net/gh/boot-vue/pics@main/vdashboard/2.png"></td>
     </tr>
     <tr>
-        <td><img src="https://cdn.jsdelivr.net/gh/boot-vue/pics@main/vdashboard/3.png"></td>
         <td><img src="https://cdn.jsdelivr.net/gh/boot-vue/pics@main/vdashboard/4.png"></td>
+        <td><img src="https://cdn.jsdelivr.net/gh/boot-vue/pics@main/vdashboard/5.png"></td>
     </tr>
     <tr>
-        <td><img src="https://cdn.jsdelivr.net/gh/boot-vue/pics@main/vdashboard/5.png"></td>
         <td><img src="https://cdn.jsdelivr.net/gh/boot-vue/pics@main/vdashboard/6.png"></td>
+        <td><img src="https://cdn.jsdelivr.net/gh/boot-vue/pics@main/vdashboard/7.png"></td>
     </tr>
 </table>

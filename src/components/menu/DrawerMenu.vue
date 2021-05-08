@@ -11,7 +11,7 @@
 
 <script lang="ts">
 import {defineComponent} from 'vue'
-import Menu from "@/components/menu/Menu.vue";
+import Menu from "@/components/menu/Menu.vue"
 
 export default defineComponent({
   name: "DrawerMenu",

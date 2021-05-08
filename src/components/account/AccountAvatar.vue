@@ -41,7 +41,7 @@ export default defineComponent({
       switch (item.key) {
         case 'logout':
           store.dispatch(LOGOUT).then()
-          router.replace('/login').then()
+          router.replace({name: 'login'}).then()
           break
       }
     }

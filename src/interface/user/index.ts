@@ -11,16 +11,26 @@ export interface Credentials {
     platform?: number
 }
 
-// token相关信息
-export interface Token {
+// user相关信息
+export interface UserInfo {
     user_id: number,
-    tenant_code: string,
+    tenant_id: number,
     username: string,
     nickname?: string,
     phone?: string,
     avatar?: string,
-    roles?: string,
+    role_id: number,
     access_token: string,
     refresh_token: string,
-    expires: number,
+    menus?: Array<Menu>
+}
+
+export interface Menu {
+    key: string,
+    icon?: string,
+    title: string,
+    default_select: boolean,
+    default_open: boolean,
+    permissions?: string[],
+    children: Array<Menu>
 }

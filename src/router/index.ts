@@ -25,12 +25,12 @@ const routes: Array<RouteRecordRaw> = [
         redirect: '/index',
         children: [
             {
-                path: 'index',
+                path: '/index',
                 name: 'index',
                 component: () => import('../views/index/Index.vue')
             },
             {
-                path: 'test',
+                path: '/test',
                 name: 'test',
                 component: () => import('../views/test/Test.vue')
             }

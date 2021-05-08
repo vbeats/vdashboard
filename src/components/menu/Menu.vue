@@ -9,51 +9,74 @@
   <a-menu theme="dark" mode="inline"
           :inline-collapsed="collapsed" v-model:openKeys="openKeys"
           v-model:selectedKeys="selectedKeys" @click="changeRouter">
-    <a-menu-item key="index">
-      <UserOutlined/>
-      <span class="nav-text">首 页</span>
+    <a-menu-item v-for="item in menuItems" :key="item.key">
+      <Component :is="item.icon"/>
+      <span class="nav-text">{{ item.title }}</span>
     </a-menu-item>
 
-    <a-sub-menu key="sub1">
+    <a-sub-menu v-for="item in subMenuItems" :key="item.key">
       <template #title>
-        <span><MailOutlined/><span>二级菜单</span></span>
+        <span><Component :is="item.icon"/><span>{{ item.title }}</span></span>
       </template>
-      <a-menu-item key="test">test页面</a-menu-item>
-      <a-menu-item key="6">Option 6</a-menu-item>
-      <a-menu-item key="7">Option 7</a-menu-item>
-      <a-menu-item key="8">Option 8</a-menu-item>
+      <template v-for="subItem in item.children" :key="subItem.key">
+        <a-menu-item :key="subItem.key">{{ subItem.title }}</a-menu-item>
+      </template>
     </a-sub-menu>
   </a-menu>
 </template>
 
 <script lang="ts">
-import {defineComponent, inject, reactive, toRefs, watchEffect} from 'vue'
+import {defineComponent, inject, reactive, toRefs, watchEffect, UnwrapRef} from 'vue'
 import {useRoute, useRouter} from 'vue-router'
-import {MailOutlined, UserOutlined} from '@ant-design/icons-vue'
+import {HomeOutlined, SettingOutlined} from '@ant-design/icons-vue'
+import {Menu} from "@/interface/user";
+
+interface Data {
+  selectedKeys: Array<string>,
+  openKeys: Array<string>,
+  menuItems: Array<Menu>,
+  subMenuItems: Array<Menu>,
+}
 
 export default defineComponent({
   name: "Menu",
-  components: {UserOutlined, MailOutlined},
+  components: {HomeOutlined, SettingOutlined},
   setup() {
 
     const router = useRouter()
     const route = useRoute()
 
-    const data = reactive({
-      selectedKeys: ['index'],
-      openKeys: ['sub1']
+    const data: UnwrapRef<Data> = reactive({
+      selectedKeys: [],
+      openKeys: [],
+      menuItems: [],
+      subMenuItems: []
     })
 
     const collapsed = inject('collapsed')
+    const menus: Array<Menu> | any = inject('menus')
+
+    menus.value.forEach((i: Menu) => {
+      if (i.children && i.children.length > 0) {
+        data.subMenuItems.push(i)
+      } else {
+        data.menuItems.push(i)
+      }
+      if (i.default_select) {
+        data.selectedKeys = [i.key]
+      }
+      if (i.default_open) {
+        data.openKeys = [i.key]
+      }
+    })
 
     // 路由切换
     const changeRouter = (item: any) => {
-      router.replace('/' + item.key)
+      router.replace({name: item.key})
     }
 
     watchEffect(() => {
-      const path = route.path
-      data.selectedKeys = new Array<string>(path.substr(1))
+      data.selectedKeys = [route.path.substr(1)]
     })
 
     return {

@@ -31,7 +31,7 @@ axios.interceptors.response.use((response: AxiosResponse): Promise<AxiosResponse
         switch (response.data.code) {
             case 401:
                 store.dispatch(LOGOUT).then()
-                router.replace('/login').then()
+                router.replace({name: 'login'}).then()
                 break
             case 200:
                 return response.data

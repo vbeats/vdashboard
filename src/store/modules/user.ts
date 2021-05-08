@@ -1,19 +1,19 @@
 import storage from '@/utils/storage'
-import {LOAD_USER_INFO, LOGOUT, UPDATE_TOKEN} from '../actionTypes'
-import {Token} from "@/interface"
+import {LOAD_USER_INFO, LOGOUT, UPDATE_USER_INFO} from '../actionTypes'
+import {UserInfo} from "@/interface/user"
 import {SUser} from "@/store/interface"
 
-class DefaultUser implements Token {
+class DefaultUser implements UserInfo {
     user_id = 0
     access_token = ''
     refresh_token = ''
     username = ''
     nickname = ''
-    roles = ''
+    role_id = 0
     phone = ''
     avatar = ''
-    expires = -1;
-    tenant_code = ''
+    tenant_id = 0
+    menus = []
 }
 
 class defaultState implements SUser {
@@ -34,18 +34,18 @@ const user: any = {
         storage.remove('access_token')
         storage.remove('refresh_token')
     },
-    [UPDATE_TOKEN]: (state: SUser, token: Token): void => {
+    [UPDATE_USER_INFO]: (state: SUser, userInfo: UserInfo): void => {
         const accessTokenExpire = new Date().getTime() + 7200 * 1000
         const refreshTokenExpire = new Date().getTime() + 20 * 24 * 3600 * 1000
-        state.user = {...token}
+        state.user = {...userInfo}
         state.access_token_expire = accessTokenExpire
         state.refresh_token_expire = refreshTokenExpire
         storage.set('user', state.user)
-        storage.set('access_token', token.access_token, accessTokenExpire)
-        storage.set('refresh_token', token.refresh_token, refreshTokenExpire)
+        storage.set('access_token', userInfo.access_token, accessTokenExpire)
+        storage.set('refresh_token', userInfo.refresh_token, refreshTokenExpire)
     },
     [LOAD_USER_INFO]: (state: SUser): void => {
-        const user: Token = storage.get('user')
+        const user: UserInfo = storage.get('user')
         const access_token_expire: number = storage.getExpiration('access_token') || -1
         const refresh_token_expire: number = storage.getExpiration('refresh_token') || -1
 
