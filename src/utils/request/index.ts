@@ -5,7 +5,7 @@ import {message} from "ant-design-vue"
 import router from "@/router";
 
 const axios: AxiosInstance = request.create({
-    baseURL: process.env.VUE_APP_API,
+    baseURL: import.meta.env.VITE_APP_API,
     headers: {
         'Content-Type': 'application/json'
     },

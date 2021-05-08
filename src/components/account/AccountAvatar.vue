@@ -21,7 +21,7 @@ import {useStore} from 'vuex'
 import {useRouter} from 'vue-router'
 import {LogoutOutlined} from '@ant-design/icons-vue'
 import Avatar from '@/assets/img/avatar.png'
-import {LOGOUT} from "@/store/actionTypes";
+import {LOGOUT} from '@/store/actionTypes'
 
 export default defineComponent({
   name: "AccountAvatar",

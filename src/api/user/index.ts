@@ -1,10 +1,10 @@
 import axios from '@/utils/request'
 import querystring from 'query-string'
-import {Credentials} from "@/interface/user";
+import {Credentials} from "@/interface/user"
 
 const key: string = querystring.stringify({
-    appid: process.env.VUE_APP_APPID,
-    secret: process.env.VUE_APP_SECRET
+    appid: import.meta.env.VITE_APP_APPID,
+    secret: import.meta.env.VITE_APP_SECRET
 })
 
 /**

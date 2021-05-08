@@ -18,9 +18,7 @@
       <template #title>
         <span><Component :is="item.icon"/><span>{{ item.title }}</span></span>
       </template>
-      <template v-for="subItem in item.children" :key="subItem.key">
-        <a-menu-item :key="subItem.key">{{ subItem.title }}</a-menu-item>
-      </template>
+      <a-menu-item :key="subItem.key" v-for="subItem in item.children">{{ subItem.title }}</a-menu-item>
     </a-sub-menu>
   </a-menu>
 </template>
