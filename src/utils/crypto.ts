@@ -1,4 +1,4 @@
-import NodeRSA from "node-rsa"
+import {JSEncrypt} from "jsencrypt"
 
 const publicKey = "-----BEGIN PUBLIC KEY-----\n" +
     "MIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEAmwU8KJMgMDNSnmlYLfGE\n" +
@@ -15,10 +15,11 @@ const publicKey = "-----BEGIN PUBLIC KEY-----\n" +
     "Y8wDuSslUuP0CfVwlStT5EcCAwEAAQ==\n" +
     "-----END PUBLIC KEY-----"
 
-const rsa = new NodeRSA(publicKey, 'pkcs8-public-pem', {encryptionScheme: 'pkcs1'})
+const jsEncrypt = new JSEncrypt({default_key_size: '4096'})
+jsEncrypt.setPublicKey(publicKey)
 
 const encrypt = (content: string): string => {
-    return rsa.encrypt(content, "base64")
+    return jsEncrypt.encrypt(content) || ''
 }
 
 export default encrypt

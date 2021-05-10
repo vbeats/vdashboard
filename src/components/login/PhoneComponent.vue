@@ -56,7 +56,7 @@ export default defineComponent({
         phone: '',
         code: ''
       },
-      showTenant: process.env.VUE_APP_TENANT === 'show',
+      showTenant: import.meta.env.VITE_APP_TENANT === 'show',
       disabled: true,
       btText: '获取验证码',
       smsTime: 60,

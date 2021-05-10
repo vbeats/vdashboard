@@ -3,18 +3,16 @@
 </template>
 
 <script lang="ts">
-import {defineComponent, reactive} from 'vue'
+import {defineComponent, ref} from 'vue'
 import dayjs from "dayjs"
 
 export default defineComponent({
   name: "CopyRight",
   setup() {
-    const data: any = reactive({
-      year: dayjs().year()
-    })
+    const year = ref<number>(dayjs().year())
 
     return {
-      ...data
+      year
     }
   }
 })

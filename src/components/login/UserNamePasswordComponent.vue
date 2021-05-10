@@ -65,7 +65,7 @@ export default defineComponent({
         key: '',
         img: ''
       },
-      showTenant: process.env.VUE_APP_TENANT === 'show',
+      showTenant: import.meta.env.VITE_APP_TENANT === 'show',
       disabled: false
     })
 
