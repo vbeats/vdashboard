@@ -19,7 +19,7 @@ export default defineComponent({
     const data = ref()
     const {t} = useI18n()
 
-    axios.post('/admin/test', {tt: ['xx', 'oo']}).then(res => {
+    axios.post('/admin/user/test', {tt: ['xx', 'oo']}).then(res => {
       data.value = res
     })
 
@@ -35,6 +35,6 @@ export default defineComponent({
 })
 </script>
 
-<style scoped lang="stylus">
+<style scoped>
 
 </style>

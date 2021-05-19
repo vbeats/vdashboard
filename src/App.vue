@@ -28,6 +28,5 @@ export default defineComponent({
 })
 </script>
 
-<style lang="stylus">
-@import "assets/css/index.styl"
+<style>
 </style>

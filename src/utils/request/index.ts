@@ -14,7 +14,7 @@ const axios: AxiosInstance = request.create({
 
 // 异常处理
 const errorHandler = (error: any): any => {
-    message.error(error.toString(), 10)
+    message.error(error.toString(), 12)
     return Promise.reject(error)
 }
 

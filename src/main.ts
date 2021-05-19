@@ -6,7 +6,7 @@ import i18n from './locale'
 import Antd from 'ant-design-vue'
 import bootstrap from "./bootstrap"
 import 'ant-design-vue/dist/antd.css'
-import './tailwind.css'
+import './assets/css/index.css'
 
 bootstrap() // 初始化数据
 

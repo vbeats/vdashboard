@@ -1,5 +1,5 @@
 <template>
-  <span>Copyright © 2019 - {{ year }} vbeats</span>
+  <span class="flex justify-center text-gray-400 text-sm">Copyright © 2019 - {{ year }} vbeats</span>
 </template>
 
 <script lang="ts">
@@ -18,10 +18,6 @@ export default defineComponent({
 })
 </script>
 
-<style scoped lang="stylus">
-span
-  display flex
-  justify-content center
-  color rgba(0, 0, 0, .45)
-  font-size 14px
+<style scoped>
+
 </style>

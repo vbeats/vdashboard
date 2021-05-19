@@ -1,8 +1,3 @@
-import store from 'store'
-import expirePlugin from 'store/plugins/expire'
-import updatePlugin from 'store/plugins/update'
+import VStore from '@vbeats/vstore'
 
-store.addPlugin(expirePlugin)
-store.addPlugin(updatePlugin)
-
-export default store
+export default new VStore("localStorage")

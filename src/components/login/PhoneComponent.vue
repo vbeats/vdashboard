@@ -1,13 +1,13 @@
 <template>
   <a-form
       ref="formRef"
-      :model="form"
+      :model="formState"
       :rules="rules"
       :wrapperCol="wrapperCol"
   >
 
-    <a-form-item name="tenant" :v-show="showTenant">
-      <a-input v-model:value="form.tenant" size="large" placeholder="租户编号">
+    <a-form-item name="tenant" v-show="showTenant">
+      <a-input v-model:value="formState.tenant" size="large" placeholder="租户编号">
         <template #prefix>
           <ShopOutlined style="color:rgba(0,0,0,.25)"/>
         </template>
@@ -15,7 +15,7 @@
     </a-form-item>
 
     <a-form-item name="phone">
-      <a-input v-model:value="form.phone" size="large" placeholder="手机号">
+      <a-input v-model:value="formState.phone" size="large" placeholder="手机号">
         <template #prefix>
           <ShopOutlined style="color:rgba(0,0,0,.25)"/>
         </template>
@@ -23,9 +23,10 @@
     </a-form-item>
 
     <a-form-item name="code">
-      <a-row>
+      <a-row type="flex" align="middle">
         <a-col :span="14">
-          <a-input v-model:value="form.code" size="large" placeholder="验证码" @blur="checkCode"/>
+          <a-input v-model:value="formState.code" size="large" placeholder="验证码" @blur="checkCode"
+                   @keyup.enter="submit"/>
         </a-col>
         <a-col :span="8" :offset="2">
           <a-button type="primary" block size="large" @click="getSmsCode" :disabled="disabled">{{ btText }}</a-button>
@@ -40,22 +41,29 @@
 </template>
 
 <script lang="ts">
-import {DefineComponent, defineComponent, reactive, ref, toRef, toRefs, watch} from 'vue'
+import {DefineComponent, defineComponent, reactive, ref, toRef, toRefs, UnwrapRef, watch} from 'vue'
 import {message} from "ant-design-vue"
 import {ShopOutlined} from '@ant-design/icons-vue'
 import {getSmsCode as getSmsCodeApi} from '@/api/user'
+
+interface FormState {
+  tenant: string,
+  phone: string,
+  code: string
+}
 
 export default defineComponent({
   name: "PhoneComponent",
   components: {ShopOutlined},
   setup(props, {emit}) {
 
+    const formState: UnwrapRef<FormState> = reactive({
+      tenant: import.meta.env.VITE_APP_TENANT === 'show' ? '' : '000000',
+      phone: '',
+      code: ''
+    })
+
     const data: any = reactive({
-      form: {
-        tenant: '',
-        phone: '',
-        code: ''
-      },
       showTenant: import.meta.env.VITE_APP_TENANT === 'show',
       disabled: true,
       btText: '获取验证码',
@@ -65,8 +73,8 @@ export default defineComponent({
 
     const rules = {
       tenant: [
-        {required: true, message: '租户编号必填', trigger: 'blur'},
-        {len: 6, message: '租户编号错误', trigger: 'blur'},
+        {required: import.meta.env.VITE_APP_TENANT === 'show', message: '租户编号必填', trigger: 'blur'},
+        {len: 6, message: '租户编号错误', trigger: 'blur'}
       ],
       phone: [
         {required: true, message: '手机号必填', trigger: 'blur'},
@@ -90,7 +98,7 @@ export default defineComponent({
           .validate()
           .then(() => {
             data.disLogin = true
-            emit('login', {...data.form, type: 1})
+            emit('login', {...formState, type: 1})
           })
     }
 
@@ -99,7 +107,7 @@ export default defineComponent({
       formRef.value && formRef.value.validateFields('code')
     }
 
-    watch([toRef(data.form, 'tenant'), toRef(data.form, 'phone')], (newValue) => {
+    watch([toRef(formState, 'tenant'), toRef(formState, 'phone')], (newValue) => {
       if (newValue[0].length === 6 && newValue[1].length === 11) {
         data.disabled = false
       }
@@ -107,11 +115,11 @@ export default defineComponent({
 
     // 获取短信验证码
     const getSmsCode = () => {
-      if (!data.form.phone || !data.form.tenant || data.form.tenant.length !== 6 || data.form.phone.length !== 11) {
+      if (!formState.phone || !formState.tenant || formState.tenant.length !== 6 || formState.phone.length !== 11) {
         return
       }
 
-      getSmsCodeApi(data.form.phone, data.form.tenant).then(() => {
+      getSmsCodeApi(formState.phone, formState.tenant).then(() => {
         message.success('短信已发送')
         data.disabled = true
         data.btText = data.smsTime + ' s'
@@ -136,7 +144,7 @@ export default defineComponent({
     }
 
     return {
-      ...toRefs(data), formRef, submit,
+      formState, ...toRefs(data), formRef, submit,
       checkCode, getSmsCode, enableLoginButton,
       wrapperCol: {span: 24}, rules
     }
@@ -144,6 +152,6 @@ export default defineComponent({
 })
 </script>
 
-<style scoped lang="stylus">
+<style scoped>
 
 </style>

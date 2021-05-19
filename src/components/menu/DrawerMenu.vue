@@ -3,7 +3,7 @@
             :get-container="false" :visible="drawerVisible"
             @close="hideDrawerMenu"
             placement="left" :body-style="{padding:0,width:$menuWidth}">
-    <a-layout-sider class="menu-sider" width="256">
+    <a-layout-sider class="overflow-hidden relative left-0 h-screen" width="256">
       <Menu/>
     </a-layout-sider>
   </a-drawer>
@@ -36,10 +36,6 @@ export default defineComponent({
 })
 </script>
 
-<style scoped lang="stylus">
-.menu-sider
-  overflow hidden
-  position relative
-  left 0
-  height 100vh
+<style scoped>
+
 </style>

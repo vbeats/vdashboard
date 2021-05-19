@@ -1,16 +1,17 @@
 <template>
-  <div class="login">
-    <div class="container">
-      <div class="head">
-        <div class="title">
-          <img src="@/assets/img/logo.svg" alt=""/>
-          <span>Ant Design</span>
+  <div
+      class="w-screen h-screen bg-bg-img bg-no-repeat bg-bg-position bg-contain bg-[#f0f2f5] overflow-hidden flex flex-col">
+    <div class="w-96 mx-auto my-0">
+      <div class="flex flex-col items-center">
+        <div class="mt-20 flex flex-row items-center">
+          <img src="@/assets/img/logo.svg" alt="" class="w-11 h-11"/>
+          <span class="ml-10 text-3xl font-bold text-gray-700">Ant Design</span>
         </div>
-        <span class="subtitle">Ant Design 是西湖区最具影响力的 Web 设计规范</span>
+        <span class="text-gray-400 text-sm mt-5">Ant Design 是西湖区最具影响力的 Web 设计规范</span>
       </div>
 
-      <div class="form">
-        <a-tabs>
+      <div class="mt-14">
+        <a-tabs class="login-tabs">
           <a-tab-pane key="1" tab="账户密码登录">
             <UserNamePasswordComponent @login="login" ref="unRef"/>
           </a-tab-pane>
@@ -20,7 +21,7 @@
         </a-tabs>
       </div>
 
-      <div class="footer">
+      <div class="mt-15">
         <CopyRight/>
       </div>
     </div>
@@ -79,8 +80,9 @@ export default defineComponent({
       }
 
       getToken(credentials).then(async res => {
-        await store.dispatch(UPDATE_USER_INFO, res.data).then()
-        router.replace({name: 'index'}).then()
+        await store.dispatch(UPDATE_USER_INFO, res.data).then(
+            router.replace({name: 'layout'}).then()
+        )
       }).catch(() => {
         unRef.value && unRef.value.refreshCaptcha()
         phRef.value && phRef.value.enableLoginButton()
@@ -95,5 +97,11 @@ export default defineComponent({
 </script>
 
 <style scoped lang="stylus">
-@import "./index.styl";
+::v-deep(.login-tabs .ant-tabs-bar)
+  border-bottom none !important
+
+
+::v-deep(.login-tabs .ant-tabs-top-bar)
+  text-align center !important
+
 </style>

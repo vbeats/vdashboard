@@ -1,31 +1,37 @@
 <template>
   <a-dropdown placement="bottomRight">
-    <span class="account-avatar">
-      <img :src="avatar" alt="">
-      <span>{{ username }}</span>
+    <span class="block text-center w-20 h-16 flex items-center">
+      <img :src="avatar" alt="" class="w-6 h-6">
+      <span class="ml-2">{{ username }}</span>
     </span>
     <template #overlay>
       <a-menu @click="handleMenuClick">
+        <a-menu-item key="updateUserInfo">
+          <span class="text-xs"><EditOutlined/></span>
+          <span class="text-sm ml-1">修改密码</span>
+        </a-menu-item>
         <a-menu-item key="logout">
-          <span class="short"><LogoutOutlined/></span>
-          <span class="text">退出登录</span>
+          <span class="text-xs"><LogoutOutlined/></span>
+          <span class="text-sm ml-1">退出登录</span>
         </a-menu-item>
       </a-menu>
     </template>
   </a-dropdown>
+  <UserInfoModal :visible="userInfoModal" @cancel="handlCancel"/>
 </template>
 
 <script>
 import {defineComponent, reactive, toRefs} from 'vue'
 import {useStore} from 'vuex'
 import {useRouter} from 'vue-router'
-import {LogoutOutlined} from '@ant-design/icons-vue'
+import {EditOutlined, LogoutOutlined} from '@ant-design/icons-vue'
 import Avatar from '@/assets/img/avatar.png'
 import {LOGOUT} from '@/store/actionTypes'
+import UserInfoModal from '@/components/header/UserInfoModal.vue'
 
 export default defineComponent({
   name: "AccountAvatar",
-  components: {LogoutOutlined},
+  components: {LogoutOutlined, EditOutlined, UserInfoModal},
   setup() {
 
     const store = useStore()
@@ -34,11 +40,15 @@ export default defineComponent({
 
     const data = reactive({
       avatar: user.avatar || Avatar,
-      username: user.nickname || user.username
+      username: user.nickname || user.username,
+      userInfoModal: false
     })
 
     const handleMenuClick = (item) => {
       switch (item.key) {
+        case 'updateUserInfo':
+          data.userInfoModal = true
+          break
         case 'logout':
           store.dispatch(LOGOUT).then()
           router.replace({name: 'login'}).then()
@@ -46,33 +56,18 @@ export default defineComponent({
       }
     }
 
+    const handlCancel = () => {
+      data.userInfoModal = false
+    }
+
     return {
       ...toRefs(data),
-      handleMenuClick
+      handleMenuClick, handlCancel
     }
   }
 })
 </script>
 
-<style scoped lang="stylus">
-.account-avatar
-  display block
-  text-align center
-  width 80px
-  height 64px
-
-  img
-    width 24px
-    height 24px
-
-  span
-    margin-left 8px
-
-.short
-  font-size 12px
-
-.text
-  font-size 14px
-  margin-left 4px
+<style scoped>
 
 </style>

@@ -1,18 +1,18 @@
 <template>
-  <a-layout class="base-layout">
+  <a-layout class="min-h-screen">
     <DrawerMenu v-if="showDrawerMenu"
                 :drawerVisible="drawerVisible"
                 @hideDrawerMenu="hideDrawerMenu"
     />
     <DefaultMenu v-else @changeCollapsed="changeCollapsed"/>
     <!--右侧-->
-    <a-layout class="right">
+    <a-layout>
       <!--头部-->
-      <a-layout-header class="header">
+      <a-layout-header class="flex bg-white p-0 h-16">
         <Header @changeCollapsed="changeCollapsed"/>
       </a-layout-header>
       <!--内容区-->
-      <a-layout-content class="content">
+      <a-layout-content class="mt-6 mb-0 mx-4 p-6 bg-white">
         <router-view/>
       </a-layout-content>
       <!--脚底-->
@@ -25,12 +25,12 @@
 
 <script lang="ts">
 import {defineComponent, onMounted, provide, reactive, ref, toRefs, watchEffect} from 'vue'
+import {useStore} from 'vuex'
 import CopyRight from "@/components/copyright/CopyRight.vue"
 import Header from "@/components/header/Header.vue"
 import DrawerMenu from "@/components/menu/DrawerMenu.vue"
 import DefaultMenu from "@/components/menu/DefaultMenu.vue"
 import checkToken from "@/utils/checkToken"
-import storage from '@/utils/storage'
 import {Menu} from "@/interface/user";
 
 export default defineComponent({
@@ -49,7 +49,8 @@ export default defineComponent({
     })
 
     // 加载菜单数据
-    const menus: Array<Menu> = storage.get('user').menus || []
+    const store = useStore()
+    const menus: Array<Menu> = store.getters.getUserInfo.user.menus || []
 
     const collapsed = ref(data.collapsed)
 
@@ -91,6 +92,5 @@ export default defineComponent({
 })
 </script>
 
-<style lang="stylus" scoped>
-@import "index.styl"
+<style scoped>
 </style>

@@ -1,5 +1,8 @@
 # vdashboard
 
+Sponsor [![paypal.me/bootvue](https://cdn.jsdelivr.net/gh/boot-vue/pics@main/icon/paypal.svg)](https://www.paypal.me/bootvue)
+☕☕☕
+
 [后端接口参考](https://github.com/vbeats/vboot)
 
 - vue3
@@ -13,11 +16,11 @@
 
 `localStorage`存储: `user` `access_token` `refresh_token`
 
-依赖 `store.js` 控制 `access_token`:`7200s` 与 `refresh_token`:`20d`的过期时间
+依赖 `@vbeats/vstore` 控制 `access_token`:`7200s` 与 `refresh_token`:`20d`的过期时间
 
 每5分钟校验一次`access_token`过期时间, 如果过期了靠`refresh_token`获取新token
 
-初次访问时, `localStorage`中已存在的`access_token`或`refresh_token`, 直接复用
+初次访问时, `localStorage`中已存在的`access_token`或`refresh_token`(未过期), (看具体业务情况 可以直接复用)
 
 具体逻辑查看: `router`路由拦截处理 与 `layouts`下相关组件 `checkToken`方法
 
@@ -107,11 +110,6 @@
   ]
 }
 ```
-
-## todo
-
-- [ ] tailwindcss
-- [ ] menu菜单改造
 
 ## Demo
 

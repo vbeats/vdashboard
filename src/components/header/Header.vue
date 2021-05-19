@@ -1,16 +1,17 @@
 <template>
   <MenuUnfoldOutlined
       v-if="collapsed"
-      class="trigger"
+      class="text-lg leading-16 px-6 cursor-pointer transition-colors"
       @click="changeCollapsed(!collapsed)"
   />
-  <MenuFoldOutlined v-else class="trigger" @click="changeCollapsed(!collapsed)"/>
+  <MenuFoldOutlined v-else class="text-lg leading-16 px-6 cursor-pointer transition-colors"
+                    @click="changeCollapsed(!collapsed)"/>
 
-  <div class="avatar">
+  <div class="ml-auto">
     <AccountAvatar/>
   </div>
 
-  <div class="language">
+  <div class="ml-2 mr-2">
     <Language/>
   </div>
 </template>
@@ -39,19 +40,5 @@ export default defineComponent({
 })
 </script>
 
-<style scoped lang="stylus">
-
-.avatar
-  margin-left auto
-
-.language
-  margin-left 10px
-  margin-right 8px
-
-.trigger
-  font-size 18px
-  line-height 64px
-  padding 0 24px
-  cursor pointer
-  transition color 0.3s
+<style scoped>
 </style>

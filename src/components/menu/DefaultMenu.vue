@@ -1,5 +1,5 @@
 <template>
-  <a-layout-sider class="menu-sider" width="256"
+  <a-layout-sider class="overflow-hidden relative left-0" width="256"
                   breakpoint="lg"
                   :trigger="null"
                   v-model:collapsed="collapsed"
@@ -33,9 +33,6 @@ export default defineComponent({
 })
 </script>
 
-<style scoped lang="stylus">
-.menu-sider
-  overflow hidden
-  position relative
-  left 0
+<style scoped>
+
 </style>

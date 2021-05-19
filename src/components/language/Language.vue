@@ -1,17 +1,17 @@
 <template>
   <a-dropdown placement="bottomRight">
-    <span class="global">
-      <GlobalOutlined class="lang-icon"/>
+    <span class="w-14 h-16 block text-center cursor-pointer flex items-center justify-center">
+      <GlobalOutlined class="w-4 h-4 text-black text-opacity-60"/>
     </span>
     <template #overlay>
       <a-menu @click="handleMenuClick">
-        <a-menu-item key="zh-CN" :class="{active:key==='zh-CN'}">
-          <span class="short">CN</span>
-          <span class="text">简体中文</span>
+        <a-menu-item key="zh-CN" :class="{'active-item':key==='zh-CN'}">
+          <span class="text-xs">CN</span>
+          <span class="text-sm ml-2">简体中文</span>
         </a-menu-item>
-        <a-menu-item key="en-US" :class="{active:key==='en-US'}">
-          <span class="short">US</span>
-          <span class="text">English</span>
+        <a-menu-item key="en-US" :class="{'active-item':key==='en-US'}">
+          <span class="text-xs">US</span>
+          <span class="text-sm ml-2">English</span>
         </a-menu-item>
       </a-menu>
     </template>
@@ -48,27 +48,8 @@ export default defineComponent({
 </script>
 
 <style scoped lang="stylus">
-.global
-  width 50px
-  height 64px
-  display block
-  text-align center
-  cursor pointer
-
-  .lang-icon
-    width 16px
-    height 16px
-    color rgba(0, 0, 0, .65)
-
-.active
+::v-deep(.active-item)
   background-color #fff1f0
   color #f5222d
-
-.short
-  font-size 12px
-
-.text
-  font-size 14px
-  margin-left 8px
 
 </style>

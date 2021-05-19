@@ -1,8 +1,8 @@
 <template>
   <router-link to="/index" replace>
-    <div class="logo">
-      <img src="@/assets/img/logo.svg" alt=""/>
-      <span v-show="!collapsed">V dashboard</span>
+    <div class="flex flex-row h-16 ml-6 items-center">
+      <img src="@/assets/img/logo.svg" alt="" class="h-8"/>
+      <span v-show="!collapsed" class="text-white text-xl font-bold ml-2.5">V dashboard</span>
     </div>
   </router-link>
   <!--菜单-->
@@ -10,13 +10,13 @@
           :inline-collapsed="collapsed" v-model:openKeys="openKeys"
           v-model:selectedKeys="selectedKeys" @click="changeRouter">
     <a-menu-item v-for="item in menuItems" :key="item.key">
-      <Component :is="item.icon"/>
+      <Component :is="item.icon" keep-alive/>
       <span class="nav-text">{{ item.title }}</span>
     </a-menu-item>
 
     <a-sub-menu v-for="item in subMenuItems" :key="item.key">
       <template #title>
-        <span><Component :is="item.icon"/><span>{{ item.title }}</span></span>
+        <span><Component :is="item.icon" keep-alive/><span>{{ item.title }}</span></span>
       </template>
       <a-menu-item :key="subItem.key" v-for="subItem in item.children">{{ subItem.title }}</a-menu-item>
     </a-sub-menu>
@@ -24,7 +24,7 @@
 </template>
 
 <script lang="ts">
-import {defineComponent, inject, reactive, toRefs, watchEffect, UnwrapRef} from 'vue'
+import {defineComponent, inject, reactive, toRefs, UnwrapRef, watchEffect} from 'vue'
 import {useRoute, useRouter} from 'vue-router'
 import {HomeOutlined, SettingOutlined} from '@ant-design/icons-vue'
 import {Menu} from "@/interface/user";
@@ -85,21 +85,6 @@ export default defineComponent({
 })
 </script>
 
-<style scoped lang="stylus">
-.logo
-  display flex
-  flex-direction row
-  height 66px
-  margin-left 24px
-  align-items center
+<style scoped>
 
-  img
-    height 32px
-
-  span
-    color #fff
-    font-size 20px
-    font-family $font-family
-    font-weight bold
-    margin-left 10px
 </style>
