@@ -1,5 +1,5 @@
 <template>
-  <a-modal :visible="visible" :title="action==='add'?'新增角色':'更新角色'" @ok="handleOk" @cancel="handleCancel">
+  <a-modal :visible="visible" title="新增角色" @ok="handleOk" @cancel="handleCancel">
     <a-form
         ref="formRef"
         :model="formState"
@@ -13,7 +13,7 @@
 </template>
 
 <script lang="ts">
-import {defineComponent, reactive, ref, toRaw, UnwrapRef, watch} from 'vue'
+import {defineComponent, reactive, ref, toRaw, UnwrapRef} from 'vue'
 import {RoleFormState} from "@/interface/setting/user";
 import {LockOutlined, UserOutlined} from '@ant-design/icons-vue'
 
@@ -26,11 +26,6 @@ export default defineComponent({
       type: Boolean,
       required: true
     },
-    action: {
-      type: String,
-      required: false,
-      default: 'add'
-    },
     data: {type: Object, required: false}
   },
   setup(props, {emit}) {
@@ -39,17 +34,6 @@ export default defineComponent({
 
     const formState: UnwrapRef<RoleFormState> = reactive({
       role_name: ''
-    })
-
-    watch(() => props.action, (newVal) => {
-      if (newVal === 'update') {
-        const item: any = props.data
-        formState.id = item.id
-        formState.role_name = item.role_name
-      } else {
-        formState.id = 0
-        formState.role_name = ''
-      }
     })
 
     const rules = {

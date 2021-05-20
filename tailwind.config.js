@@ -13,13 +13,15 @@ module.exports = {
             backgroundImage: theme => ({
                 'bg-img': "url('@/assets/img/background.svg')",
             }),
+            display: ['hover']
         },
         backgroundPosition: {
             'bg-position': 'center 110px'
         },
         lineHeight: {
             '16': '4rem'
-        }
+        },
+        textColor: {}
     },
     variants: {
         extend: {},

@@ -63,12 +63,14 @@ export default defineComponent({
       }
     })
 
-    const checkPassword = async (rule: RuleObject, value: String) => {
+    const checkPassword = async (rule: RuleObject, value: string) => {
+      const pattern = "^\\S*(?=\\S{6,})(?=\\S*\\d)(?=\\S*[A-Z])(?=\\S*[a-z])(?=\\S*[!@#$%^&*? ])\\S*$"
+      const regex = new RegExp(pattern)
       if ((!formState.id || formState.id === 0) && (
-          !value || value.length < 6 || value.length > 12)) {
-        return Promise.reject('密码长度6-12位')
-      } else if (formState.id && formState.id > 0 && value && (value.length < 6 || value.length > 12)) {
-        return Promise.reject('密码长度6-12位')
+          !value || !regex.test(value))) {
+        return Promise.reject('至少6位，包括至少1个大写字母，1个小写字母，1个数字，1个特殊字符')
+      } else if (formState.id && formState.id > 0 && value && !regex.test(value)) {
+        return Promise.reject('至少6位，包括至少1个大写字母，1个小写字母，1个数字，1个特殊字符')
       } else {
         return Promise.resolve()
       }
@@ -97,6 +99,7 @@ export default defineComponent({
           .validate()
           .then(() => {
             emit('handleUser', toRaw(formState))
+            setTimeout(() => formRef.value.resetFields(), 1000)
           })
     }
 

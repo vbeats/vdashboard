@@ -44,7 +44,11 @@ export default defineComponent({
     const rules = {
       password: [
         {required: true, message: '密码不能为空', trigger: 'blur'},
-        {min: 6, max: 12, message: '密码长度6-12位', trigger: 'blur'},
+        {
+          pattern: '^\\S*(?=\\S{6,})(?=\\S*\\d)(?=\\S*[A-Z])(?=\\S*[a-z])(?=\\S*[!@#$%^&*? ])\\S*$',
+          message: '至少6位，包括至少1个大写字母，1个小写字母，1个数字，1个特殊字符',
+          trigger: 'blur'
+        },
       ]
     }
 

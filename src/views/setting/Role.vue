@@ -41,12 +41,26 @@
            :data-source="rows"
            :pagination="{total,current,pageSize}"
            :loading="loading"
-           @change="handleTableChange" :scroll="{x:1000}" class="mt-8"
+           @change="handleTableChange" :scroll="{x:800}" class="mt-8"
   >
+    <template #role="{text,record}">
+      <div class="relative">
+        <a-input
+            v-if="showEditCell&&currentEditRecord.id===record.id&&roleActions.list&&roleActions.update"
+            autofocus
+            v-model:value="roleValue" class="w-full"
+            @blur="cancelRoleEdit" @pressEnter="handleUpdateRole"
+        />
+        <div v-else>
+          {{ text || '' }}
+          <EditOutlined @click="editRoleCell(record)" class="ml-2"/>
+        </div>
+      </div>
+    </template>
     <template #operation="{ record }" v-if="roleActions.update||userActions.update">
       <a-space>
-        <a-button type="primary" v-if="userActions.list&&userActions.update">用户</a-button>
-        <a-button type="warn" v-if="roleActions.update" @click="showUpdateModal(record)">更新</a-button>
+        <a-button type="primary" v-if="actionActions.list&&actionActions.update">权限</a-button>
+        <a-button v-if="userActions.list&&userActions.update" @click="bindUsers(record)">用户</a-button>
         <a-button type="danger" v-if="roleActions.delete" @click="handleDelRole(record.id)">删除</a-button>
       </a-space>
     </template>
@@ -54,8 +68,11 @@
 
   <!-- Modal -->
   <RoleModal :visible="roleModal" @handleRole="handleRole"
-             @cancel="handleCancel"
-             :action="modalType" :data="formState"/>
+             @cancel="handleCancel" :data="formState"/>
+
+  <UserTableModal :visible="userTableModal" :datasource="userDatasource" :total="user_total" :current="user_current"
+                  :page-size="user_pageSize" @handleCancel="handleUserTableCancel"
+                  @handleTableChange="handleUserTableModalChange" :current-role-name="currentEditRecord.name"/>
 </template>
 
 <script lang="ts">
@@ -63,8 +80,8 @@ import {computed, defineComponent, reactive, ref, toRefs, UnwrapRef} from 'vue'
 import {useRoute} from 'vue-router'
 import {Permission} from "@/interface/user/permission";
 import {checkPerms, getPerms} from "@/utils/permsUtil";
-import {PlusCircleOutlined} from '@ant-design/icons-vue';
-import {addRole, delRole, getRoleList, updateRole} from '@/api/setting'
+import {EditOutlined, PlusCircleOutlined} from '@ant-design/icons-vue';
+import {addRole, delRole, getRoleList, getUserList, updateRole} from '@/api/setting'
 import UserModal from "@/components/modal/UserModal.vue";
 import {Actions} from "@/interface/user/actions";
 import {TableState} from 'ant-design-vue/es/table/interface'
@@ -72,12 +89,13 @@ import {message} from "ant-design-vue";
 import user from "@/store/modules/user";
 import {RoleFormState} from "@/interface/setting/user";
 import RoleModal from "@/components/modal/RoleModal.vue";
+import UserTableModal from "@/components/modal/UserTableModal.vue";
 
 type Pagination = TableState['pagination']
 
 export default defineComponent({
-  name: "User",
-  components: {RoleModal, UserModal, PlusCircleOutlined},
+  name: "Role",
+  components: {UserTableModal, RoleModal, UserModal, PlusCircleOutlined, EditOutlined},
   setup() {
     const formRef = ref()
     const route = useRoute()
@@ -86,6 +104,7 @@ export default defineComponent({
     // 权限
     const userActions: Actions = checkPerms('user', perms)
     const roleActions: Actions = checkPerms('role', perms)
+    const actionActions: Actions = checkPerms('action', perms)
 
     const formState: UnwrapRef<RoleFormState> = reactive({
       role_name: ''
@@ -98,7 +117,14 @@ export default defineComponent({
       current: 1,
       pageSize: 10,
       roleModal: false,
-      modalType: 'add', // add|update
+      userTableModal: false,
+      roleValue: '',
+      showEditCell: false,
+      currentEditRecord: {id: 0, name: ''},
+      user_total: 0,
+      user_current: 1,
+      user_pageSize: 15,
+      user_loading: false
     })
 
     const roleName = computed(() => formState.role_name)
@@ -128,10 +154,11 @@ export default defineComponent({
       {
         title: '角色名',
         dataIndex: 'role_name',
+        slots: {customRender: 'role'}
       },
       {
         title: '操作',
-        width: '300px',
+        width: '500px',
         align: 'center',
         slots: {customRender: 'operation'},
       }
@@ -142,13 +169,6 @@ export default defineComponent({
       data.pageSize = page?.pageSize || 10
       roleList()
     }
-
-    const showUpdateModal = (record: any) => {
-      formState.id = record.id
-      formState.role_name = record.role_name
-      data.modalType = 'update'
-      data.roleModal = true
-    };
 
     // 新增or update角色
     const handleRole = (item: RoleFormState) => {
@@ -173,12 +193,12 @@ export default defineComponent({
       setTimeout(() => {
         handleCancel()
         roleList()
-      }, 1200)
+        cancelRoleEdit()
+      }, 800)
     }
 
     const handleCancel = () => {
       data.roleModal = false
-      data.modalType = 'add'
       resetFields()
     }
 
@@ -191,12 +211,76 @@ export default defineComponent({
       })
     }
 
+    // 角色编辑
+    const editRoleCell = (record: any) => {
+      data.currentEditRecord = record
+      data.showEditCell = true
+      data.roleValue = record.role_name
+    }
+    const cancelRoleEdit = () => {
+      data.currentEditRecord = {id: 0, name: ""}
+      data.roleValue = ''
+      data.showEditCell = false
+    }
+    const handleUpdateRole = () => {
+      if (data.roleValue && data.roleValue.length > 0) {
+        handleRole({id: data.currentEditRecord.id, role_name: data.roleValue})
+      }
+    }
+
+    // 分配用户
+    const userDatasource = ref([])
+    const bindUsers = (record: any) => {
+      data.userTableModal = true
+      data.currentEditRecord = {id: record.id, name: record.role_name}
+      userList()
+    }
+
+    const handleUserTableCancel = () => {
+      data.userTableModal = false
+      userDatasource.value = []
+    }
+
+    const handleUserTableModalChange = (page: Pagination) => {
+      data.user_current = page?.current || 1
+      data.user_pageSize = page?.pageSize || 15
+      userList()
+    }
+
+    // 获取用户
+    const userList = () => {
+      data.user_loading = true
+      getUserList({current: data.user_current, page_size: data.user_pageSize}).then(res => {
+        if (res.code === 200) {
+          data.user_loading = false
+          data.user_total = res.data.total
+          userDatasource.value = res.data.rows
+        }
+      })
+    }
+
     return {
       formRef,
       formState,
-      perms, queryRole, resetFields, userActions, roleActions,
-      ...toRefs(data), columns, handleCancel,
-      handleTableChange, showUpdateModal, handleRole, handleDelRole
+      perms,
+      queryRole,
+      resetFields,
+      userActions,
+      roleActions,
+      actionActions,
+      ...toRefs(data),
+      columns,
+      handleCancel,
+      bindUsers,
+      userDatasource,
+      handleUserTableCancel,
+      handleTableChange,
+      handleRole,
+      handleDelRole,
+      editRoleCell,
+      cancelRoleEdit,
+      handleUpdateRole,
+      handleUserTableModalChange
     }
   }
 })
