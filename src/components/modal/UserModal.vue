@@ -21,13 +21,11 @@
 <script lang="ts">
 import {defineComponent, reactive, ref, toRaw, UnwrapRef, watch} from 'vue'
 import {UserFormState} from "@/interface/setting/user";
-import {LockOutlined, UserOutlined} from '@ant-design/icons-vue'
 import {RuleObject} from "ant-design-vue/es/form/interface";
 
 export default defineComponent({
   name: "UserModal",
   emits: ['cancel', 'handleUser'],
-  components: [UserOutlined, LockOutlined],
   props: {
     visible: {
       type: Boolean,

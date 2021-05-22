@@ -80,9 +80,9 @@ export default defineComponent({
       }
 
       getToken(credentials).then(async res => {
-        await store.dispatch(UPDATE_USER_INFO, res.data).then(
-            router.replace({name: 'layout'}).then()
-        )
+        await store.dispatch(UPDATE_USER_INFO, res.data).then(() => {
+          router.replace({name: 'layout'})
+        })
       }).catch(() => {
         unRef.value && unRef.value.refreshCaptcha()
         phRef.value && phRef.value.enableLoginButton()

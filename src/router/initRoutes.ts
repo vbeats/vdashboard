@@ -22,6 +22,7 @@ function childrenRoute(): RouteRecordRaw[] {
     const menus: Array<Menu> = storage.get('user')?.menus || store.getters.getUserInfo.user.menus
     let routes = new Array<RouteRecordRaw>()
 
+    menus && menus.length >= 1 &&
     menus.forEach(item => {
         if (item.children && item.children.length > 0) {
             item.children.forEach(child => addRoute(item.key, child, routes))

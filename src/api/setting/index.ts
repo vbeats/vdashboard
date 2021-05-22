@@ -42,3 +42,20 @@ export function delRole(id: number): Promise<any> {
 export function updateUserRole(param: UserRoleState): Promise<any> {
     return axios.post('/admin/user/updateRole', param)
 }
+
+export function getRoleUserList(page: Page, roleName: string): Promise<any> {
+    return axios.post('/admin/user/listByRole', {...page, role_name: roleName})
+}
+
+// 要更新的user id集合, 要取消该角色的user id集合
+export function updateUserRoles(selected_keys: number[], un_selected_keys: number[], role_id: number): Promise<any> {
+    return axios.post('/admin/user/updateRoles', {selected_keys, un_selected_keys, role_id})
+}
+
+export function getActionList(id: number): Promise<any> {
+    return axios.post('/admin/action/list', {id})
+}
+
+export function updateRoleActions(changed_items: Array<any>, role_id: number, role_name: string): Promise<any> {
+    return axios.post('/admin/action/update', {changed_items, role_id, role_name})
+}

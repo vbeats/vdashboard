@@ -1,11 +1,11 @@
 <template>
-  <a-modal :visible="visible" title="修改密码" @ok="handleOk" @cancel="handleCancel">
+  <a-modal :visible="visible" title="修改密码" @cancel="handleCancel" @ok="handleOk">
     <a-form
         ref="formRef"
         :model="formState"
-        label-align="left" :rules="rules"
+        :rules="rules" label-align="left"
     >
-      <a-form-item name="password" :wrapperCol="{span:18}" label="密码" :label-col="{span:4}">
+      <a-form-item :label-col="{span:4}" :wrapperCol="{span:18}" label="密码" name="password">
         <a-input v-model:value="formState.password" placeholder="密码" type="password"/>
       </a-form-item>
     </a-form>
@@ -14,7 +14,6 @@
 
 <script lang="ts">
 import {defineComponent, reactive, ref, UnwrapRef} from 'vue'
-import {LockOutlined, UserOutlined} from '@ant-design/icons-vue'
 import {updateUserSelf} from "@/api/setting";
 import encrypt from "@/utils/crypto";
 import {message} from "ant-design-vue";
@@ -26,7 +25,6 @@ interface FormState {
 export default defineComponent({
   name: "UserInfoModal",
   emits: ['cancel', 'handleUser'],
-  components: [UserOutlined, LockOutlined],
   props: {
     visible: {
       type: Boolean,

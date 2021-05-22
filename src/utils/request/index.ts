@@ -3,6 +3,7 @@ import store from '@/store'
 import {LOGOUT} from '@/store/actionTypes'
 import {message} from "ant-design-vue"
 import router from "@/router";
+import storage from '@/utils/storage'
 
 const axios: AxiosInstance = request.create({
     baseURL: import.meta.env.VITE_APP_API,
@@ -20,7 +21,7 @@ const errorHandler = (error: any): any => {
 
 // 请求拦截器
 axios.interceptors.request.use((config: AxiosRequestConfig) => {
-    config.headers.common['token'] = store.getters.getUserInfo.user.access_token
+    config.headers.common['token'] = store.getters.getUserInfo.user.access_token || storage.get('access_token')
     return config;
 }, errorHandler)
 

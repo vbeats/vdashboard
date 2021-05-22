@@ -26,9 +26,7 @@ Sponsor [![paypal.me/bootvue](https://cdn.jsdelivr.net/gh/boot-vue/pics@main/ico
 
 ## ~~store.js~~
 
-`expire`插件 set/getExpiration: 毫秒时间戳
-
-后期替换掉
+已经替换为`@vbeats/vstore`
 
 ## axios
 
@@ -52,9 +50,9 @@ Sponsor [![paypal.me/bootvue](https://cdn.jsdelivr.net/gh/boot-vue/pics@main/ico
 
 ## 菜单权限
 
-> 一个用户只能属于一个role角色, 我定的, 咋的了
+> 一个用户只能属于一个role, 我定的, 咋的了
 
-> permissions 字段格式 ["按钮:add,list,update,delete"]或["list"] (菜单是否可以查看)
+> permissions 字段格式 ["按钮:add,list,update,delete"]或["list"] (菜单是否可以查看),`util`包下有`permsUtil`工具类处理权限字段
 
 > 按钮非特指, 对应前端当前页面下同类型的所有按钮, 需要前后端约定好
 
@@ -119,11 +117,15 @@ Sponsor [![paypal.me/bootvue](https://cdn.jsdelivr.net/gh/boot-vue/pics@main/ico
         <td><img src="https://cdn.jsdelivr.net/gh/boot-vue/pics@main/vdashboard/2.png"></td>
     </tr>
     <tr>
+        <td><img src="https://cdn.jsdelivr.net/gh/boot-vue/pics@main/vdashboard/3.png"></td>
         <td><img src="https://cdn.jsdelivr.net/gh/boot-vue/pics@main/vdashboard/4.png"></td>
-        <td><img src="https://cdn.jsdelivr.net/gh/boot-vue/pics@main/vdashboard/5.png"></td>
     </tr>
     <tr>
+        <td><img src="https://cdn.jsdelivr.net/gh/boot-vue/pics@main/vdashboard/5.png"></td>
         <td><img src="https://cdn.jsdelivr.net/gh/boot-vue/pics@main/vdashboard/6.png"></td>
+    </tr>
+<tr>
         <td><img src="https://cdn.jsdelivr.net/gh/boot-vue/pics@main/vdashboard/7.png"></td>
+        <td><img src="https://cdn.jsdelivr.net/gh/boot-vue/pics@main/vdashboard/8.png"></td>
     </tr>
 </table>

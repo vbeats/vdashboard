@@ -82,7 +82,7 @@ import {computed, defineComponent, reactive, Ref, ref, toRefs, UnwrapRef} from '
 import {useRoute} from 'vue-router'
 import {Permission} from "@/interface/user/permission";
 import {checkPerms, getPerms} from "@/utils/permsUtil";
-import {EditOutlined, PlusCircleOutlined} from '@ant-design/icons-vue';
+import {EditOutlined, PlusCircleOutlined, UserOutlined} from '@ant-design/icons-vue';
 import {addUser, getRoleList, getUserList, updateUser, updateUserRole, updateUserStatus} from '@/api/setting'
 import UserModal from "@/components/modal/UserModal.vue";
 import {Actions} from "@/interface/user/actions";
@@ -113,7 +113,7 @@ interface RoleItem {
 
 export default defineComponent({
   name: "User",
-  components: {UserModal, PlusCircleOutlined, EditOutlined},
+  components: {UserModal, PlusCircleOutlined, EditOutlined, UserOutlined},
   setup() {
     const formRef = ref()
     const route = useRoute()
@@ -165,7 +165,7 @@ export default defineComponent({
     }
 
     // 获取用户列表
-    userList()
+    userActions.list && userList()
 
     const columns = [
       {

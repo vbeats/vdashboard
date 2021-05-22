@@ -12,15 +12,14 @@
 </template>
 
 <script lang="ts">
-import {computed, defineComponent, ref, watchEffect} from 'vue'
-import {ColumnProps, TableState} from 'ant-design-vue/es/table/interface'
-
-type Key = ColumnProps['key'];
+import {computed, defineComponent, ref, unref, watch} from 'vue'
+import {TableState} from 'ant-design-vue/es/table/interface'
+import _ from "lodash";
 
 type Pagination = TableState['pagination']
+type Keys = Array<number>
 
 interface DataItem {
-  key: Key,
   id: number,
   username: string,
   role_name?: string
@@ -28,7 +27,7 @@ interface DataItem {
 
 export default defineComponent({
   name: "UserTableModal",
-  emits: ['handleCancel', 'handleTableChange'],
+  emits: ['handleCancel', 'handleTableChange', 'handleOk'],
   props: {
     loading: Boolean,
     datasource: {type: Array, required: true},
@@ -36,11 +35,16 @@ export default defineComponent({
     current: Number,
     pageSize: Number,
     visible: Boolean,
-    currentRoleName: String
+    currentRoleName: String,
+    selectedKeys: {type: Array, required: true},
   },
   setup(props, {emit}) {
+    const selectedKeys = ref<number[]>([])
+    const unSelectedKeys = ref<number[]>([])
 
-    const selectKeys = ref<Key[]>([])
+    watch(() => props.selectedKeys, (v: any) => {
+      selectedKeys.value = v || []
+    })
 
     const handleCancel = () => {
       emit('handleCancel')
@@ -57,28 +61,21 @@ export default defineComponent({
       emit('handleTableChange', page)
     }
 
-    watchEffect(() => {
-      const items = props.datasource
-      items?.forEach((i: any) => {
-        if (i.role_name && i.role_name === props.currentRoleName) {
-          selectKeys.value.push(i.id)
-        }
-      })
-    })
-
     const changeSelectKeys = (selected: boolean, rows: DataItem[]) => {
       rows.forEach((record: DataItem) => {
-        if (selected && selectKeys.value.indexOf(record.id) < 0) {
-          selectKeys.value.push(record.id)
-        } else if (!selected && selectKeys.value.indexOf(record.id) >= 0) {
-          selectKeys.value.splice(selectKeys.value.indexOf(record.id), 1)
+        if (selected) {
+          selectedKeys.value = _.union(selectedKeys.value, [record.id])
+          _.remove(unSelectedKeys.value, i => i === record.id)
+        } else {
+          unSelectedKeys.value = _.union(unSelectedKeys.value, [record.id])
+          _.remove(selectedKeys.value, i => i === record.id)
         }
       })
     }
 
     const rowSelection = computed(() => {
       return {
-        selectedRowKeys: selectKeys,
+        selectedRowKeys: unref(selectedKeys),
         onSelect: (record: DataItem, selected: boolean, rows: DataItem[]) => {
           changeSelectKeys(selected, [record])
         },
@@ -88,8 +85,12 @@ export default defineComponent({
       }
     })
 
+    const handleOk = () => {
+      emit('handleOk', {keys: selectedKeys.value, unKeys: unSelectedKeys.value})
+    }
+
     return {
-      handleCancel, columns, handleTableChange, rowSelection, selectKeys
+      handleCancel, columns, handleTableChange, rowSelection, handleOk
     }
   }
 })

@@ -15,12 +15,10 @@
 <script lang="ts">
 import {defineComponent, reactive, ref, toRaw, UnwrapRef} from 'vue'
 import {RoleFormState} from "@/interface/setting/user";
-import {LockOutlined, UserOutlined} from '@ant-design/icons-vue'
 
 export default defineComponent({
   name: "RoleModal",
   emits: ['cancel', 'handleRole'],
-  components: [UserOutlined, LockOutlined],
   props: {
     visible: {
       type: Boolean,

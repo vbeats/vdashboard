@@ -21,7 +21,7 @@ export function handleRouterAuth(router: Router): void {
             }
         } else {
             // 存在token
-            checkUserRoutes(to, from, next, store.getters.getUserInfo.user.menus || [])
+            await checkUserRoutes(to, from, next, store.getters.getUserInfo.user.menus || [])
         }
     })
 
@@ -31,9 +31,10 @@ export function handleRouterAuth(router: Router): void {
 }
 
 // 用户路由权限校验
-function checkUserRoutes(to: RouteLocationNormalized, from: RouteLocationNormalized, next: NavigationGuardNext, menus: Array<Menu>) {
+async function checkUserRoutes(to: RouteLocationNormalized, from: RouteLocationNormalized, next: NavigationGuardNext, menus: Array<Menu>) {
     if (menus.length === 0) {
         message.error('403 Forbidden', 8)
+        await store.dispatch(LOGOUT).then(() => next('/login'))
         return
     }
 
