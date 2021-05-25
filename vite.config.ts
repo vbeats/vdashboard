@@ -3,6 +3,7 @@ import {defineConfig} from 'vite'
 import vue from '@vitejs/plugin-vue'
 import tsconfigPaths from 'vite-tsconfig-paths'
 
+console.log(process.env.NODE_ENV)
 export default defineConfig({
     plugins: [
         vue(),
@@ -19,6 +20,7 @@ export default defineConfig({
         cors: true
     },
     build: {
+        sourcemap: process.env.NODE_ENV === 'development',
         rollupOptions: {
             output: {
                 manualChunks: (id) => {

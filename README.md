@@ -10,7 +10,7 @@ Sponsor [![paypal.me/bootvue](https://cdn.jsdelivr.net/gh/boot-vue/pics@main/ico
 
 ## crypto
 
-`utils`包下`crypto.ts` `encrypt`RSA非对称加密 公钥加密 需要替换
+`utils`包下`crypto.ts` `encrypt`RSA非对称加密 公钥加密
 
 ## token验证
 
