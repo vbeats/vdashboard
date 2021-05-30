@@ -16,7 +16,6 @@ export interface UserInfo {
     user_id: number,
     tenant_id: number,
     username: string,
-    nickname?: string,
     phone?: string,
     avatar?: string,
     role_id: number,

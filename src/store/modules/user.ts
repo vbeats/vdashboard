@@ -9,7 +9,6 @@ class DefaultUser implements UserInfo {
     access_token = ''
     refresh_token = ''
     username = ''
-    nickname = ''
     role_id = 0
     phone = ''
     avatar = ''

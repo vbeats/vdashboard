@@ -68,7 +68,7 @@ export default defineComponent({
   components: {UserOutlined, LockOutlined, ShopOutlined},
   setup(props, {emit}) {
     const formState: UnwrapRef<FormState> = reactive({
-      tenant: import.meta.env.VITE_APP_TENANT === 'show' ? '' : '000000',
+      tenant: import.meta.env.VITE_APP_TENANT === 'show' ? '' : import.meta.env.VITE_APP_TENANT_CODE,
       username: '',
       password: '',
       captcha: '',

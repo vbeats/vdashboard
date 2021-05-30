@@ -15,11 +15,11 @@ export function addUser(user: UserFormState): Promise<any> {
 }
 
 export function updateUserStatus(id: number): Promise<any> {
-    return axios.post('/admin/user/updateStatus', {id})
+    return axios.post('/admin/user/update_atatus', {id})
 }
 
 export function updateUserSelf(user: UserFormState): Promise<any> {
-    return axios.post('/admin/user/updateSelf', user)
+    return axios.post('/admin/user/update_self', user)
 }
 
 /*角色*/
@@ -40,16 +40,16 @@ export function delRole(id: number): Promise<any> {
 }
 
 export function updateUserRole(param: UserRoleState): Promise<any> {
-    return axios.post('/admin/user/updateRole', param)
+    return axios.post('/admin/user/update_role', param)
 }
 
 export function getRoleUserList(page: Page, roleName: string): Promise<any> {
-    return axios.post('/admin/user/listByRole', {...page, role_name: roleName})
+    return axios.post('/admin/user/list_by_role', {...page, role_name: roleName})
 }
 
 // 要更新的user id集合, 要取消该角色的user id集合
 export function updateUserRoles(selected_keys: number[], un_selected_keys: number[], role_id: number): Promise<any> {
-    return axios.post('/admin/user/updateRoles', {selected_keys, un_selected_keys, role_id})
+    return axios.post('/admin/user/update_roles', {selected_keys, un_selected_keys, role_id})
 }
 
 export function getActionList(id: number): Promise<any> {

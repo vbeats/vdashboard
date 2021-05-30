@@ -17,7 +17,7 @@
       </a-menu>
     </template>
   </a-dropdown>
-  <UserInfoModal :visible="userInfoModal" @cancel="handlCancel"/>
+  <UserInfoModal :visible="userInfoModal" @cancel="handleCancel"/>
 </template>
 
 <script>
@@ -40,7 +40,7 @@ export default defineComponent({
 
     const data = reactive({
       avatar: user.avatar || Avatar,
-      username: user.nickname || user.username,
+      username: user.username,
       userInfoModal: false
     })
 
@@ -56,13 +56,13 @@ export default defineComponent({
       }
     }
 
-    const handlCancel = () => {
+    const handleCancel = () => {
       data.userInfoModal = false
     }
 
     return {
       ...toRefs(data),
-      handleMenuClick, handlCancel
+      handleMenuClick, handleCancel
     }
   }
 })

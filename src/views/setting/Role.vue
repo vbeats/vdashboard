@@ -73,7 +73,7 @@
                :datasource="actions"/>
 
   <RoleModal :visible="roleModal" @handleRole="handleRole"
-             @cancel="handleCancel" :data="formState"/>
+             @cancel="handleCancel" />
 
   <UserTableModal :visible="userTableModal" :datasource="userDatasource" :total="user_total" :current="user_current"
                   :page-size="user_pageSize" @handleCancel="handleUserTableCancel" :selected-keys="selectedKeys"

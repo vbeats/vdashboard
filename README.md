@@ -56,8 +56,6 @@ Sponsor [![paypal.me/bootvue](https://cdn.jsdelivr.net/gh/boot-vue/pics@main/ico
 
 > 按钮非特指, 对应前端当前页面下同类型的所有按钮, 需要前后端约定好
 
-- 非后台管理员类型用户 `user role_id`为0
-
 - 二级菜单 父一级 `permissions` ["list"]或者没有, 对应 `role_menu_action actions`字段, 0(有查看权限)/-1(没有查看权限)
 
 ```json

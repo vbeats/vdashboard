@@ -1,5 +1,5 @@
 <template>
-  <a-modal :visible="visible" title="新增角色" @ok="handleOk" @cancel="handleCancel">
+  <a-modal :visible="visible" title="新增角色" @ok="handleOk" @cancel="handleCancel" destroy-on-close>
     <a-form
         ref="formRef"
         :model="formState"
@@ -23,8 +23,7 @@ export default defineComponent({
     visible: {
       type: Boolean,
       required: true
-    },
-    data: {type: Object, required: false}
+    }
   },
   setup(props, {emit}) {
 
@@ -45,6 +44,7 @@ export default defineComponent({
           .validate()
           .then(() => {
             emit('handleRole', toRaw(formState))
+            setTimeout(() => formRef.value.resetFields(), 500)
           })
     }
 
