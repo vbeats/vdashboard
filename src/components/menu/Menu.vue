@@ -64,7 +64,7 @@ export default defineComponent({
         data.selectedKeys = [i.key]
       }
       if (i.default_open) {
-        data.openKeys = [i.key]
+        data.openKeys.push(i.key)
       }
     })
 
