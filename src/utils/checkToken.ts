@@ -17,8 +17,8 @@ const checkToken = async (): Promise<void> => {
 
     if (!user || !refresh_token || refresh_token_expire / 1000 <= 320) { // refresh_token有效时间不足一次检查周期5分钟
         clearTimeout(timer)
-        await store.dispatch(LOGOUT).then()
-        router.replace({name: 'login'}).then()
+        await store.dispatch(LOGOUT)
+        await router.replace({name: 'login'})
         return
     }
 
@@ -28,10 +28,8 @@ const checkToken = async (): Promise<void> => {
     }
 
     // 获取新的token
-    getToken({type: 0, refresh_token}).then(async res => {
-        await store.dispatch(UPDATE_USER_INFO, res.data).then()
-    })
-
+    const res = await getToken({type: 0, refresh_token, platform: parseInt(import.meta.env.VITE_APP_PLATFORM)})
+    await store.dispatch(UPDATE_USER_INFO, res.data)
 }
 
 export default checkToken

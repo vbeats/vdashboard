@@ -8,10 +8,5 @@ export interface UserFormState {
 
 export interface RoleFormState {
     id?: number,
-    role_name: string
-}
-
-export interface UserRoleState {
-    user_id: number,
-    role_name: string
+    role_name: string,
 }

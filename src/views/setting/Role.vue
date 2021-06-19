@@ -73,7 +73,7 @@
                :datasource="actions"/>
 
   <RoleModal :visible="roleModal" @handleRole="handleRole"
-             @cancel="handleCancel" />
+             @cancel="handleCancel"/>
 
   <UserTableModal :visible="userTableModal" :datasource="userDatasource" :total="user_total" :current="user_current"
                   :page-size="user_pageSize" @handleCancel="handleUserTableCancel" :selected-keys="selectedKeys"
@@ -137,7 +137,7 @@ export default defineComponent({
       userTableModal: false,
       roleValue: '',
       showEditCell: false,
-      currentEditRecord: {id: 0, name: ''},
+      currentEditRecord: {id: 0, role_name: ''},
       user_total: 0,
       user_current: 1,
       user_pageSize: 10,
@@ -174,6 +174,10 @@ export default defineComponent({
         title: '角色名',
         dataIndex: 'role_name',
         slots: {customRender: 'role'}
+      },
+      {
+        title: '租户',
+        dataIndex: 'tenant_name',
       },
       {
         title: '操作',
@@ -237,13 +241,16 @@ export default defineComponent({
       data.roleValue = record.role_name
     }
     const cancelRoleEdit = () => {
-      data.currentEditRecord = {id: 0, name: ""}
+      data.currentEditRecord = {id: 0, role_name: ''}
       data.roleValue = ''
       data.showEditCell = false
     }
     const handleUpdateRole = () => {
       if (data.roleValue && data.roleValue.length > 0) {
-        handleRole({id: data.currentEditRecord.id, role_name: data.roleValue})
+        handleRole({
+          id: data.currentEditRecord.id,
+          role_name: data.roleValue,
+        })
       }
     }
 
@@ -253,7 +260,7 @@ export default defineComponent({
     const initKeys = ref<number[]>([])
 
     const bindUsers = (record: any) => {
-      data.currentEditRecord = {id: record.id, name: record.role_name}
+      data.currentEditRecord = {id: record.id, role_name: record.role_name}
       userList(true).then(() => data.userTableModal = true)
     }
 
@@ -278,7 +285,7 @@ export default defineComponent({
       await getRoleUserList({
         current: data.user_current,
         page_size: data.user_pageSize
-      }, data.currentEditRecord.name).then(res => {
+      }, data.currentEditRecord.role_name).then(res => {
         if (res.code === 200) {
           data.user_loading = false
           data.user_total = res.data.total
@@ -310,7 +317,7 @@ export default defineComponent({
 
     const handleActionModalCancel = () => {
       data.actionModal = false
-      data.currentEditRecord = {id: 0, name: ''}
+      data.currentEditRecord = {id: 0, role_name: ''}
     }
 
     const handleUpdateRoleAction = (items: any) => {
@@ -318,7 +325,7 @@ export default defineComponent({
         handleActionModalCancel()
         return
       }
-      updateRoleActions(items, data.currentEditRecord.id, data.currentEditRecord.name).then(() => {
+      updateRoleActions(items, data.currentEditRecord.id, data.currentEditRecord.role_name).then(() => {
         message.success('保存成功')
         setTimeout(handleActionModalCancel, 800)
       })

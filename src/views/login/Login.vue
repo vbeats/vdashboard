@@ -54,6 +54,7 @@ export default defineComponent({
     const login = (params: any): void => {
       let credentials: Credentials = {
         type: -1,
+        platform: parseInt(import.meta.env.VITE_APP_PLATFORM)
       }
 
       switch (params.type) {
@@ -65,7 +66,7 @@ export default defineComponent({
             key: params.key,
             code: params.captcha,
             type: 1,
-            platform: 0
+            platform: parseInt(import.meta.env.VITE_APP_PLATFORM)
           }
           break
         case 1:
@@ -74,15 +75,14 @@ export default defineComponent({
             phone: params.phone,
             code: params.code,
             type: 2,
-            platform: 0
+            platform: parseInt(import.meta.env.VITE_APP_PLATFORM)
           }
           break
       }
 
       getToken(credentials).then(async res => {
-        await store.dispatch(UPDATE_USER_INFO, res.data).then(() => {
-          router.replace({name: 'layout'})
-        })
+        await store.dispatch(UPDATE_USER_INFO, res.data)
+        await router.replace({name: 'layout'})
       }).catch(() => {
         unRef.value && unRef.value.refreshCaptcha()
         phRef.value && phRef.value.enableLoginButton()

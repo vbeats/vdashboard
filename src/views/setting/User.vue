@@ -28,7 +28,7 @@
     </a-form-item>
   </a-form>
   <!--添加-->
-  <a-button type="primary" class="mt-4" v-if="userActions.add" @click="userModal=true">
+  <a-button type="primary" class="mt-4" v-if="userActions.add&&roleActions.list" @click="showAddModal">
     <template #icon>
       <PlusCircleOutlined/>
     </template>
@@ -43,21 +43,9 @@
            :loading="loading"
            @change="handleTableChange" :scroll="{x:1000}" class="mt-8"
   >
-    <!--  角色单元格  -->
-    <template #role="{text,record}">
-      <div class="relative">
-        <a-auto-complete
-            v-if="showRoleEdit&&currentEditRecordId===record.id&&userActions.list&&userActions.update&&roleActions.list"
-            autofocus
-            v-model:value="roleValue" :options="items"
-            placeholder="选择角色" class="w-full"
-            @search="fetchRole" @select="saveRole(roleValue,record)" @blur="cancelRoleEdit"
-        />
-        <div v-else>
-          {{ text || '' }}
-          <EditOutlined @click="editRoleCell(record)" class="ml-2"/>
-        </div>
-      </div>
+    <template #status="{record}">
+      <a-tag color="#87d068" v-if="record.status==='正常'">正常</a-tag>
+      <a-tag color="pink" v-else>禁用</a-tag>
     </template>
     <template #operation="{ record }" v-if="roleActions.update||userActions.update">
       <a-space>
@@ -73,7 +61,7 @@
 
   <!-- Modal -->
   <UserModal :visible="userModal" @handleUser="handleUser"
-             @cancel="handleCancel"
+             @cancel="handleCancel" :roles="roles"
              :action="modalType" :data="userFormState"/>
 </template>
 
@@ -83,7 +71,7 @@ import {useRoute} from 'vue-router'
 import {Permission} from "@/interface/user/permission";
 import {checkPerms, getPerms} from "@/utils/permsUtil";
 import {EditOutlined, PlusCircleOutlined, UserOutlined} from '@ant-design/icons-vue';
-import {addUser, getRoleList, getUserList, updateUser, updateUserRole, updateUserStatus} from '@/api/setting'
+import {addUser, getRoleList, getUserList, updateUser, updateUserStatus} from '@/api/setting'
 import UserModal from "@/components/modal/UserModal.vue";
 import {Actions} from "@/interface/user/actions";
 import {TableState} from 'ant-design-vue/es/table/interface'
@@ -91,7 +79,6 @@ import {UserFormState} from "@/interface/setting/user";
 import {message} from "ant-design-vue";
 import user from "@/store/modules/user";
 import encrypt from "@/utils/crypto";
-import _ from "lodash";
 
 type Pagination = TableState['pagination']
 
@@ -105,10 +92,6 @@ interface DataItem {
   role_name?: number;
   phone?: string;
   create_time: string
-}
-
-interface RoleItem {
-  value: string
 }
 
 export default defineComponent({
@@ -136,13 +119,13 @@ export default defineComponent({
       pageSize: 10,
       userModal: false,
       modalType: 'add', // add|update
-      showRoleEdit: false,
-      currentEditRecordId: 0
     })
 
     const datasource: Ref<DataItem[]> = ref([])
 
     const roleValue: Ref<string> = ref('')
+
+    const roles: Ref<object> = ref()
 
     const username = computed(() => formState.username)
 
@@ -173,13 +156,21 @@ export default defineComponent({
         dataIndex: 'username',
       },
       {
+        title: '手机号',
+        dataIndex: 'phone',
+      },
+      {
+        title: '租户',
+        dataIndex: 'tenant_name'
+      },
+      {
         title: '角色',
         dataIndex: 'role_name',
-        slots: {customRender: 'role'},
       },
       {
         title: '状态',
-        dataIndex: 'status',
+        align: 'center',
+        slots: {customRender: 'status'},
       },
       {
         title: '加入时间',
@@ -199,7 +190,9 @@ export default defineComponent({
       userList()
     }
 
-    const showUpdateModal = (record: any) => {
+    const showUpdateModal = async (record: any) => {
+      const rs = await getRoleList({current: 1, page_size: 10000})
+      roles.value = rs.data.rows || []
       userFormState.value = {...record}
       data.modalType = 'update'
       data.userModal = true
@@ -236,6 +229,7 @@ export default defineComponent({
     }
 
     const handleCancel = () => {
+      roles.value = []
       data.userModal = false
       data.modalType = 'add'
       userFormState.value = {}
@@ -251,56 +245,31 @@ export default defineComponent({
       })
     }
 
-    // 角色单元格
-    const editRoleCell = (record: any) => {
-      roleValue.value = record.role_name
-      data.currentEditRecordId = record.id
-      data.showRoleEdit = true
-    }
-
-    const items: Ref<Array<RoleItem>> = ref([])
-
-    let lastFetchId: number = 0
-
-    const fetchRole = _.debounce((value: string): void => {
-      if (!value || value.length === 0) return
-      lastFetchId += 1;
-      const fetchId = lastFetchId;
-      items.value = [];
-      // 加载数据
-      getRoleList({current: 1, page_size: 1000}, value).then(res => {
-        if (res.code === 200 && res.data && res.data.total && res.data.total > 0 && fetchId === lastFetchId) {
-          items.value = _.map(res.data.rows, (i): RoleItem => {
-            return {value: i.role_name}
-          })
-        }
-      })
-    }, 800)
-
-    const saveRole = (value: string, record: any) => {
-      if (value && value.length > 0) {
-        // 绑定角色
-        updateUserRole({user_id: record.id, role_name: value}).then(() => {
-          cancelRoleEdit()
-          userList()
-        })
-      }
-    }
-
-    const cancelRoleEdit = () => {
-      data.showRoleEdit = false
-      data.currentEditRecordId = 0
-      items.value = []
-      roleValue.value = ''
+    const showAddModal = async () => {
+      const rs = await getRoleList({current: 1, page_size: 10000})
+      roles.value = rs.data.rows || []
+      data.userModal = true
     }
 
     return {
       formRef,
-      formState, datasource,
-      perms, queryUser, resetFields, userActions, roleActions,
-      ...toRefs(data), columns, handleCancel,
-      handleTableChange, userFormState, showUpdateModal, handleUser, handleUpdateUserStatus,
-      editRoleCell, roleValue, fetchRole, saveRole, cancelRoleEdit, items
+      formState,
+      datasource,
+      perms,
+      queryUser,
+      resetFields,
+      userActions,
+      roleActions,
+      ...toRefs(data), roles,
+      columns,
+      handleCancel,
+      handleTableChange,
+      userFormState,
+      showUpdateModal,
+      handleUser,
+      handleUpdateUserStatus,
+      roleValue,
+      showAddModal
     }
   }
 })

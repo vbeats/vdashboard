@@ -3,7 +3,6 @@ import {defineConfig} from 'vite'
 import vue from '@vitejs/plugin-vue'
 import tsconfigPaths from 'vite-tsconfig-paths'
 
-console.log(process.env.NODE_ENV)
 export default defineConfig({
     plugins: [
         vue(),

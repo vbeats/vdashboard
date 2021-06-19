@@ -1,6 +1,6 @@
 import axios from '@/utils/request'
 import {Page} from '@/interface/common/page'
-import {RoleFormState, UserFormState, UserRoleState} from "@/interface/setting/user";
+import {RoleFormState, UserFormState} from "@/interface/setting/user";
 
 export function getUserList(page: Page, username?: string): Promise<any> {
     return axios.post('/admin/user/list', {...page, username})
@@ -15,7 +15,7 @@ export function addUser(user: UserFormState): Promise<any> {
 }
 
 export function updateUserStatus(id: number): Promise<any> {
-    return axios.post('/admin/user/update_atatus', {id})
+    return axios.post('/admin/user/update_status', {id})
 }
 
 export function updateUserSelf(user: UserFormState): Promise<any> {
@@ -37,10 +37,6 @@ export function addRole(role: RoleFormState): Promise<any> {
 
 export function delRole(id: number): Promise<any> {
     return axios.post('/admin/role/delete', {id})
-}
-
-export function updateUserRole(param: UserRoleState): Promise<any> {
-    return axios.post('/admin/user/update_role', param)
 }
 
 export function getRoleUserList(page: Page, roleName: string): Promise<any> {

@@ -1,5 +1,6 @@
 <template>
-  <a-modal :visible="visible" :title="action==='add'?'新增用户':'更新用户'" @ok="handleOk" @cancel="handleCancel">
+  <a-modal :visible="visible" :title="action==='add'?'新增用户':'更新用户'" @ok="handleOk" @cancel="handleCancel"
+           destroy-on-close>
     <a-form
         ref="formRef"
         :model="formState"
@@ -13,6 +14,12 @@
       </a-form-item>
       <a-form-item name="phone" :wrapperCol="{span:18}" label="手机号" :label-col="{span:4}">
         <a-input v-model:value="formState.phone" placeholder="手机号"/>
+      </a-form-item>
+      <a-form-item name="role_id" :wrapperCol="{span:18}" label="角色" :label-col="{span:4}">
+        <a-select v-model:value="formState.role_id" placeholder="选择角色">
+          <a-select-option v-for="item in roles" :key="item.id" :value="item.id">{{ item.role_name }}
+          </a-select-option>
+        </a-select>
       </a-form-item>
     </a-form>
   </a-modal>
@@ -36,6 +43,9 @@ export default defineComponent({
       required: false,
       default: 'add'
     },
+    roles: {
+      type: Array
+    },
     data: {type: Object, required: false}
   },
   setup(props, {emit}) {
@@ -53,6 +63,7 @@ export default defineComponent({
         formState.username = item.username
         formState.password = ''
         formState.phone = item.phone || ''
+        formState.role_id = item.role_id
       } else {
         formState.id = 0
         formState.username = ''
@@ -89,6 +100,9 @@ export default defineComponent({
           message: '手机号错误',
           trigger: 'blur'
         },
+      ],
+      role_id: [
+        {type: 'number', required: true, message: '角色不能为空', trigger: 'blur'},
       ]
     }
 
