@@ -16,7 +16,7 @@ export function getPerms(meta: RouteMeta): Array<Permission> {
 }
 
 
-// user []
+// login []
 export function checkPerms(action: string, perms: Array<Permission>): Actions {
     let actions: Actions = {add: false, list: false, update: false, delete: false, export: false}
 

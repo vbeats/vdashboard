@@ -82,13 +82,13 @@ Sponsor [![paypal.me/bootvue](https://cdn.jsdelivr.net/gh/boot-vue/pics@main/ico
       ],
       "children": [
         {
-          "key": "user",
+          "key": "login",
           "title": "用户管理",
           "default_select": false,
           "default_open": false,
           "permissions": [
             "role:update,list",
-            "user:add,update,list,delete"
+            "login:add,update,list,delete"
           ]
         },
         {
@@ -115,15 +115,11 @@ Sponsor [![paypal.me/bootvue](https://cdn.jsdelivr.net/gh/boot-vue/pics@main/ico
         <td><img src="https://cdn.jsdelivr.net/gh/boot-vue/pics@main/vdashboard/2.png"></td>
     </tr>
     <tr>
-        <td><img src="https://cdn.jsdelivr.net/gh/boot-vue/pics@main/vdashboard/3.png"></td>
-        <td><img src="https://cdn.jsdelivr.net/gh/boot-vue/pics@main/vdashboard/4.png"></td>
+        <td><img src="https://cdn.jsdelivr.net/gh/boot-vue/pics@main/vdashboard/11.png"></td>
+        <td><img src="https://cdn.jsdelivr.net/gh/boot-vue/pics@main/vdashboard/22.png"></td>
     </tr>
     <tr>
-        <td><img src="https://cdn.jsdelivr.net/gh/boot-vue/pics@main/vdashboard/5.png"></td>
-        <td><img src="https://cdn.jsdelivr.net/gh/boot-vue/pics@main/vdashboard/6.png"></td>
-    </tr>
-<tr>
-        <td><img src="https://cdn.jsdelivr.net/gh/boot-vue/pics@main/vdashboard/7.png"></td>
-        <td><img src="https://cdn.jsdelivr.net/gh/boot-vue/pics@main/vdashboard/8.png"></td>
+        <td><img src="https://cdn.jsdelivr.net/gh/boot-vue/pics@main/vdashboard/33.png"></td>
+        <td><img src="https://cdn.jsdelivr.net/gh/boot-vue/pics@main/vdashboard/44.png"></td>
     </tr>
 </table>

@@ -8,6 +8,12 @@
       <a-form-item name="role_name" :wrapperCol="{span:18}" label="角色名" :label-col="{span:4}">
         <a-input v-model:value="formState.role_name" placeholder="角色名"/>
       </a-form-item>
+      <a-form-item name="tid" :wrapperCol="{span:18}" label="租户" :label-col="{span:4}">
+        <a-select v-model:value="formState.tid" placeholder="选择租户" @select="handleSelectTenant">
+          <a-select-option v-for="item in tenants" :key="item.id" :value="item.id">{{ item.name }}
+          </a-select-option>
+        </a-select>
+      </a-form-item>
     </a-form>
   </a-modal>
 </template>
@@ -23,6 +29,9 @@ export default defineComponent({
     visible: {
       type: Boolean,
       required: true
+    },
+    tenants: {
+      type: Array
     }
   },
   setup(props, {emit}) {
@@ -37,6 +46,9 @@ export default defineComponent({
       role_name: [
         {required: true, message: '角色不能为空', trigger: 'blur'},
       ],
+      tid: [
+        {type: 'number', required: true, message: '租户不能为空', trigger: 'blur'}
+      ]
     }
 
     const handleOk = () => {
@@ -53,9 +65,13 @@ export default defineComponent({
       emit('cancel')
     }
 
+    const handleSelectTenant = (id: number) => {
+      console.log(id)
+    }
+
     return {
       formRef, formState,
-      handleOk, handleCancel, rules,
+      handleOk, handleCancel, rules, handleSelectTenant
     }
   }
 })

@@ -28,7 +28,7 @@
     </a-form-item>
   </a-form>
   <!--添加-->
-  <a-button type="primary" class="mt-4" v-if="roleActions.add" @click="roleModal=true">
+  <a-button type="primary" class="mt-4" v-if="roleActions.add&&tenantActions.list" @click="showAddRoleModal">
     <template #icon>
       <PlusCircleOutlined/>
     </template>
@@ -72,7 +72,7 @@
                @handleOk="handleUpdateRoleAction"
                :datasource="actions"/>
 
-  <RoleModal :visible="roleModal" @handleRole="handleRole"
+  <RoleModal :visible="roleModal" @handleRole="handleRole" :tenants="tenants"
              @cancel="handleCancel"/>
 
   <UserTableModal :visible="userTableModal" :datasource="userDatasource" :total="user_total" :current="user_current"
@@ -82,7 +82,7 @@
 </template>
 
 <script lang="ts">
-import {computed, defineComponent, reactive, ref, toRefs, UnwrapRef} from 'vue'
+import {computed, defineComponent, reactive, Ref, ref, toRefs, UnwrapRef} from 'vue'
 import {useRoute} from 'vue-router'
 import {Permission} from "@/interface/user/permission";
 import {checkPerms, getPerms} from "@/utils/permsUtil";
@@ -93,15 +93,15 @@ import {
   getActionList,
   getRoleList,
   getRoleUserList,
+  getTenantList,
+  updateAdminRoles,
   updateRole,
-  updateRoleActions,
-  updateUserRoles
+  updateRoleActions
 } from '@/api/setting'
 import UserModal from "@/components/modal/UserModal.vue";
 import {Actions} from "@/interface/user/actions";
 import {TableState} from 'ant-design-vue/es/table/interface'
 import {message} from "ant-design-vue";
-import user from "@/store/modules/user";
 import {RoleFormState} from "@/interface/setting/user";
 import RoleModal from "@/components/modal/RoleModal.vue";
 import UserTableModal from "@/components/modal/UserTableModal.vue";
@@ -109,6 +109,11 @@ import ActionModal from "@/components/modal/ActionModal.vue";
 import _ from "lodash";
 
 type Pagination = TableState['pagination']
+
+interface EditRecord {
+  id: number,
+  role_name: string,
+}
 
 export default defineComponent({
   name: "Role",
@@ -119,13 +124,16 @@ export default defineComponent({
     const perms: Array<Permission> = getPerms(route.meta)
 
     // 权限
-    const userActions: Actions = checkPerms('user', perms)
+    const adminActions: Actions = checkPerms('admin', perms)
     const roleActions: Actions = checkPerms('role', perms)
     const actionActions: Actions = checkPerms('action', perms)
+    const tenantActions: Actions = checkPerms('tenant', perms)
 
     const formState: UnwrapRef<RoleFormState> = reactive({
       role_name: ''
-    });
+    })
+
+    const tenants: Ref<Array<any>> = ref([])
 
     const data = reactive({
       rows: [],
@@ -137,7 +145,6 @@ export default defineComponent({
       userTableModal: false,
       roleValue: '',
       showEditCell: false,
-      currentEditRecord: {id: 0, role_name: ''},
       user_total: 0,
       user_current: 1,
       user_pageSize: 10,
@@ -147,6 +154,8 @@ export default defineComponent({
     })
 
     const roleName = computed(() => formState.role_name)
+
+    const currentEditRecord: Ref<EditRecord> = ref({id: 0, role_name: ''})
 
     const resetFields = () => {
       formRef.value && formRef.value.resetFields()
@@ -236,19 +245,19 @@ export default defineComponent({
 
     // 角色编辑
     const editRoleCell = (record: any) => {
-      data.currentEditRecord = record
+      currentEditRecord.value = record
       data.showEditCell = true
       data.roleValue = record.role_name
     }
     const cancelRoleEdit = () => {
-      data.currentEditRecord = {id: 0, role_name: ''}
+      currentEditRecord.value = {id: 0, role_name: ''}
       data.roleValue = ''
       data.showEditCell = false
     }
     const handleUpdateRole = () => {
       if (data.roleValue && data.roleValue.length > 0) {
         handleRole({
-          id: data.currentEditRecord.id,
+          id: currentEditRecord.value.id,
           role_name: data.roleValue,
         })
       }
@@ -260,7 +269,7 @@ export default defineComponent({
     const initKeys = ref<number[]>([])
 
     const bindUsers = (record: any) => {
-      data.currentEditRecord = {id: record.id, role_name: record.role_name}
+      currentEditRecord.value = {id: record.id, role_name: record.role_name}
       userList(true).then(() => data.userTableModal = true)
     }
 
@@ -285,7 +294,7 @@ export default defineComponent({
       await getRoleUserList({
         current: data.user_current,
         page_size: data.user_pageSize
-      }, data.currentEditRecord.role_name).then(res => {
+      }, currentEditRecord.value.role_name).then(res => {
         if (res.code === 200) {
           data.user_loading = false
           data.user_total = res.data.total
@@ -300,7 +309,7 @@ export default defineComponent({
 
     const handleUpdateUserRole = (params: any) => {
       const {keys, unKeys} = params
-      updateUserRoles(keys, _.intersection(initKeys.value, unKeys), data.currentEditRecord.id).then(() => {
+      updateAdminRoles(keys, _.intersection(initKeys.value, unKeys), currentEditRecord.value.id).then(() => {
         message.success('更新成功')
         setTimeout(handleUserTableCancel, 800)
       })
@@ -308,7 +317,7 @@ export default defineComponent({
 
     // 用户action权限
     const showActionModal = (record: any) => {
-      data.currentEditRecord = record
+      currentEditRecord.value = record
       getActionList(record.id).then((res) => {
         data.actions = res.data
         data.actionModal = true
@@ -317,7 +326,7 @@ export default defineComponent({
 
     const handleActionModalCancel = () => {
       data.actionModal = false
-      data.currentEditRecord = {id: 0, role_name: ''}
+      currentEditRecord.value = {id: 0, role_name: ''}
     }
 
     const handleUpdateRoleAction = (items: any) => {
@@ -325,10 +334,16 @@ export default defineComponent({
         handleActionModalCancel()
         return
       }
-      updateRoleActions(items, data.currentEditRecord.id, data.currentEditRecord.role_name).then(() => {
+      updateRoleActions(items, currentEditRecord.value.id, currentEditRecord.value.role_name).then(() => {
         message.success('保存成功')
         setTimeout(handleActionModalCancel, 800)
       })
+    }
+
+    const showAddRoleModal = async () => {
+      const res = await getTenantList({current: 1, page_size: 10000})
+      tenants.value = res.data.rows
+      data.roleModal = true
     }
 
     return {
@@ -337,7 +352,7 @@ export default defineComponent({
       perms,
       queryRole,
       resetFields,
-      userActions,
+      userActions: adminActions, tenantActions,
       roleActions,
       actionActions,
       ...toRefs(data),
@@ -352,7 +367,8 @@ export default defineComponent({
       editRoleCell,
       cancelRoleEdit,
       handleUpdateRole, handleActionModalCancel, handleUpdateRoleAction,
-      handleUserTableModalChange, selectedKeys, handleUpdateUserRole, showActionModal
+      handleUserTableModalChange, selectedKeys, handleUpdateUserRole, showActionModal, showAddRoleModal,
+      tenants, currentEditRecord
     }
   }
 })

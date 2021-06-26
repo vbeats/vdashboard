@@ -1,5 +1,5 @@
 <template>
-  <a-modal :visible="visible" :width="1000" title="菜单权限" @ok="handleOk" @cancel="handleCancel">
+  <a-modal :visible="visible" :width="1000" title="菜单权限" @ok="handleOk" @cancel="handleCancel" destroy-on-close>
     <a-table :columns="columns" :data-source="datasource" :row-key="record=>record.key"
              default-expand-all-rows :pagination="false">
       <template #actions="{text,record}">

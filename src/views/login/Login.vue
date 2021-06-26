@@ -37,7 +37,7 @@ import UserNamePasswordComponent from "@/components/login/UserNamePasswordCompon
 import PhoneComponent from "@/components/login/PhoneComponent.vue"
 import CopyRight from "@/components/copyright/CopyRight.vue"
 import {Credentials} from '@/interface/user'
-import {getToken} from '@/api/user'
+import {getToken} from '@/api/login'
 import encrypt from '@/utils/crypto'
 
 export default defineComponent({

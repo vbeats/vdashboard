@@ -2,13 +2,13 @@ import {UserInfo} from "@/interface/user";
 import storage from "@/utils/storage";
 import {LOGOUT, UPDATE_USER_INFO} from "@/store/actionTypes";
 import router from "@/router";
-import {getToken} from "@/api/user";
+import {getToken} from "@/api/login";
 import store from '@/store'
 
 const checkToken = async (): Promise<void> => {
     const timer = setTimeout(checkToken, 5 * 60 * 1000)
 
-    // user access_token refresh_token都存在的  校验有效时间  否则logout
+    // login access_token refresh_token都存在的  校验有效时间  否则logout
     const user: UserInfo = storage.get('user')
     const access_token: string = storage.get('access_token')
     const refresh_token: string = storage.get('refresh_token')

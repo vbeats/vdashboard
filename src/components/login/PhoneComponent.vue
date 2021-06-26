@@ -44,7 +44,7 @@
 import {DefineComponent, defineComponent, reactive, ref, toRef, toRefs, UnwrapRef, watch} from 'vue'
 import {message} from "ant-design-vue"
 import {ShopOutlined} from '@ant-design/icons-vue'
-import {getSmsCode as getSmsCodeApi} from '@/api/user'
+import {getSmsCode as getSmsCodeApi} from '@/api/login'
 
 interface FormState {
   tenant: string,
