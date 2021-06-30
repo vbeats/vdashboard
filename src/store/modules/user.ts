@@ -36,7 +36,7 @@ const user: any = {
     },
     [UPDATE_USER_INFO]: (state: SUser, userInfo: UserInfo): void => {
         const accessTokenExpire = new Date().getTime() + 7200 * 1000
-        const refreshTokenExpire = new Date().getTime() + 20 * 24 * 3600 * 1000
+        const refreshTokenExpire = new Date().getTime() + 30 * 24 * 3600 * 1000
         state.user = {...userInfo}
         state.access_token_expire = accessTokenExpire
         state.refresh_token_expire = refreshTokenExpire

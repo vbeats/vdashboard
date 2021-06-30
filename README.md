@@ -16,7 +16,7 @@ Sponsor [![paypal.me/bootvue](https://cdn.jsdelivr.net/gh/boot-vue/pics@main/ico
 
 `localStorage`存储: `user` `access_token` `refresh_token`
 
-依赖 `@vbeats/vstore` 控制 `access_token`:`7200s` 与 `refresh_token`:`20d`的过期时间
+依赖 `@vbeats/vstore` 控制 `access_token`:`7200s` 与 `refresh_token`:`30d`的过期时间
 
 每5分钟校验一次`access_token`过期时间, 如果过期了靠`refresh_token`获取新token
 
