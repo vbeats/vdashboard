@@ -8,6 +8,7 @@ class DefaultUser implements UserInfo {
     user_id = 0
     access_token = ''
     refresh_token = ''
+    expire = 0
     username = ''
     role_id = 0
     phone = ''
@@ -36,7 +37,7 @@ const user: any = {
     },
     [UPDATE_USER_INFO]: (state: SUser, userInfo: UserInfo): void => {
         const accessTokenExpire = new Date().getTime() + 7200 * 1000
-        const refreshTokenExpire = new Date().getTime() + 30 * 24 * 3600 * 1000
+        const refreshTokenExpire = new Date().getTime() + userInfo.expire * 1000
         state.user = {...userInfo}
         state.access_token_expire = accessTokenExpire
         state.refresh_token_expire = refreshTokenExpire

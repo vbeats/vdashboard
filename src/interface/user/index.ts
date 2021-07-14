@@ -21,6 +21,7 @@ export interface UserInfo {
     role_id: number,
     access_token: string,
     refresh_token: string,
+    expire: number,
     menus?: Array<Menu>
 }
 
