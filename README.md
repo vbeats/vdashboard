@@ -8,6 +8,10 @@ Sponsor [![paypal.me/bootvue](https://cdn.jsdelivr.net/gh/boot-vue/pics@main/ico
 - vue3
 - vue-router@4 vuex@4 vue-i18n-next antV@2
 
+## FAQ
+
+- `vite build`打包, router中动态路由引入的方式要改, `import.meta.global`
+
 ## crypto
 
 `utils`包下`crypto.ts` `encrypt`RSA非对称加密 公钥加密
