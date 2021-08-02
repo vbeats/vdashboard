@@ -10,7 +10,7 @@ Sponsor [![paypal.me/bootvue](https://cdn.jsdelivr.net/gh/boot-vue/pics@main/ico
 
 ## FAQ
 
-- `vite build`打包, router中动态路由引入的方式要改, `import.meta.global`
+- ...
 
 ## crypto
 
