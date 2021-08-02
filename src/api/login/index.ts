@@ -4,7 +4,8 @@ import {Credentials} from "@/interface/user"
 
 const key: string = querystring.stringify({
     appid: import.meta.env.VITE_APP_APPID,
-    secret: import.meta.env.VITE_APP_SECRET
+    secret: import.meta.env.VITE_APP_SECRET,
+    platform: import.meta.env.VITE_APP_PLATFORM
 })
 
 /**
