@@ -3,7 +3,8 @@
             :closable="false" :get-container="false"
             :visible="drawerVisible"
             placement="left" @close="hideDrawerMenu">
-    <a-layout-sider class="overflow-hidden relative left-0 h-screen" width="256">
+    <a-layout-sider :trigger="false" class="overflow-hidden relative left-0 h-screen"
+                    width="256">
       <Menu/>
     </a-layout-sider>
   </a-drawer>

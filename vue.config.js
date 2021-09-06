@@ -29,10 +29,11 @@ const assetsCDN = {
     '//cdn.jsdelivr.net/npm/ant-design-vue@2.2.6/dist/antd.min.css'
   ],
   js: [
-    '//cdn.jsdelivr.net/npm/vue@3.2.6/dist/vue.global.prod.js',
+    '//cdn.jsdelivr.net/npm/vue@3.2.9/dist/vue.global.prod.js',
     '//cdn.jsdelivr.net/npm/vue-router@4.0.11/dist/vue-router.global.min.js',
     '//cdn.jsdelivr.net/npm/vuex@4.0.2/dist/vuex.global.min.js',
-    '//cdn.jsdelivr.net/npm/axios@0.21.1/dist/axios.min.js',
+    '//cdn.jsdelivr.net/npm/axios@0.21.3/dist/axios.min.js',
+    '//cdn.jsdelivr.net/npm/moment@2.29.1/min/moment-with-locales.min.js',
     '//cdn.jsdelivr.net/npm/ant-design-vue@2.2.6/dist/antd-with-locales.min.js',
     '//cdn.jsdelivr.net/npm/lodash@4.17.21/lodash.min.js',
     '//cdn.jsdelivr.net/npm/dayjs@1.10.6/dayjs.min.js'
@@ -90,7 +91,7 @@ module.exports = {
         assetsSort: true
       }),
       new BundleAnalyzerPlugin({
-        analyzerMode: '',
+        analyzerMode: 'server',
         analyzerHost: '127.0.0.1',
         analyzerPort: 8888,
         reportFilename: 'report.html',

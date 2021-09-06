@@ -56,9 +56,9 @@ export default defineComponent({
     const menus: Array<any> | any = inject('menus')
 
     menus.value.forEach((i: any) => {
-      if (i.children && i.children.length > 0) {
+      if (i.children && i.children.length > 0 && i.show) {
         data.subMenuItems.push(i)
-      } else {
+      } else if (i.show) {
         data.menuItems.push(i)
       }
       if (i.default_select) {

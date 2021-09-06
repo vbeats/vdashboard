@@ -1,5 +1,4 @@
 export interface Credentials {
-  tenant_code?: string,
   username?: string,
   password?: string,
   phone?: string,

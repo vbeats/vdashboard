@@ -62,7 +62,6 @@ export default defineComponent({
       switch (params.type) {
         case 0:
           credentials = {
-            tenant_code: params.tenant,
             username: params.username,
             password: encrypt(params.password),
             key: params.key,
@@ -73,7 +72,6 @@ export default defineComponent({
           break
         case 1:
           credentials = {
-            tenant_code: params.tenant,
             phone: params.phone,
             code: params.code,
             type: 2,

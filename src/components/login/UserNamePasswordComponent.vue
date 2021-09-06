@@ -6,14 +6,6 @@
     :wrapperCol="wrapperCol"
   >
 
-    <a-form-item v-show="showTenant" name="tenant">
-      <a-input v-model:value="formState.tenant" placeholder="租户编号" size="large">
-        <template #prefix>
-          <ShopOutlined style="color:rgba(0,0,0,.25)"/>
-        </template>
-      </a-input>
-    </a-form-item>
-
     <a-form-item name="username">
       <a-input v-model:value="formState.username" placeholder="账号" size="large">
         <template #prefix>
@@ -52,11 +44,10 @@
 
 <script lang="ts">
 import { DefineComponent, defineComponent, onMounted, reactive, ref, UnwrapRef } from 'vue'
-import { LockOutlined, ShopOutlined, UserOutlined } from '@ant-design/icons-vue'
+import { LockOutlined, UserOutlined } from '@ant-design/icons-vue'
 import { getCaptcha } from '@/api/auth'
 
 interface FormState {
-  tenant: string,
   username: string,
   password: string,
   captcha: string,
@@ -68,12 +59,10 @@ export default defineComponent({
   name: 'UserNamePasswordComponent',
   components: {
     UserOutlined,
-    LockOutlined,
-    ShopOutlined
+    LockOutlined
   },
   setup (props, { emit }) {
     const formState: UnwrapRef<FormState> = reactive({
-      tenant: process.env.VUE_APP_TENANT === 'show' ? '' : process.env.VUE_APP_TENANT_CODE,
       username: '',
       password: '',
       captcha: '',
@@ -82,18 +71,10 @@ export default defineComponent({
     })
 
     const data: any = reactive({
-      showTenant: process.env.VUE_APP_TENANT === 'show',
       disabled: false
     })
 
     const rules = {
-      tenant: [
-        {
-          required: process.env.VUE_APP_TENANT === 'show',
-          message: '租户编号必填',
-          trigger: 'blur'
-        }
-      ],
       username: [
         {
           required: true,

@@ -1,10 +1,12 @@
 <template>
   <MenuUnfoldOutlined
     v-if="collapsed"
-    class="text-lg leading-16 px-6 cursor-pointer transition-colors"
+    class="text-lg px-6 cursor-pointer transition-colors"
+    style="line-height: 4rem"
     @click="changeCollapsed(!collapsed)"
   />
-  <MenuFoldOutlined v-else class="text-lg leading-16 px-6 cursor-pointer transition-colors"
+  <MenuFoldOutlined v-else class="text-lg px-6 cursor-pointer transition-colors"
+                    style="line-height: 4rem"
                     @click="changeCollapsed(!collapsed)"/>
 
   <div class="ml-auto">

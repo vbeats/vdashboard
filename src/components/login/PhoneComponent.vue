@@ -6,14 +6,6 @@
     :wrapperCol="wrapperCol"
   >
 
-    <a-form-item v-show="showTenant" name="tenant">
-      <a-input v-model:value="formState.tenant" placeholder="租户编号" size="large">
-        <template #prefix>
-          <ShopOutlined style="color:rgba(0,0,0,.25)"/>
-        </template>
-      </a-input>
-    </a-form-item>
-
     <a-form-item name="phone">
       <a-input v-model:value="formState.phone" placeholder="手机号" size="large">
         <template #prefix>
@@ -47,7 +39,6 @@ import { ShopOutlined } from '@ant-design/icons-vue'
 import { getSmsCode as getSmsCodeApi } from '@/api/auth'
 
 interface FormState {
-  tenant: string,
   phone: string,
   code: string
 }
@@ -57,13 +48,11 @@ export default defineComponent({
   components: { ShopOutlined },
   setup (props, { emit }) {
     const formState: UnwrapRef<FormState> = reactive({
-      tenant: process.env.VUE_APP_TENANT === 'show' ? '' : process.env.VUE_APP_TENANT_CODE,
       phone: '',
       code: ''
     })
 
     const data: any = reactive({
-      showTenant: process.env.VUE_APP_TENANT === 'show',
       disabled: true,
       btText: '获取验证码',
       smsTime: 60,
@@ -71,18 +60,6 @@ export default defineComponent({
     })
 
     const rules = {
-      tenant: [
-        {
-          required: process.env.VUE_APP_TENANT === 'show',
-          message: '租户编号必填',
-          trigger: 'blur'
-        },
-        {
-          len: 6,
-          message: '租户编号错误',
-          trigger: 'blur'
-        }
-      ],
       phone: [
         {
           required: true,
@@ -129,19 +106,19 @@ export default defineComponent({
       formRef.value && formRef.value.validateFields('code')
     }
 
-    watch([toRef(formState, 'tenant'), toRef(formState, 'phone')], (newValue) => {
-      if (newValue[0].length > 0 && newValue[1].length === 11) {
+    watch(toRef(formState, 'phone'), (newValue) => {
+      if (newValue.length === 11) {
         data.disabled = false
       }
     })
 
     // 获取短信验证码
     const getSmsCode = () => {
-      if (!formState.phone || !formState.tenant || formState.tenant.length === 0 || formState.phone.length !== 11) {
+      if (!formState.phone || formState.phone.length !== 11) {
         return
       }
 
-      getSmsCodeApi(formState.phone, formState.tenant).then(() => {
+      getSmsCodeApi(formState.phone).then(() => {
         message.success('短信已发送')
         data.disabled = true
         data.btText = data.smsTime + ' s'

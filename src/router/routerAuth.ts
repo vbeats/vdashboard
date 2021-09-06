@@ -6,7 +6,7 @@ export function handleRouterAuth (router: Router): void {
   /* 全局路由拦截 */
   router.beforeEach(async (to: RouteLocationNormalized, from: RouteLocationNormalized, next: NavigationGuardNext) => {
     const expire: number = store.getters.getUserInfo.access_token_expire
-    if (expire <= 0) { // access_token过期
+    if (expire - Date.now() <= 0) { // access_token过期
       await store.dispatch('logout').then()
       if (to.path === '/login') {
         next()
