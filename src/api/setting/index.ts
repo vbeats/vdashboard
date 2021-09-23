@@ -90,3 +90,8 @@ export function assignRoleAdmin (params: any): Promise<any> {
 export function assignRoleMenu (params: any): Promise<any> {
   return axios.post('/admin/role/assign_menu', { ...params })
 }
+
+// ---------------------------租户
+export function getAllTenant (): Promise<any> {
+  return axios.post('/admin/tenant/list_all_tenant')
+}

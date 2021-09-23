@@ -16,6 +16,12 @@
       <a-form-item :label-col="{span:4}" :wrapperCol="{span:18}" label="手机号" name="phone">
         <a-input v-model:value="formState.phone" placeholder="手机号"/>
       </a-form-item>
+      <a-form-item :label-col="{span:4}" :wrapperCol="{span:18}" label="所属租户" name="tenant_id">
+        <a-select v-model:value="formState.tenant_id" placeholder="选择租户">
+          <a-select-option v-for="item in tenants" :key="item.id" :value="item.id">{{ item.name }}
+          </a-select-option>
+        </a-select>
+      </a-form-item>
     </a-form>
   </a-modal>
 </template>
@@ -29,6 +35,7 @@ interface FormState {
   username?: string,
   password?: string,
   phone?: string,
+  tenant_id:string
 }
 
 const props = defineProps({
@@ -44,10 +51,14 @@ const props = defineProps({
   data: {
     type: Object,
     required: false
+  },
+  tenants: {
+    type: Array,
+    required: true
   }
 })
 
-const formState: UnwrapRef<FormState> = reactive({})
+const formState: UnwrapRef<FormState> = reactive({ tenant_id: '' })
 
 const formRef = ref()
 const emit = defineEmits(['cancel', 'handleAddOrUpdateAdmin'])
@@ -121,6 +132,13 @@ const rules = {
     {
       pattern: '^(?:(?:\\+|00)86)?1(?:(?:3[\\d])|(?:4[5-79])|(?:5[0-35-9])|(?:6[5-7])|(?:7[0-8])|(?:8[\\d])|(?:9[189]))\\d{8}$',
       message: '手机号错误',
+      trigger: 'blur'
+    }
+  ],
+  tenant_id: [
+    {
+      required: true,
+      message: '租户不能为空',
       trigger: 'blur'
     }
   ]

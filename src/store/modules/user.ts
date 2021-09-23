@@ -2,7 +2,6 @@ import initRoutes from '@/router/initRoutes'
 
 const state = {
   user: {
-    user_id: 0,
     access_token: '',
     refresh_token: '',
     username: '',

@@ -1,11 +1,8 @@
 # vdashboard
 
-Sponsor [![paypal.me/bootvue](https://cdn.jsdelivr.net/gh/boot-vue/pics@main/icon/paypal.svg)](https://www.paypal.me/bootvue)
-☕☕☕
-
 [后端接口参考](https://github.com/vbeats/vboot)
 
-- vue3 typescript vuex ant-design-vue
+- vue3 typescript vuex ant-design-vue webpack
 
 ### run
 
@@ -16,6 +13,10 @@ yarn serve
 
 yarn build
 ```
+
+### Contact
+
+![battery_wx](https://cdn.jsdelivr.net/gh/boot-vue/pics@main/wechat.jpg)
 
 ### demo
 

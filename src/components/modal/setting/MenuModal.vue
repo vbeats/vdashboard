@@ -55,13 +55,13 @@
 import { defineEmits, defineProps, reactive, ref, toRaw, UnwrapRef, watchEffect } from 'vue'
 
 interface FormState {
-  id?: number,
+  id?: string,
   title?: string,
   key?: string,
   path?: string,
   icon?: string,
   sort?: number,
-  p_id?: number,
+  p_id?: string,
   show?: boolean,
   default_select?: boolean,
   default_open?: boolean
@@ -110,7 +110,7 @@ const handleOk = () => {
 
 watchEffect(() => {
   const d = props.data
-  if (d?.id > 0) {
+  if (d?.id && d?.id !== '') {
     formState.id = d?.id
     formState.title = d?.title
     formState.key = d?.key
@@ -128,7 +128,7 @@ watchEffect(() => {
     formState.path = undefined
     formState.icon = undefined
     formState.sort = undefined
-    formState.p_id = 0
+    formState.p_id = '0'
     formState.show = true
     formState.default_select = false
     formState.default_open = true

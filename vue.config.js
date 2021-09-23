@@ -3,7 +3,8 @@ const webpack = require('webpack')
 const CompressionPlugin = require('compression-webpack-plugin')
 const resolve = dir => path.join(__dirname, dir)
 const StatsPlugin = require('stats-webpack-plugin')
-const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
+  .BundleAnalyzerPlugin
 const addStylusResource = rule => {
   rule
     .use('style-resouce')
@@ -25,9 +26,7 @@ const assetsCDN = {
     dayjs: 'dayjs',
     lodash: '_'
   },
-  css: [
-    '//cdn.jsdelivr.net/npm/ant-design-vue@2.2.6/dist/antd.min.css'
-  ],
+  css: ['//cdn.jsdelivr.net/npm/ant-design-vue@2.2.6/dist/antd.min.css'],
   js: [
     '//cdn.jsdelivr.net/npm/vue@3.2.9/dist/vue.global.prod.js',
     '//cdn.jsdelivr.net/npm/vue-router@4.0.11/dist/vue-router.global.min.js',
@@ -41,9 +40,7 @@ const assetsCDN = {
 }
 
 const assetsDevCDN = {
-  css: [
-    '//cdn.jsdelivr.net/npm/ant-design-vue@2.2.6/dist/antd.min.css'
-  ]
+  css: ['//cdn.jsdelivr.net/npm/ant-design-vue@2.2.6/dist/antd.min.css']
 }
 
 module.exports = {
@@ -73,7 +70,7 @@ module.exports = {
 
   configureWebpack: {
     plugins: [
-      new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
+      // new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
       new CompressionPlugin({
         test: /\.js$|\.css$|\.html$/,
         filename: '[path][name].gz[query]',
@@ -93,7 +90,7 @@ module.exports = {
       new BundleAnalyzerPlugin({
         analyzerMode: 'server',
         analyzerHost: '127.0.0.1',
-        analyzerPort: 8888,
+        analyzerPort: 10086,
         reportFilename: 'report.html',
         defaultSizes: 'parsed',
         openAnalyzer: true,
@@ -107,8 +104,7 @@ module.exports = {
   },
 
   chainWebpack: config => {
-    config.resolve.alias
-      .set('@$', resolve('src'))
+    config.resolve.alias.set('@$', resolve('src'))
 
     const svgRule = config.module.rule('svg')
     svgRule.uses.clear()
@@ -140,14 +136,16 @@ module.exports = {
     config.optimization.splitChunks({
       chunks: 'all',
       maxInitialRequests: Infinity,
-      minSize: 30 * 1024,
-      maxSize: 128 * 1024,
+      minSize: 128 * 1024,
+      maxSize: 500 * 1024,
       automaticNameDelimiter: '-',
       cacheGroups: {
         vendor: {
           test: /[\\/]node_modules[\\/]/,
           name (module) {
-            const packageName = module.context.match(/[\\/]node_modules[\\/](.*?)([\\/]|$)/)[1]
+            const packageName = module.context.match(
+              /[\\/]node_modules[\\/](.*?)([\\/]|$)/
+            )[1]
             return `chunk.${packageName.replace('@', '')}`
           },
           priority: 10

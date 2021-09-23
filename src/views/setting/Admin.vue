@@ -5,8 +5,13 @@
     :model="formState">
     <a-row>
       <a-col :span="4">
-        <a-form-item name="name">
+        <a-form-item name="username">
           <a-input v-model:value="formState.username" placeholder="用户名"/>
+        </a-form-item>
+      </a-col>
+      <a-col :span="4" :offset="1">
+        <a-form-item name="phone">
+          <a-input v-model:value="formState.phone" placeholder="手机号"/>
         </a-form-item>
       </a-col>
       <a-col :offset="1">
@@ -37,6 +42,9 @@
       <a-tag v-if="text===true" color="#87d068">正常</a-tag>
       <a-tag v-else color="#f50">禁用</a-tag>
     </template>
+    <template #roles="{text}">
+      <a-tag v-for="item in text" :key="item.id" color="#87d068">{{ item.name }}</a-tag>
+    </template>
     <template #operation="{ record }">
       <a-space>
         <a-button type="primary" @click="showRoleModal(record)">角色</a-button>
@@ -48,9 +56,10 @@
   </a-table>
   <!--  modal -->
   <admin-modal :action="action" :data="item" :visible="visible" @cancel="handleModalCancel"
+               :tenants="tenants"
                @handleAddOrUpdateAdmin="handleAddOrUpdateAdmin"/>
 
-  <admin-role-modal :selected-keys="roleIds" :visible="roleVisible" @cancel="handleRoleModalCancel"
+  <admin-role-modal :selected-keys="roleIds" :tenant-name="currentTenantName" :visible="roleVisible" @cancel="handleRoleModalCancel"
                     @selectKeysChange="handleSelectedKeysChange" @updateAdminRole="updateAdminRole"/>
 </template>
 
@@ -63,7 +72,7 @@ import {
   addAdmin,
   assignRole,
   delAdmin,
-  getAdminList,
+  getAdminList, getAllTenant,
   getRoleIdsByAdminId,
   updateAdmin,
   updateAdminStatus
@@ -71,41 +80,49 @@ import {
 import AdminModal from '@/components/modal/setting/AdminModal.vue'
 import encrypt from '@/util/crypto'
 import AdminRoleModal from '@/components/modal/setting/AdminRoleModal.vue'
+type Pagination = TableState['pagination']
 
 interface FormState {
-  username?: string
+  username?: string,
+  phone?:string
 }
 
-type Pagination = TableState['pagination']
 const columns = [
   {
     title: '用户名',
     dataIndex: 'username'
   },
   {
+    title: '所属租户',
+    dataIndex: 'tenant_name'
+  },
+  {
     title: '手机号',
-    dataIndex: 'phone',
-    width: '150px'
+    dataIndex: 'phone'
   },
   {
     title: '状态',
     dataIndex: 'status',
-    width: '100px',
     slots: { customRender: 'status' }
   },
   {
+    title: '角色',
+    dataIndex: 'roles',
+    slots: { customRender: 'roles' }
+  },
+  {
     title: '创建时间',
-    dataIndex: 'create_time',
-    width: '180px'
+    dataIndex: 'create_time'
   },
   {
     title: '删除时间',
-    dataIndex: 'delete_time',
-    width: '180px'
+    dataIndex: 'delete_time'
   },
   {
     title: '操作',
     align: 'center',
+    width: '310px',
+    fixed: 'right',
     slots: { customRender: 'operation' }
   }
 ]
@@ -122,6 +139,8 @@ const item = ref({})
 const roleVisible = ref(false)
 const roleIds = ref<any>([])
 const currentAdminId = ref(0)
+const currentTenantName = ref()
+const tenants = ref([])
 
 const reset = () => {
   formRef.value.resetFields()
@@ -138,7 +157,8 @@ const userList = () => {
   getAdminList({
     current: current.value,
     page_size: pageSize.value,
-    username: formState.username
+    username: formState.username,
+    phone: formState.phone
   }).then(res => {
     loading.value = false
     datasource.value = res.data.rows
@@ -171,6 +191,8 @@ const updateStatus = async (record: any) => {
 }
 
 const showAddModal = async () => {
+  const res = await getAllTenant()
+  tenants.value = res.data
   action.value = 'add'
   visible.value = true
   item.value = {}
@@ -185,12 +207,14 @@ const handleAddOrUpdateAdmin = async (param: any) => {
   if (param.id && param.id > 0) {
     const res = await updateAdmin({
       ...param,
+      platform: process.env.VUE_APP_PLATFORM,
       password: encrypt(param.password)
     })
     handleResult(res)
   } else {
     const res = await addAdmin({
       ...param,
+      platform: process.env.VUE_APP_PLATFORM,
       password: encrypt(param.password)
     })
     handleResult(res)
@@ -208,6 +232,7 @@ const handleResult = (res: any) => {
 // 用户分配角色
 const showRoleModal = async (record: any) => {
   currentAdminId.value = record.id
+  currentTenantName.value = record.tenant_name
   // 此用户已分配的角色
   const res = await getRoleIdsByAdminId({ id: record.id })
   roleIds.value = res.data
@@ -231,6 +256,7 @@ const updateAdminRole = async () => {
   })
   if (res.code === 200) {
     message.success('分配成功')
+    userList()
     currentAdminId.value = 0
     roleIds.value = []
     roleVisible.value = false

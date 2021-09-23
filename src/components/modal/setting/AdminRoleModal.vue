@@ -16,7 +16,7 @@
 </template>
 
 <script lang="ts" setup>
-import { defineEmits, defineProps, ref } from 'vue'
+import { defineEmits, defineProps, ref, watchEffect } from 'vue'
 import { TableState } from 'ant-design-vue/es/table/interface'
 import { getRoleList } from '@/api/setting'
 
@@ -32,6 +32,10 @@ const props = defineProps({
   selectedKeys: {
     type: Array,
     required: false
+  },
+  tenantName: {
+    type: String,
+    required: true
   }
 })
 
@@ -44,7 +48,11 @@ const pageSize = ref(10)
 const columns = [
   {
     title: '角色名',
-    dataIndex: 'name'
+    dataIndex: 'role_name'
+  },
+  {
+    title: '所属租户',
+    dataIndex: 'tenant_name'
   }
 ]
 
@@ -52,7 +60,8 @@ const roleList = () => {
   loading.value = true
   getRoleList({
     current: current.value,
-    page_size: pageSize.value
+    page_size: pageSize.value,
+    tenant_name: props.tenantName
   }).then(res => {
     data.value = res.data.rows
     total.value = res.data.total
@@ -60,7 +69,12 @@ const roleList = () => {
   })
 }
 
-roleList()
+watchEffect(() => {
+  const tenantName = props.tenantName
+  if (tenantName) {
+    roleList()
+  }
+})
 
 const handleTableChange = (page: Pagination) => {
   current.value = page?.current || 1
