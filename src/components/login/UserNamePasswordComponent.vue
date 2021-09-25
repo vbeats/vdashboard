@@ -9,7 +9,7 @@
     <a-form-item name="tenant_code" v-show="show_tenant">
       <a-input v-model:value="formState.tenant_code" placeholder="租户编号" size="large">
         <template #prefix>
-          <UserOutlined style="color:rgba(0,0,0,.25)"/>
+          <KeyOutlined  style="color:rgba(0,0,0,.25)"/>
         </template>
       </a-input>
     </a-form-item>
@@ -52,7 +52,7 @@
 
 <script lang="ts">
 import { DefineComponent, defineComponent, onMounted, reactive, ref, UnwrapRef } from 'vue'
-import { LockOutlined, UserOutlined } from '@ant-design/icons-vue'
+import { LockOutlined, UserOutlined, KeyOutlined } from '@ant-design/icons-vue'
 import { getCaptcha } from '@/api/auth'
 
 interface FormState {
@@ -68,11 +68,12 @@ export default defineComponent({
   name: 'UserNamePasswordComponent',
   components: {
     UserOutlined,
-    LockOutlined
+    LockOutlined,
+    KeyOutlined
   },
   setup (props, { emit }) {
     const formState: UnwrapRef<FormState> = reactive({
-      tenant_code: process.env.VUE_APP_SHOW_TENANT === 'true' ? process.env.VUE_APP_TENANT : '',
+      tenant_code: process.env.VUE_APP_SHOW_TENANT === 'true' ? '' : process.env.VUE_APP_TENANT,
       username: '',
       password: '',
       captcha: '',
@@ -143,6 +144,7 @@ export default defineComponent({
 
     // 获取验证码
     const getCaptchaImg = () => {
+      formState.captcha = ''
       getCaptcha().then(res => {
         formState.img = res.data.image
         formState.key = res.data.key

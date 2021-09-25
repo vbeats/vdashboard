@@ -16,7 +16,7 @@
 </template>
 
 <script lang="ts" setup>
-import { defineEmits, defineProps, ref } from 'vue'
+import { defineEmits, defineProps, ref, watchEffect } from 'vue'
 import { getAdminList } from '@/api/setting'
 import { TableState } from 'ant-design-vue/es/table/interface'
 
@@ -32,6 +32,10 @@ const props = defineProps({
   selectedKeys: {
     type: Array,
     required: false
+  },
+  tenantId: {
+    type: String,
+    required: true
   }
 })
 
@@ -52,7 +56,8 @@ const adminList = () => {
   loading.value = true
   getAdminList({
     current: current.value,
-    page_size: pageSize.value
+    page_size: pageSize.value,
+    tenant_id: props.tenantId
   }).then(res => {
     data.value = res.data.rows
     total.value = res.data.total
@@ -60,7 +65,12 @@ const adminList = () => {
   })
 }
 
-adminList()
+watchEffect(() => {
+  const tenantId = props.tenantId
+  if (tenantId && tenantId !== '') {
+    adminList()
+  }
+})
 
 const handleTableChange = (page: Pagination) => {
   current.value = page?.current || 1

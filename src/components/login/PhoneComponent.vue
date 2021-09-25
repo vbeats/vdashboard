@@ -5,6 +5,13 @@
     :rules="rules"
     :wrapperCol="wrapperCol"
   >
+    <a-form-item name="tenant_code" v-show="show_tenant">
+      <a-input v-model:value="formState.tenant_code" placeholder="租户编号" size="large">
+        <template #prefix>
+          <KeyOutlined style="color:rgba(0,0,0,.25)"/>
+        </template>
+      </a-input>
+    </a-form-item>
 
     <a-form-item name="phone">
       <a-input v-model:value="formState.phone" placeholder="手机号" size="large">
@@ -18,7 +25,7 @@
       <a-row align="middle" type="flex">
         <a-col :span="14">
           <a-input v-model:value="formState.code" placeholder="验证码" size="large" @blur="checkCode"
-                   @keyup.enter="submit"/>
+                   @keyup.enter="getSmsCode"/>
         </a-col>
         <a-col :offset="2" :span="8">
           <a-button :disabled="disabled" block size="large" type="primary" @click="getSmsCode">{{ btText }}</a-button>
@@ -33,21 +40,23 @@
 </template>
 
 <script lang="ts">
-import { DefineComponent, defineComponent, reactive, ref, toRef, toRefs, UnwrapRef, watch } from 'vue'
+import { DefineComponent, defineComponent, reactive, ref, toRaw, toRef, toRefs, UnwrapRef, watch } from 'vue'
 import { message } from 'ant-design-vue'
-import { ShopOutlined } from '@ant-design/icons-vue'
+import { ShopOutlined, KeyOutlined } from '@ant-design/icons-vue'
 import { getSmsCode as getSmsCodeApi } from '@/api/auth'
 
 interface FormState {
+  tenant_code:string,
   phone: string,
   code: string
 }
 
 export default defineComponent({
   name: 'PhoneComponent',
-  components: { ShopOutlined },
+  components: { ShopOutlined, KeyOutlined },
   setup (props, { emit }) {
     const formState: UnwrapRef<FormState> = reactive({
+      tenant_code: process.env.VUE_APP_SHOW_TENANT === 'true' ? '' : process.env.VUE_APP_TENANT,
       phone: '',
       code: ''
     })
@@ -56,10 +65,18 @@ export default defineComponent({
       disabled: true,
       btText: '获取验证码',
       smsTime: 60,
-      disLogin: false
+      disLogin: false,
+      show_tenant: process.env.VUE_APP_SHOW_TENANT === 'true'
     })
 
     const rules = {
+      tenant_code: [
+        {
+          required: true,
+          message: '租户编号不能为空',
+          trigger: 'blur'
+        }
+      ],
       phone: [
         {
           required: true,
@@ -114,11 +131,11 @@ export default defineComponent({
 
     // 获取短信验证码
     const getSmsCode = () => {
-      if (!formState.phone || formState.phone.length !== 11) {
+      if (!formState.phone || formState.phone.length !== 11 || !formState.tenant_code || formState.tenant_code === '') {
         return
       }
 
-      getSmsCodeApi(formState.phone).then(() => {
+      getSmsCodeApi({ ...toRaw(formState) }).then(() => {
         message.success('短信已发送')
         data.disabled = true
         data.btText = data.smsTime + ' s'

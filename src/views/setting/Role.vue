@@ -5,8 +5,8 @@
     :model="formState">
     <a-row>
       <a-col :span="4">
-        <a-form-item name="name">
-          <a-input v-model:value="formState.name" placeholder="角色名"/>
+        <a-form-item name="role_name">
+          <a-input v-model:value="formState.role_name" placeholder="角色名" @keyup.enter="roleList"/>
         </a-form-item>
       </a-col>
       <a-col :offset="1">
@@ -44,12 +44,15 @@
   </a-table>
   <!--  modal -->
   <role-modal :action="action" :data="item" :visible="visible" @cancel="handleModalCancel"
+              :tenants="tenants"
               @handleAddOrUpdateRole="handleAddOrUpdateRole"/>
 
   <role-admin-modal :selected-keys="userIds" :visible="roleAdminVisible" @cancel="handleRoleAdminModalCancel"
+                    :tenant-id="currentTenantId"
                     @selectKeysChange="handleSelectedKeysChange" @updateRoleAdmin="updateRoleAdmin"/>
 
   <role-menu-modal :menus="menus" :visible="menuVisible" @cancel="handleRoleMenuCancel"
+                   :tenant-id="currentTenantId"
                    @handleUpdateRoleMenu="handleUpdateRoleMenu" @handleUpdateSelectMenu="handleUpdateSelectMenu"/>
 </template>
 
@@ -62,7 +65,7 @@ import {
   addRole,
   assignRoleAdmin,
   assignRoleMenu,
-  delRole,
+  delRole, getAllTenant,
   getMenuIdsByRoleId,
   getRoleList,
   getUserIdsByRoleId,
@@ -73,18 +76,18 @@ import RoleAdminModal from '@/components/modal/setting/RoleAdminModal.vue'
 import RoleMenuModal from '@/components/modal/setting/RoleMenuModal.vue'
 
 interface FormState {
-  name?: string
+  role_name?: string
 }
 
 type Pagination = TableState['pagination']
 const columns = [
   {
-    title: 'ID',
-    dataIndex: 'id'
+    title: '角色名',
+    dataIndex: 'role_name'
   },
   {
-    title: '角色名',
-    dataIndex: 'name'
+    title: '所属租户',
+    dataIndex: 'tenant_name'
   },
   {
     title: '操作',
@@ -105,8 +108,10 @@ const item = ref({})
 const roleAdminVisible = ref(false)
 const menuVisible = ref(false)
 const userIds = ref([])
-const currentRoleId = ref(0)
 const menus = ref([])
+const tenants = ref([])
+const currentTenantId = ref()
+const currentRoleId = ref()
 
 const reset = () => {
   formRef.value.resetFields()
@@ -123,7 +128,7 @@ const roleList = () => {
   getRoleList({
     current: current.value,
     page_size: pageSize.value,
-    name: formState.name
+    role_name: formState.role_name
   }).then(res => {
     loading.value = false
     datasource.value = res.data.rows
@@ -135,7 +140,7 @@ roleList()
 
 // 删除角色
 const handleDeleteRole = async (record: any) => {
-  const res = await delRole({ id: record.id })
+  const res = await delRole({ id: record.id, tenant_id: record.tenant_id })
   if (res.code === 200) {
     message.success('删除成功')
     setTimeout(() => roleList(), 800)
@@ -143,12 +148,16 @@ const handleDeleteRole = async (record: any) => {
 }
 
 const showUpdateModal = async (record: any) => {
+  const res = await getAllTenant()
+  tenants.value = res.data
   action.value = 'update'
   visible.value = true
   item.value = record
 }
 
 const showAddModal = async () => {
+  const res = await getAllTenant()
+  tenants.value = res.data
   action.value = 'add'
   visible.value = true
   item.value = {}
@@ -171,6 +180,7 @@ const handleAddOrUpdateRole = async (param: any) => {
 
 const handleResult = (res: any) => {
   if (res.code === 200) {
+    message.success('success')
     handleModalCancel()
     roleList()
   }
@@ -180,6 +190,7 @@ const handleResult = (res: any) => {
 const showRoleAdminModal = async (record: any) => {
   // 用户信息
   currentRoleId.value = record.id
+  currentTenantId.value = record.tenant_id
   const res = await getUserIdsByRoleId({ id: record.id })
   userIds.value = res.data
   roleAdminVisible.value = true
@@ -187,7 +198,6 @@ const showRoleAdminModal = async (record: any) => {
 
 const handleRoleAdminModalCancel = () => {
   userIds.value = []
-  currentRoleId.value = 0
   roleAdminVisible.value = false
 }
 
@@ -202,7 +212,8 @@ const updateRoleAdmin = async () => {
   })
   if (res.code === 200) {
     message.success('分配成功')
-    currentRoleId.value = 0
+    currentRoleId.value = ''
+    currentTenantId.value = ''
     userIds.value = []
     roleAdminVisible.value = false
   }
@@ -211,6 +222,7 @@ const updateRoleAdmin = async () => {
 // 菜单分配
 const showMenuModal = async (record: any) => {
   currentRoleId.value = record.id
+  currentTenantId.value = record.tenant_id
   const res = await getMenuIdsByRoleId({ id: record.id })
   menus.value = res.data
   menuVisible.value = true
@@ -221,7 +233,8 @@ const handleUpdateSelectMenu = (keys: any) => {
 }
 
 const handleRoleMenuCancel = () => {
-  currentRoleId.value = 0
+  currentTenantId.value = ''
+  currentRoleId.value = ''
   menus.value = []
   menuVisible.value = false
 }
@@ -233,7 +246,7 @@ const handleUpdateRoleMenu = async () => {
   })
   if (res.code === 200) {
     message.success('success')
-    currentRoleId.value = 0
+    currentRoleId.value = ''
     menus.value = []
     menuVisible.value = false
   }

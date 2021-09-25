@@ -26,13 +26,8 @@ const checkToken = async (): Promise<void> => {
     return
   }
 
-  // 获取新的token
-  const res = await getToken({
-    type: 0,
-    refresh_token,
-    platform: parseInt(process.env.VUE_APP_PLATFORM)
-  })
-  await store.dispatch('update_userinfo', res.data)
+  // 刷新token等信息
+  await store.dispatch('refresh_token')
 }
 
 export default checkToken

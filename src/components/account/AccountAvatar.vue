@@ -1,6 +1,6 @@
 <template>
   <a-dropdown placement="bottomRight">
-    <span class="block text-center w-20 h-16 flex items-center">
+    <span class="block text-center h-16 flex items-center">
       <img :src="avatar" alt="" class="w-6 h-6">
       <span class="ml-2">{{ username }}</span>
     </span>

@@ -95,3 +95,19 @@ export function assignRoleMenu (params: any): Promise<any> {
 export function getAllTenant (): Promise<any> {
   return axios.post('/admin/tenant/list_all_tenant')
 }
+
+export function getTenantList (params: any): Promise<any> {
+  return axios.post('/admin/tenant/list', { ...params })
+}
+
+export function delTenant (params: any): Promise<any> {
+  return axios.post('/admin/tenant/del', { ...params })
+}
+
+export function updateTenant (params: any): Promise<any> {
+  return axios.post('/admin/tenant/update', { ...params })
+}
+
+export function addTenant (params: any): Promise<any> {
+  return axios.post('/admin/tenant/add', { ...params })
+}

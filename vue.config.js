@@ -1,10 +1,9 @@
+const chalk = require('chalk')
 const path = require('path')
 const webpack = require('webpack')
 const CompressionPlugin = require('compression-webpack-plugin')
 const resolve = dir => path.join(__dirname, dir)
-const StatsPlugin = require('stats-webpack-plugin')
-const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
-  .BundleAnalyzerPlugin
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
 const addStylusResource = rule => {
   rule
     .use('style-resouce')
@@ -16,6 +15,8 @@ const addStylusResource = rule => {
 
 const isProd = process.env.NODE_ENV === 'production'
 
+console.log(chalk.bgGreen(isProd ? 'build production..... ' : 'build dev....'))
+
 const assetsCDN = {
   externals: {
     vue: 'Vue',
@@ -26,22 +27,45 @@ const assetsCDN = {
     dayjs: 'dayjs',
     lodash: '_'
   },
-  css: ['//cdn.jsdelivr.net/npm/ant-design-vue@2.2.6/dist/antd.min.css'],
+  css: ['//cdn.jsdelivr.net/npm/ant-design-vue@2.2.8/dist/antd.min.css'],
   js: [
-    '//cdn.jsdelivr.net/npm/vue@3.2.9/dist/vue.global.prod.js',
+    '//cdn.jsdelivr.net/npm/vue@3.2.18/dist/vue.global.prod.js',
     '//cdn.jsdelivr.net/npm/vue-router@4.0.11/dist/vue-router.global.min.js',
     '//cdn.jsdelivr.net/npm/vuex@4.0.2/dist/vuex.global.min.js',
-    '//cdn.jsdelivr.net/npm/axios@0.21.3/dist/axios.min.js',
+    '//cdn.jsdelivr.net/npm/axios@0.21.4/dist/axios.min.js',
     '//cdn.jsdelivr.net/npm/moment@2.29.1/min/moment-with-locales.min.js',
-    '//cdn.jsdelivr.net/npm/ant-design-vue@2.2.6/dist/antd-with-locales.min.js',
+    '//cdn.jsdelivr.net/npm/ant-design-vue@2.2.8/dist/antd-with-locales.min.js',
     '//cdn.jsdelivr.net/npm/lodash@4.17.21/lodash.min.js',
-    '//cdn.jsdelivr.net/npm/dayjs@1.10.6/dayjs.min.js'
+    '//cdn.jsdelivr.net/npm/dayjs@1.10.7/dayjs.min.js'
   ]
 }
 
 const assetsDevCDN = {
-  css: ['//cdn.jsdelivr.net/npm/ant-design-vue@2.2.6/dist/antd.min.css']
+  css: ['//cdn.jsdelivr.net/npm/ant-design-vue@2.2.8/dist/antd.min.css']
 }
+
+const plugins = isProd ? [
+  // new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
+  new CompressionPlugin({
+    test: /\.js$|\.css$|\.html$/,
+    filename: '[path][name].gz[query]',
+    algorithm: 'gzip',
+    threshold: 10240,
+    minRatio: 0.8
+  }),
+  new BundleAnalyzerPlugin({
+    analyzerMode: 'disabled', // server
+    analyzerHost: '127.0.0.1',
+    analyzerPort: 10086,
+    reportFilename: 'report.html',
+    defaultSizes: 'parsed',
+    openAnalyzer: true,
+    generateStatsFile: true,
+    statsFilename: 'stats.json',
+    statsOptions: null,
+    logLevel: 'info'
+  })
+] : []
 
 module.exports = {
   devServer: {
@@ -69,37 +93,7 @@ module.exports = {
   productionSourceMap: false,
 
   configureWebpack: {
-    plugins: [
-      // new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
-      new CompressionPlugin({
-        test: /\.js$|\.css$|\.html$/,
-        filename: '[path][name].gz[query]',
-        algorithm: 'gzip',
-        threshold: 10240,
-        minRatio: 0.8
-      }),
-      new StatsPlugin('stats.json', {
-        chunkModules: true,
-        chunks: true,
-        assets: false,
-        modules: true,
-        children: true,
-        chunksSort: true,
-        assetsSort: true
-      }),
-      new BundleAnalyzerPlugin({
-        analyzerMode: 'server',
-        analyzerHost: '127.0.0.1',
-        analyzerPort: 10086,
-        reportFilename: 'report.html',
-        defaultSizes: 'parsed',
-        openAnalyzer: true,
-        generateStatsFile: false,
-        statsFilename: 'stats.json',
-        statsOptions: null,
-        logLevel: 'info'
-      })
-    ],
+    plugins,
     externals: isProd ? assetsCDN.externals : ''
   },
 
@@ -133,24 +127,26 @@ module.exports = {
       return args
     })
 
-    config.optimization.splitChunks({
-      chunks: 'all',
-      maxInitialRequests: Infinity,
-      minSize: 128 * 1024,
-      maxSize: 500 * 1024,
-      automaticNameDelimiter: '-',
-      cacheGroups: {
-        vendor: {
-          test: /[\\/]node_modules[\\/]/,
-          name (module) {
-            const packageName = module.context.match(
-              /[\\/]node_modules[\\/](.*?)([\\/]|$)/
-            )[1]
-            return `chunk.${packageName.replace('@', '')}`
-          },
-          priority: 10
+    if (isProd) {
+      config.optimization.splitChunks({
+        chunks: 'all',
+        maxInitialRequests: Infinity,
+        minSize: 128 * 1024,
+        maxSize: 500 * 1024,
+        automaticNameDelimiter: '-',
+        cacheGroups: {
+          vendor: {
+            test: /[\\/]node_modules[\\/]/,
+            name (module) {
+              const packageName = module.context.match(
+                /[\\/]node_modules[\\/](.*?)([\\/]|$)/
+              )[1]
+              return `chunk.${packageName.replace('@', '')}`
+            },
+            priority: 10
+          }
         }
-      }
-    })
+      })
+    }
   }
 }

@@ -17,7 +17,7 @@
         <a-input v-model:value="formState.phone" placeholder="手机号"/>
       </a-form-item>
       <a-form-item :label-col="{span:4}" :wrapperCol="{span:18}" label="所属租户" name="tenant_id">
-        <a-select v-model:value="formState.tenant_id" placeholder="选择租户">
+        <a-select v-model:value="formState.tenant_id" placeholder="选择租户" :disabled="action==='update'">
           <a-select-option v-for="item in tenants" :key="item.id" :value="item.id">{{ item.name }}
           </a-select-option>
         </a-select>
@@ -31,11 +31,11 @@ import { defineEmits, defineProps, reactive, ref, toRaw, UnwrapRef, watchEffect 
 import { RuleObject } from 'ant-design-vue/es/form/interface'
 
 interface FormState {
-  id?: number,
+  id?: string,
   username?: string,
   password?: string,
   phone?: string,
-  tenant_id:string
+  tenant_id?:string
 }
 
 const props = defineProps({
@@ -58,7 +58,7 @@ const props = defineProps({
   }
 })
 
-const formState: UnwrapRef<FormState> = reactive({ tenant_id: '' })
+const formState: UnwrapRef<FormState> = reactive({ })
 
 const formRef = ref()
 const emit = defineEmits(['cancel', 'handleAddOrUpdateAdmin'])
@@ -77,13 +77,15 @@ const handleOk = () => {
 
 watchEffect(() => {
   const d = props.data
-  if (d?.id > 0) {
+  if (d?.id && d?.id !== '') {
     formState.id = d?.id
+    formState.tenant_id = d?.tenant_id
     formState.username = d?.username
     formState.password = d?.password
     formState.phone = d?.phone
   } else {
     formState.id = undefined
+    formState.tenant_id = undefined
     formState.username = undefined
     formState.password = undefined
     formState.phone = undefined
@@ -93,11 +95,11 @@ watchEffect(() => {
 const checkPassword = async (rule: RuleObject, value: string): Promise<any> => {
   const pattern = '^\\S*(?=\\S{6,})(?=\\S*\\d)(?=\\S*[A-Z])(?=\\S*[a-z])(?=\\S*[!@#$%^&*? ])\\S*$'
   const regex = new RegExp(pattern)
-  if ((!formState.id || formState.id === 0) && (
+  if ((!formState.id || formState.id === '') && (
     !value || !regex.test(value))) {
     // eslint-disable-next-line prefer-promise-reject-errors
     return Promise.reject('至少6位，包括至少1个大写字母，1个小写字母，1个数字，1个特殊字符')
-  } else if (formState.id && formState.id > 0 && value && !regex.test(value)) {
+  } else if (formState.id && formState.id !== '' && value && !regex.test(value)) {
     // eslint-disable-next-line prefer-promise-reject-errors
     return Promise.reject('至少6位，包括至少1个大写字母，1个小写字母，1个数字，1个特殊字符')
   } else {
@@ -113,8 +115,8 @@ const rules = {
       trigger: 'blur'
     },
     {
-      min: 5,
-      message: '不能少于5个字符',
+      pattern: '^[a-zA-Z]\\w{4,15}$',
+      message: '字母开头 字母数字_ 5-16个字符',
       trigger: 'blur'
     }
   ],

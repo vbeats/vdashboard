@@ -20,7 +20,7 @@
 </template>
 
 <script lang="ts" setup>
-import { defineEmits, defineProps, ref } from 'vue'
+import { defineEmits, defineProps, ref, watchEffect } from 'vue'
 import { getMenuList } from '@/api/setting'
 import { TableState } from 'ant-design-vue/es/table/interface'
 
@@ -35,6 +35,10 @@ const props = defineProps({
   menus: {
     type: Array,
     required: false
+  },
+  tenantId: {
+    type: String,
+    required: true
   }
 })
 const loading = ref(false)
@@ -62,7 +66,8 @@ const menuList = () => {
   loading.value = true
   getMenuList({
     current: current.value,
-    page_size: pageSize.value
+    page_size: pageSize.value,
+    tenant_id: props.tenantId
   }).then(res => {
     loading.value = false
     data.value = res.data.rows
@@ -70,7 +75,14 @@ const menuList = () => {
   })
 }
 
-menuList()
+watchEffect(() => {
+  const tenantId = props.tenantId
+  if (tenantId && tenantId !== '') {
+    menuList()
+  } else {
+    data.value = []
+  }
+})
 
 const handleTableChange = (page: Pagination) => {
   current.value = page?.current || 1

@@ -7,8 +7,14 @@
       :model="formState"
       :rules="rules" label-align="left"
     >
-      <a-form-item :label-col="{span:4}" :wrapperCol="{span:18}" label="角色名" name="name">
-        <a-input v-model:value="formState.name" placeholder="角色名"/>
+      <a-form-item :label-col="{span:4}" :wrapperCol="{span:18}" label="角色名" name="role_name">
+        <a-input v-model:value="formState.role_name" placeholder="角色名"/>
+      </a-form-item>
+      <a-form-item :label-col="{span:4}" :wrapperCol="{span:18}" label="所属租户" name="tenant_id">
+        <a-select v-model:value="formState.tenant_id" placeholder="选择租户" :disabled="action==='update'">
+          <a-select-option v-for="item in tenants" :key="item.id" :value="item.id">{{ item.name }}
+          </a-select-option>
+        </a-select>
       </a-form-item>
     </a-form>
   </a-modal>
@@ -19,7 +25,8 @@ import { defineEmits, defineProps, reactive, ref, toRaw, UnwrapRef, watchEffect 
 
 interface FormState {
   id?: number,
-  name?: string,
+  role_name?: string,
+  tenant_id:string
 }
 
 const props = defineProps({
@@ -35,10 +42,14 @@ const props = defineProps({
   data: {
     type: Object,
     required: false
+  },
+  tenants: {
+    type: Array,
+    required: true
   }
 })
 
-const formState: UnwrapRef<FormState> = reactive({})
+const formState: UnwrapRef<FormState> = reactive({ tenant_id: '' })
 
 const formRef = ref()
 const emit = defineEmits(['cancel', 'handleAddOrUpdateRole'])
@@ -57,20 +68,29 @@ const handleOk = () => {
 
 watchEffect(() => {
   const d = props.data
-  if (d?.id > 0) {
+  if (d?.id && d?.id !== '') {
     formState.id = d?.id
-    formState.name = d?.name
+    formState.role_name = d?.role_name
+    formState.tenant_id = d?.tenant_id
   } else {
     formState.id = undefined
-    formState.name = undefined
+    formState.role_name = undefined
+    formState.tenant_id = undefined
   }
 })
 
 const rules = {
-  name: [
+  role_name: [
     {
       required: true,
       message: '角色名不能为空',
+      trigger: 'blur'
+    }
+  ],
+  tenant_id: [
+    {
+      required: true,
+      message: '租户名不能为空',
       trigger: 'blur'
     }
   ]

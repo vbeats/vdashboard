@@ -33,7 +33,7 @@ const props = defineProps({
     type: Array,
     required: false
   },
-  tenantName: {
+  tenantId: {
     type: String,
     required: true
   }
@@ -61,7 +61,7 @@ const roleList = () => {
   getRoleList({
     current: current.value,
     page_size: pageSize.value,
-    tenant_name: props.tenantName
+    tenant_id: props.tenantId
   }).then(res => {
     data.value = res.data.rows
     total.value = res.data.total
@@ -70,8 +70,8 @@ const roleList = () => {
 }
 
 watchEffect(() => {
-  const tenantName = props.tenantName
-  if (tenantName) {
+  const tenantId = props.tenantId
+  if (tenantId && tenantId !== '') {
     roleList()
   }
 })

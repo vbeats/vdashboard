@@ -59,7 +59,7 @@
                :tenants="tenants"
                @handleAddOrUpdateAdmin="handleAddOrUpdateAdmin"/>
 
-  <admin-role-modal :selected-keys="roleIds" :tenant-name="currentTenantName" :visible="roleVisible" @cancel="handleRoleModalCancel"
+  <admin-role-modal :selected-keys="roleIds" :tenant-id="currentTenantId" :visible="roleVisible" @cancel="handleRoleModalCancel"
                     @selectKeysChange="handleSelectedKeysChange" @updateAdminRole="updateAdminRole"/>
 </template>
 
@@ -138,8 +138,8 @@ const visible = ref(false)
 const item = ref({})
 const roleVisible = ref(false)
 const roleIds = ref<any>([])
-const currentAdminId = ref(0)
-const currentTenantName = ref()
+const currentAdminId = ref()
+const currentTenantId = ref()
 const tenants = ref([])
 
 const reset = () => {
@@ -178,6 +178,8 @@ const handleDeleteUser = async (record: any) => {
 }
 
 const showUpdateModal = async (record: any) => {
+  const res = await getAllTenant()
+  tenants.value = res.data
   action.value = 'update'
   item.value = record
   visible.value = true
@@ -194,8 +196,8 @@ const showAddModal = async () => {
   const res = await getAllTenant()
   tenants.value = res.data
   action.value = 'add'
-  visible.value = true
   item.value = {}
+  visible.value = true
 }
 
 const handleModalCancel = () => {
@@ -204,17 +206,17 @@ const handleModalCancel = () => {
 }
 
 const handleAddOrUpdateAdmin = async (param: any) => {
-  if (param.id && param.id > 0) {
+  if (param.id && param.id !== '') {
     const res = await updateAdmin({
       ...param,
-      platform: process.env.VUE_APP_PLATFORM,
+      platform: parseInt(process.env.VUE_APP_PLATFORM),
       password: encrypt(param.password)
     })
     handleResult(res)
   } else {
     const res = await addAdmin({
       ...param,
-      platform: process.env.VUE_APP_PLATFORM,
+      platform: parseInt(process.env.VUE_APP_PLATFORM),
       password: encrypt(param.password)
     })
     handleResult(res)
@@ -232,7 +234,7 @@ const handleResult = (res: any) => {
 // 用户分配角色
 const showRoleModal = async (record: any) => {
   currentAdminId.value = record.id
-  currentTenantName.value = record.tenant_name
+  currentTenantId.value = record.tenant_id
   // 此用户已分配的角色
   const res = await getRoleIdsByAdminId({ id: record.id })
   roleIds.value = res.data
@@ -241,7 +243,7 @@ const showRoleModal = async (record: any) => {
 
 const handleRoleModalCancel = () => {
   roleIds.value = []
-  currentAdminId.value = 0
+  currentAdminId.value = ''
   roleVisible.value = false
 }
 
@@ -257,7 +259,7 @@ const updateAdminRole = async () => {
   if (res.code === 200) {
     message.success('分配成功')
     userList()
-    currentAdminId.value = 0
+    currentAdminId.value = ''
     roleIds.value = []
     roleVisible.value = false
   }

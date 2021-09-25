@@ -18,8 +18,8 @@ export function getCaptcha (): Promise<any> {
 /*
 * 获取手机验证码
 * */
-export function getSmsCode (phone: string): Promise<any> {
-  return axios.post('/auth/oauth/sms?' + key, { phone })
+export function getSmsCode (params: any): Promise<any> {
+  return axios.post('/auth/oauth/sms?' + key, { ...params })
 }
 
 /*
