@@ -1,7 +1,7 @@
-import { loadLanguage } from '@/locale'
+import {loadLanguage} from '@/locale'
 
 const state = {
-  lang: 'zh-CN'
+  lang: 'zh-CN',
 }
 
 const app: any = {
@@ -9,10 +9,10 @@ const app: any = {
     state.lang = lang
     localStorage.setItem('lang', lang)
     loadLanguage(lang)
-  }
+  },
 }
 
 export default {
   state,
-  mutations: app
+  mutations: app,
 }

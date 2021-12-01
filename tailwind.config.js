@@ -1,20 +1,11 @@
 module.exports = {
-  purge: {
-    enable: true,
-    content: ['./public/index.html', './src/**/*.{vue,js,ts,jsx,tsx}'],
-    preserveHtmlElements: false,
-    options: {
-      keyframes: true
-    }
-  },
+  purge: [],
+  darkMode: false, // or 'media' or 'class'
   theme: {
-    extend: {}
+    extend: {},
   },
   variants: {
-    extend: {}
+    extend: {},
   },
   plugins: [],
-  corePlugins: {
-    preflight: false
-  }
 }

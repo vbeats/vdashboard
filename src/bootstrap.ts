@@ -7,8 +7,7 @@ const loadUserInfo = () => {
 
 // 默认语言
 const loadLanguage = () => {
-  store.dispatch('load_language', localStorage.getItem('lang') ||
-    (navigator.language === 'zh-CN' ? 'zh-CN' : 'en-US')).then()
+  store.dispatch('load_language', localStorage.getItem('lang') || (navigator.language === 'zh-CN' ? 'zh-CN' : 'en-US')).then()
 }
 
 export default (): void => {

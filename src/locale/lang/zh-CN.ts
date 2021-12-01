@@ -1,3 +1,3 @@
 export default {
-  btTest: '更改语言'
+  btTest: '更改语言',
 }

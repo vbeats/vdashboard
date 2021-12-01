@@ -1,7 +1,7 @@
-import { JSEncrypt } from 'jsencrypt'
+import {JSEncrypt} from 'jsencrypt'
 
 const publicKey = process.env.VUE_APP_PUBLIC_KEY
-const jsEncrypt = new JSEncrypt({ default_key_size: '4096' })
+const jsEncrypt = new JSEncrypt({default_key_size: '4096'})
 jsEncrypt.setPublicKey(publicKey)
 
 const encrypt = (content: string): string => {

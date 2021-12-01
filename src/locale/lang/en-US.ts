@@ -1,3 +1,3 @@
 export default {
-  btTest: 'Change Language'
+  btTest: 'Change Language',
 }

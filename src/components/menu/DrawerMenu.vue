@@ -1,41 +1,27 @@
 <template>
-  <a-drawer :body-style="{padding:0,width:'256px'}"
-            :closable="false" :get-container="false"
-            :visible="drawerVisible"
-            placement="left" @close="hideDrawerMenu">
-    <a-layout-sider :trigger="false" class="overflow-hidden relative left-0 h-screen"
-                    width="256">
-      <Menu/>
+  <a-drawer :body-style="{padding: 0, width: '256px'}" :closable="false" :get-container="false" :visible="drawerVisible" placement="left" @close="hideDrawerMenu" :width="256">
+    <a-layout-sider :trigger="false" class="overflow-hidden relative left-0 h-screen" width="256">
+      <Menu />
     </a-layout-sider>
   </a-drawer>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
+<script lang="ts" setup>
+import {defineEmits, defineProps} from 'vue'
 import Menu from '@/components/menu/Menu.vue'
 
-export default defineComponent({
-  name: 'DrawerMenu',
-  components: { Menu },
-  emits: ['hideDrawerMenu'],
-  props: {
-    drawerVisible: {
-      type: Boolean,
-      required: true
-    }
-  },
-  setup (props, { emit }) {
-    const hideDrawerMenu = () => {
-      emit('hideDrawerMenu')
-    }
+const emit = defineEmits(['hideDrawerMenu'])
 
-    return {
-      hideDrawerMenu
-    }
-  }
+const props = defineProps({
+  drawerVisible: {
+    type: Boolean,
+    required: true,
+  },
 })
+
+const hideDrawerMenu = () => {
+  emit('hideDrawerMenu')
+}
 </script>
 
-<style lang="stylus" scoped>
-
-</style>
+<style lang="stylus" scoped></style>

@@ -1,69 +1,54 @@
+import {useLocalStorage} from '@vueuse/core'
+import dayjs from 'dayjs'
+import {UserInfo} from '@/store/interface/UserInfo'
 import initRoutes from '@/router/initRoutes'
-import { getToken } from '@/api/auth'
+import {mapValueToState} from '@/util/util'
 
-const state = {
-  user: {
-    id: '',
-    access_token: '',
-    refresh_token: '',
-    username: '',
-    phone: '',
-    avatar: '',
-    menus: []
-  },
+const defaultUser = {
+  tenant_code: process.env.VUE_APP_SHOW_TENANT === 'true' ? '' : process.env.VUE_APP_TENANT,
+  account: '',
+  nick_name: '',
+  gender: '',
+  phone: '',
+  access_token: undefined,
+  refresh_token: undefined,
   access_token_expire: -1,
-  refresh_token_expire: -1
+  refresh_token_expire: -1,
+  menus: undefined,
 }
 
-const updateUserInfo = (state:any, userInfo:any) => {
-  const access_token_expire = new Date().getTime() + 7200 * 1000
-  const refresh_token_expire = new Date().getTime() + 180 * 24 * 3600 * 1000
-  state.user = { ...userInfo }
-  state.access_token_expire = access_token_expire
-  state.refresh_token_expire = refresh_token_expire
-  localStorage.setItem('user', JSON.stringify(userInfo))
-  localStorage.setItem('access_token', userInfo.access_token)
-  localStorage.setItem('refresh_token', userInfo.refresh_token)
-  localStorage.setItem('access_token_expire', String(access_token_expire))
-  localStorage.setItem('refresh_token_expire', String(refresh_token_expire))
-  initRoutes()
+const state = {
+  ...defaultUser,
 }
 
 const user: any = {
-  logout: (state: any): void => {
-    state.user = {}
-    state.access_token_expire = -1
-    state.refresh_token_expire = -1
+  // 加载用户信息
+  load_userinfo: (state: any) => {
+    const user = useLocalStorage('user', defaultUser)
+    mapValueToState(state, user.value)
+    // menus
+    user.value.menus && initRoutes()
+  },
+  // token && 用户信息
+  update_userinfo: (state: any, info: UserInfo) => {
+    mapValueToState(state, info)
+    if (info.access_token && info.refresh_token) {
+      state.access_token_expire = dayjs().unix() + 7200
+      state.refresh_token_expire = dayjs().unix() + 30 * 24 * 3600
+    }
     localStorage.removeItem('user')
-    localStorage.removeItem('access_token')
-    localStorage.removeItem('refresh_token')
-    localStorage.removeItem('access_token_expire')
-    localStorage.removeItem('refresh_token_expire')
+    useLocalStorage('user', {...state})
+    // menus
+    info.menus && initRoutes()
   },
-  refresh_token: async (state: any): Promise<void> => {
-    const res = await getToken({
-      type: 0,
-      refresh_token: state.user.refresh_token,
-      platform: parseInt(process.env.VUE_APP_PLATFORM)
-    })
-    updateUserInfo(state, res.data)
+  // 退出登录
+  logout: (state: any) => {
+    mapValueToState(state, defaultUser)
+    localStorage.removeItem('user')
   },
-  update_userinfo: (state: any, userInfo:any): void => {
-    updateUserInfo(state, userInfo)
-  },
-  load_userinfo: (state: any): void => {
-    const user = localStorage.getItem('user')
-    const access_token_expire: number = parseInt(localStorage.getItem('access_token_expire') || '-1')
-    const refresh_token_expire: number = parseInt(localStorage.getItem('refresh_token_expire') || '-1')
-    state.user = user ? JSON.parse(user) : {}
-
-    state.access_token_expire = access_token_expire
-    state.refresh_token_expire = refresh_token_expire
-    initRoutes()
-  }
 }
 
 export default {
   state,
-  mutations: user
+  mutations: user,
 }

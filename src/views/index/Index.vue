@@ -1,30 +1,18 @@
 <template>
   <h1>index.......</h1>
-  <div>{{ data }}</div>
-  <h1>国际化测试</h1><br><br>
-  <a-date-picker/>
-  <a-button @click="changeLanguage">{{ t('btTest') }}</a-button>
+  <h1>国际化测试</h1>
+  <br /><br />
+  <a-date-picker />
+  <br />
+  <div class="mt-10">{{ t('btTest') }} -- 当前语言环境: {{ locale }}</div>
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue'
-import axios from '@/util/request'
-import { useI18n } from 'vue-i18n'
-import { message } from 'ant-design-vue'
+import {useI18n} from 'vue-i18n'
+import {useStore} from 'vuex'
 
-const data = ref()
-const { t } = useI18n()
-
-axios.post('/admin/user/test', { tt: ['xx', 'oo'] }).then(res => {
-  data.value = res
-})
-
-const changeLanguage = () => {
-  message.error('点击右上角切换')
-}
-
+const {t, locale} = useI18n()
+const store = useStore()
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

@@ -1,10 +1,5 @@
-<template>
-  404
-</template>
+<template>404</template>
 
-<script lang="ts" setup>
-</script>
+<script lang="ts" setup></script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

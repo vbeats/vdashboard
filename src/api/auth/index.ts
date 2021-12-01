@@ -1,30 +1,24 @@
 import axios from '@/util/request'
 import querystring from 'query-string'
-import { Credentials } from '@/interface/auth'
 
 const key: string = querystring.stringify({
-  appid: process.env.VUE_APP_APPID,
+  client_id: process.env.VUE_APP_CLIENTID,
   secret: process.env.VUE_APP_SECRET,
-  platform: process.env.VUE_APP_PLATFORM
+  platform: process.env.VUE_APP_PLATFORM,
+  tenant_code: process.env.VUE_APP_TENANT,
 })
 
-/**
- * 获取图形验证码
- */
-export function getCaptcha (): Promise<any> {
-  return axios.get('/auth/oauth/captcha?' + key)
+// 获取图形验证码
+export function getCaptcha(): Promise<any> {
+  return axios.get('/auth/oauth2/captcha?' + key)
 }
 
-/*
-* 获取手机验证码
-* */
-export function getSmsCode (params: any): Promise<any> {
-  return axios.post('/auth/oauth/sms?' + key, { ...params })
+// 用户认证接口
+export function getToken(params: any): Promise<any> {
+  return axios.post('/auth/oauth2/token', {...params})
 }
 
-/*
-*  认证获取token
-* */
-export function getToken (credentials: Credentials): Promise<any> {
-  return axios.post('/auth/oauth/token?' + key, credentials)
+// 用户基本信息 菜单...
+export function getUserProfile(): Promise<any> {
+  return axios.post('/admin/basic/user_profile')
 }
