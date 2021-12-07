@@ -33,8 +33,6 @@ import {useWindowSize} from '@vueuse/core'
 // 校验token
 checkToken()
 
-// await loadUserProfile()
-
 const {width} = useWindowSize()
 
 const data = reactive({

@@ -16,6 +16,13 @@ yarn serve
 yarn build
 ```
 
+### FAQ
+
+1. 页面初次渲染时 `localStorage`中`user`加载到`store` 见: `bootstrap.ts`
+2. `authUtil.ts`包含定时任务 , 定时检查&刷新`token`
+3. `routerAuth.ts`:路由守卫
+4. `route` `meta`: 包含`title` `breads` `actions`
+
 ### Contact
 
 ![battery_wx](https://cdn.jsdelivr.net/gh/boot-vue/pics@main/wechat.jpg)
@@ -28,23 +35,24 @@ yarn build
         <td><img src="https://cdn.jsdelivr.net/gh/boot-vue/pics@main/vdashboard/next/10.png"></td>
     </tr>
     <tr>
-        <td><img src="https://cdn.jsdelivr.net/gh/boot-vue/pics@main/vdashboard/next/3.png"></td>
-        <td><img src="https://cdn.jsdelivr.net/gh/boot-vue/pics@main/vdashboard/next/4.png"></td>
+        <td><img src="https://cdn.jsdelivr.net/gh/boot-vue/pics@main/vdashboard/next/42.png"></td>
+        <td><img src="https://cdn.jsdelivr.net/gh/boot-vue/pics@main/vdashboard/next/43.png"></td>
     </tr>
     <tr>
-        <td><img src="https://cdn.jsdelivr.net/gh/boot-vue/pics@main/vdashboard/next/5.png"></td>
-        <td><img src="https://cdn.jsdelivr.net/gh/boot-vue/pics@main/vdashboard/next/6.png"></td>
+        <td><img src="https://cdn.jsdelivr.net/gh/boot-vue/pics@main/vdashboard/next/44.png"></td>
+        <td><img src="https://cdn.jsdelivr.net/gh/boot-vue/pics@main/vdashboard/next/45.png"></td>
     </tr>
     <tr>
-        <td><img src="https://cdn.jsdelivr.net/gh/boot-vue/pics@main/vdashboard/next/7.png"></td>
-        <td><img src="https://cdn.jsdelivr.net/gh/boot-vue/pics@main/vdashboard/next/8.png"></td>
+        <td><img src="https://cdn.jsdelivr.net/gh/boot-vue/pics@main/vdashboard/next/46.png"></td>
+        <td><img src="https://cdn.jsdelivr.net/gh/boot-vue/pics@main/vdashboard/next/48.png"></td>
     </tr>
     <tr>
         <td><img src="https://cdn.jsdelivr.net/gh/boot-vue/pics@main/vdashboard/next/2.png"></td>
         <td><img src="https://cdn.jsdelivr.net/gh/boot-vue/pics@main/vdashboard/next/9.png"></td>
     </tr>
     <tr>
-        <td><img src="https://cdn.jsdelivr.net/gh/boot-vue/pics@main/vdashboard/next/11.png"></td>
+        <td><img src="https://cdn.jsdelivr.net/gh/boot-vue/pics@main/vdashboard/next/49.png"></td>
+        <td><img src="https://cdn.jsdelivr.net/gh/boot-vue/pics@main/vdashboard/next/12.png"></td>
     </tr>
 </table>
 

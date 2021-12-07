@@ -4,8 +4,10 @@ import {UserInfo} from '@/store/interface/UserInfo'
 import initRoutes from '@/router/initRoutes'
 import {mapValueToState} from '@/util/util'
 
-const defaultUser = {
+const defaultUser: UserInfo = {
   tenant_code: process.env.VUE_APP_SHOW_TENANT === 'true' ? '' : process.env.VUE_APP_TENANT,
+  tenant_id: '0',
+  type: 0,
   account: '',
   nick_name: '',
   gender: '',

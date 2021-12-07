@@ -22,3 +22,8 @@ export function getToken(params: any): Promise<any> {
 export function getUserProfile(): Promise<any> {
   return axios.post('/admin/basic/user_profile')
 }
+
+// 更新用户信息
+export function updateUserProfile(params: any): Promise<any> {
+  return axios.post('/admin/basic/user_profile_update', {...params})
+}

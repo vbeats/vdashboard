@@ -21,24 +21,24 @@ const assetsCDN = {
     'vue-router': 'VueRouter',
     vuex: 'Vuex',
     axios: 'axios',
-    'ant-design-vue': 'Antd',
+    'ant-design-vue': 'antd',
     dayjs: 'dayjs',
     lodash: '_',
   },
-  css: ['//cdn.jsdelivr.net/npm/ant-design-vue@3.0.0-alpha.13/dist/antd.min.css'],
+  css: ['//cdn.jsdelivr.net/npm/ant-design-vue@3.0.0-alpha.14/dist/antd.min.css'],
   js: [
-    '//cdn.jsdelivr.net/npm/vue@3.2.23/dist/vue.global.prod.js',
+    '//cdn.jsdelivr.net/npm/vue@3.2.24/dist/vue.global.prod.js',
     '//cdn.jsdelivr.net/npm/vue-router@4.0.12/dist/vue-router.global.min.js',
     '//cdn.jsdelivr.net/npm/vuex@4.0.2/dist/vuex.global.min.js',
     '//cdn.jsdelivr.net/npm/axios@0.24.0/dist/axios.min.js',
-    '//cdn.jsdelivr.net/npm/ant-design-vue@3.0.0-alpha.13/dist/antd-with-locales.min.js',
-    '//cdn.jsdelivr.net/npm/lodash@4.17.21/lodash.min.js',
     '//cdn.jsdelivr.net/npm/dayjs@1.10.7/dayjs.min.js',
+    '//cdn.jsdelivr.net/npm/lodash@4.17.21/lodash.min.js',
+    '//cdn.jsdelivr.net/npm/ant-design-vue@3.0.0-alpha.14/dist/antd-with-locales.min.js',
   ],
 }
 
 const assetsDevCDN = {
-  css: ['//cdn.jsdelivr.net/npm/ant-design-vue@3.0.0-alpha.13/dist/antd.min.css'],
+  css: ['//cdn.jsdelivr.net/npm/ant-design-vue@3.0.0-alpha.14/dist/antd.min.css'],
 }
 
 const plugins = isProd

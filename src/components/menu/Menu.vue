@@ -85,7 +85,7 @@ export default defineComponent({
     }
 
     watchEffect(() => {
-      data.selectedKeys = [route.path.substring(1)]
+      data.selectedKeys = [route.path.substring(route.path.lastIndexOf('/') + 1)]
     })
 
     return {

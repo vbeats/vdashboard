@@ -2,13 +2,16 @@
   <div class="login w-screen min-h-screen overflow-hidden flex flex-col">
     <div class="flex flex-row items-center justify-center mt-4 md:mt-36 2xl:mt-48">
       <img src="@/assets/img/logo.svg" alt="" class="w-16" />
-      <span class="text-2xl font-sans">V Dashboard</span>
+      <span class="text-2xl font-sans ml-4">V Dashboard</span>
     </div>
     <div class="flex justify-center items-center mt-4 md:mt-16 2xl:mt-24">
-      <!--  登录框  -->
+      <!--  登录区域  -->
       <div class="flex items-center p-4 sm:w-full md:w-3/4 2xl:w-7/12 max-w-screen-lg bg-white rounded-lg">
         <img :src="LoginSvg" class="w-3/5 hidden lg:flex" />
-        <div class="m-4 w-full lg:w-2/5">
+        <!-- 加载中 -->
+        <a-spin size="large" v-if="loading" class="w-full" />
+        <!-- 表单  -->
+        <div class="m-4 w-full lg:w-2/5" v-else>
           <a-tabs class="login-tabs">
             <a-tab-pane key="1" tab="账户密码登录">
               <PasswordLogin ref="unRef" @login="login" />
@@ -53,8 +56,11 @@ const unRef = ref<DefineComponent | null>()
 const phRef = ref<DefineComponent | null>()
 const store = useStore()
 const router = useRouter()
+const loading = ref<boolean>(false)
+
 // 用户认证
 const login = (params: any): void => {
+  loading.value = true
   const credentials: Credentials = {
     tenant_code: params.tenant_code,
     client_id: process.env.VUE_APP_CLIENTID,
@@ -83,6 +89,7 @@ const login = (params: any): void => {
     .catch(() => {
       unRef.value && unRef.value.refreshCaptcha()
       phRef.value && phRef.value.enableLoginButton()
+      loading.value = false
     })
 }
 </script>

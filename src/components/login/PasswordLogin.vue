@@ -1,7 +1,7 @@
 <template>
   <a-form ref="formRef" :model="formState" :rules="rules" :wrapperCol="wrapperCol">
     <a-form-item name="tenant_code" v-show="show_tenant">
-      <a-input v-model:value="formState.tenant_code" placeholder="租户编号" size="large">
+      <a-input v-model:value.trim="formState.tenant_code" placeholder="租户编号" size="large" :autofocus="show_tenant">
         <template #prefix>
           <KeyOutlined style="color: rgba(0, 0, 0, 0.25)" />
         </template>
@@ -9,7 +9,7 @@
     </a-form-item>
 
     <a-form-item name="account">
-      <a-input v-model:value="formState.account" placeholder="账号" size="large">
+      <a-input v-model:value.trim="formState.account" placeholder="账号" size="large" :autofocus="!show_tenant">
         <template #prefix>
           <UserOutlined style="color: rgba(0, 0, 0, 0.25)" />
         </template>
@@ -17,7 +17,7 @@
     </a-form-item>
 
     <a-form-item name="password">
-      <a-input-password v-model:value="formState.password" placeholder="密码" size="large">
+      <a-input-password v-model:value.trim="formState.password" placeholder="密码" size="large">
         <template #prefix>
           <LockOutlined style="color: rgba(0, 0, 0, 0.25)" />
         </template>
@@ -27,7 +27,7 @@
     <a-form-item name="captcha">
       <a-row align="middle" type="flex">
         <a-col :span="12">
-          <a-input v-model:value="formState.captcha" placeholder="验证码" size="large" @blur="checkCaptcha" @keyup.enter="submit" />
+          <a-input v-model:value.trim="formState.captcha" placeholder="验证码" size="large" @blur="checkCaptcha" @keyup.enter="submit" />
         </a-col>
         <a-col :offset="2" :span="10">
           <a-image :src="formState.img" alt="" width="100%" class="w-full cursor-pointer h-14" :preview="false" :fallback="CaptchaSvg" @click="refreshCaptcha" />

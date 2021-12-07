@@ -1,7 +1,7 @@
 <template>
   <a-form ref="formRef" :model="formState" :rules="rules" :wrapperCol="wrapperCol">
     <a-form-item name="tenant_code" v-show="show_tenant">
-      <a-input v-model:value="formState.tenant_code" placeholder="租户编号" size="large">
+      <a-input v-model:value.trim="formState.tenant_code" placeholder="租户编号" size="large">
         <template #prefix>
           <KeyOutlined style="color: rgba(0, 0, 0, 0.25)" />
         </template>
@@ -9,7 +9,7 @@
     </a-form-item>
 
     <a-form-item name="phone">
-      <a-input v-model:value="formState.phone" placeholder="手机号" size="large">
+      <a-input v-model:value.trim="formState.phone" placeholder="手机号" size="large">
         <template #prefix>
           <ShopOutlined style="color: rgba(0, 0, 0, 0.25)" />
         </template>
@@ -19,7 +19,7 @@
     <a-form-item name="sms_code">
       <a-row align="middle" type="flex">
         <a-col :span="12">
-          <a-input v-model:value="formState.sms_code" placeholder="验证码" size="large" @blur="checkCode" @keyup.enter="getSmsCode" />
+          <a-input v-model:value.trim="formState.sms_code" placeholder="验证码" size="large" @blur="checkCode" @keyup.enter="getSmsCode" />
         </a-col>
         <a-col :offset="2" :span="8">
           <a-button :disabled="disabled" block size="large" type="primary" @click="getSmsCode">{{ btText }}</a-button>

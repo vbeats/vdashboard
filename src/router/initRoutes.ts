@@ -9,7 +9,7 @@ export default function (): void {
     path: '/',
     name: 'layout',
     component: Layout,
-    redirect: childrenRoutes[0].path,
+    redirect: childrenRoutes[1].path,
     children: childrenRoutes,
   })
 }
@@ -22,21 +22,23 @@ function childrenRoute(): RouteRecordRaw[] {
     menus.length >= 1 &&
     menus.forEach((item) => {
       if (item.children && item.children.length > 0) {
-        item.children.forEach((child: any) => addRoute(item.key, child, routes))
+        item.children.forEach((child: any) => addRoute(item.key, item.title, child, routes))
       } else {
-        addRoute(item.key, item, routes)
+        addRoute(item.key, '', item, routes)
       }
     })
   return routes
 }
 
-function addRoute(prefix: string, item: any, routes: Array<RouteRecordRaw>): void {
+function addRoute(prefix: string, pTitle: string, item: any, routes: Array<RouteRecordRaw>): void {
   routes.push({
     path: item.path,
     name: item.key,
     component: () => import(`../views/${prefix}/${item.key[0].toUpperCase() + item.key.substring(1, item.key.length)}.vue`),
     meta: {
       title: item.title,
+      breads: pTitle + '_' + item.title,
+      actions: item.action && item.action.split(',').filter((v: string) => v && v !== ''),
     },
   })
 }

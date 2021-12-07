@@ -1,6 +1,6 @@
 <template>
   <a-dropdown placement="bottomRight">
-    <span class="w-14 h-16 block text-center cursor-pointer flex items-center justify-center">
+    <span class="w-14 h-16 block text-center cursor-pointer flex items-center justify-center hover:bg-gray-200">
       <GlobalOutlined class="w-4 h-4 text-black text-opacity-60" />
     </span>
     <template #overlay>

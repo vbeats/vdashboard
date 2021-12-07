@@ -49,4 +49,9 @@ const loadUserProfile = async () => {
   await store.dispatch('update_userinfo', res.data)
 }
 
-export {checkToken, loadUserProfile}
+// 检查当前页面有某些action权限 (route.meta.action)
+const checkPerms = (actions: Array<string>, action: string): boolean => {
+  return actions.indexOf(action) >= 0
+}
+
+export {checkToken, loadUserProfile, checkPerms}
