@@ -16,6 +16,11 @@ yarn serve
 yarn build
 ```
 
+### next plan
+
+- [ ] 大量object属性深拷贝不优雅
+- [ ] 整合map示例
+
 ### FAQ
 
 1. 页面初次渲染时 `localStorage`中`user`加载到`store` 见: `bootstrap.ts`
