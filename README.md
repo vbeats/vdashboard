@@ -3,8 +3,9 @@
 [后端接口参考](https://github.com/vbeats/vcloud)
 
 - `vue3` `typescript` `vuex` `i18n` `ant-design-vue` `webpack`
-- `dev`模式下为了加快编译速度未做优化
+- `dev`模式下为了加快编译速度 未做`chunk`分割
 - `webpack`仅在`build production`时优化资源大小 详见`vue.config.js`配置
+- `vue.config.js`默认开启`cdn`, 不需要的可以自行去掉 & 处理好相关资源依赖
 
 ### run
 
@@ -19,7 +20,7 @@ yarn build
 ### next plan
 
 - [ ] 大量object属性深拷贝不优雅
-- [ ] 整合map示例
+- [ ] 整合map示例, 图表示例
 
 ### FAQ
 
