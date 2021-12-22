@@ -13,7 +13,13 @@
       </template>
       <span class="nav-text">{{ item.title }}</span>
     </a-menu-item>
-
+    <a-sub-menu key="test">
+      <template #icon>
+        <MonitorOutlined />
+      </template>
+      <template #title>测试模块</template>
+      <a-menu-item key="map">百度地图</a-menu-item>
+    </a-sub-menu>
     <a-sub-menu v-for="item in subMenuItems" :key="item.key">
       <template #icon>
         <Component :is="item.icon" keep-alive />
@@ -29,7 +35,8 @@
 <script lang="ts">
 import {defineComponent, inject, reactive, toRefs, UnwrapRef, watchEffect} from 'vue'
 import {useRoute, useRouter} from 'vue-router'
-import {HomeOutlined, SettingOutlined} from '@ant-design/icons-vue'
+import {HomeOutlined, MonitorOutlined, SettingOutlined} from '@ant-design/icons-vue'
+import _ from 'lodash'
 
 interface Item {
   title: string
@@ -41,6 +48,7 @@ interface Item {
 interface Data {
   selectedKeys: Array<string>
   openKeys: Array<string>
+  defaultOpenKeys: Array<string>
   menuItems: Array<Item>
   subMenuItems: Array<Item>
 }
@@ -50,6 +58,7 @@ export default defineComponent({
   components: {
     HomeOutlined,
     SettingOutlined,
+    MonitorOutlined,
   },
   setup() {
     const router = useRouter()
@@ -58,6 +67,7 @@ export default defineComponent({
     const data: UnwrapRef<Data> = reactive({
       selectedKeys: [],
       openKeys: [],
+      defaultOpenKeys: [],
       menuItems: [],
       subMenuItems: [],
     })
@@ -76,6 +86,7 @@ export default defineComponent({
       }
       if (i.default_open) {
         data.openKeys.push(i.key)
+        data.defaultOpenKeys.push(i.key)
       }
     })
 
@@ -86,6 +97,7 @@ export default defineComponent({
 
     watchEffect(() => {
       data.selectedKeys = [route.path.substring(route.path.lastIndexOf('/') + 1)]
+      data.openKeys = _.concat(data.defaultOpenKeys, route.path.substring(route.path.indexOf('/') + 1, route.path.lastIndexOf('/')))
     })
 
     return {

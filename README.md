@@ -20,7 +20,10 @@ yarn build
 ### next plan
 
 - [ ] 大量object属性深拷贝不优雅
-- [ ] 整合map示例, 图表示例
+- [x] 整合百度map示例
+- [ ] 整合高德map示例
+- [ ] 整合`antv`图表示例
+- [ ] 优化404页面
 
 ### FAQ
 
@@ -28,6 +31,7 @@ yarn build
 2. `authUtil.ts`包含定时任务 , 定时检查&刷新`token`
 3. `routerAuth.ts`:路由守卫
 4. `route` `meta`: 包含`title` `breads` `actions`
+5. `vue.config.js`中地图相关api访问凭证`ak`要更换为自己的
 
 ### Contact
 
@@ -43,6 +47,9 @@ yarn build
     <tr>
         <td><img src="https://cdn.jsdelivr.net/gh/boot-vue/pics@main/vdashboard/next/42.png"></td>
         <td><img src="https://cdn.jsdelivr.net/gh/boot-vue/pics@main/vdashboard/next/43.png"></td>
+    </tr>
+    <tr>
+        <td><img src="https://cdn.jsdelivr.net/gh/boot-vue/pics@main/vdashboard/next/61.png"></td>
     </tr>
     <tr>
         <td><img src="https://cdn.jsdelivr.net/gh/boot-vue/pics@main/vdashboard/next/44.png"></td>

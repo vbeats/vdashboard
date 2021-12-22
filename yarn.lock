@@ -2055,10 +2055,10 @@ ansi-styles@^4.0.0, ansi-styles@^4.1.0:
   dependencies:
     color-convert "^2.0.1"
 
-ant-design-vue@^3.0.0-alpha.14:
-  version "3.0.0-alpha.14"
-  resolved "https://registry.npmmirror.com/ant-design-vue/download/ant-design-vue-3.0.0-alpha.14.tgz#93fc2507f706f30363adcd2a16d16fc25c871751"
-  integrity sha512-PmK8I90CMEwij+wFU52nPFi5PgRNlEzyHoF7gB2a7fU5m248OhTorQ9Rv3QqBwC1kjp4a2GpaFR2uvP0Mbu70Q==
+ant-design-vue@^3.0.0-alpha.16:
+  version "3.0.0-alpha.16"
+  resolved "https://registry.npmmirror.com/ant-design-vue/download/ant-design-vue-3.0.0-alpha.16.tgz#77471826a67e6639386c0d30d54590d51a6c915f"
+  integrity sha512-EPWt3F6SOfPXe+HyhOJXdTywdabbuzyARpnXER/zHfq0pYXeFPhki1v5re0afnrS7k6MR/BHJ6cJ1BRBeFqXhQ==
   dependencies:
     "@ant-design/colors" "^6.0.0"
     "@ant-design/icons-vue" "^6.0.0"

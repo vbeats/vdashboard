@@ -25,7 +25,7 @@ const assetsCDN = {
     dayjs: 'dayjs',
     lodash: '_',
   },
-  css: ['//cdn.jsdelivr.net/npm/ant-design-vue@3.0.0-alpha.14/dist/antd.min.css'],
+  css: ['//cdn.jsdelivr.net/npm/ant-design-vue@3.0.0-alpha.16/dist/antd.min.css', '//mapopen.cdn.bcebos.com/github/BMapGLLib/DrawingManager/src/DrawingManager.min.css'],
   js: [
     '//cdn.jsdelivr.net/npm/vue@3.2.24/dist/vue.global.prod.js',
     '//cdn.jsdelivr.net/npm/vue-router@4.0.12/dist/vue-router.global.min.js',
@@ -33,12 +33,15 @@ const assetsCDN = {
     '//cdn.jsdelivr.net/npm/axios@0.24.0/dist/axios.min.js',
     '//cdn.jsdelivr.net/npm/dayjs@1.10.7/dayjs.min.js',
     '//cdn.jsdelivr.net/npm/lodash@4.17.21/lodash.min.js',
-    '//cdn.jsdelivr.net/npm/ant-design-vue@3.0.0-alpha.14/dist/antd-with-locales.min.js',
+    '//cdn.jsdelivr.net/npm/ant-design-vue@3.0.0-alpha.16/dist/antd-with-locales.min.js',
+    '//api.map.baidu.com/api?type=webgl&v=1.0&ak=你自己的ak',
+    '//mapopen.cdn.bcebos.com/github/BMapGLLib/DrawingManager/src/DrawingManager.min.js',
   ],
 }
 
 const assetsDevCDN = {
-  css: ['//cdn.jsdelivr.net/npm/ant-design-vue@3.0.0-alpha.14/dist/antd.min.css'],
+  css: ['//cdn.jsdelivr.net/npm/ant-design-vue@3.0.0-alpha.16/dist/antd.min.css', '//mapopen.cdn.bcebos.com/github/BMapGLLib/DrawingManager/src/DrawingManager.min.css'],
+  js: ['//api.map.baidu.com/api?type=webgl&v=1.0&ak=你自己的ak', '//mapopen.cdn.bcebos.com/github/BMapGLLib/DrawingManager/src/DrawingManager.min.js'],
 }
 
 const plugins = isProd
