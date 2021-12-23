@@ -6,11 +6,18 @@ import Layout from '@/layout/BasicLayout.vue'
 export default function (): void {
   const childrenRoutes = childrenRoute()
   // 测试模块
-  childrenRoutes.push({
-    path: '/test/map',
-    name: 'map',
-    component: () => import(`../views/test/Map.vue`),
-  })
+  childrenRoutes.push(
+    {
+      path: '/test/map',
+      name: 'map',
+      component: () => import(`../views/test/Map.vue`),
+    },
+    {
+      path: '/test/amap',
+      name: 'amap',
+      component: () => import(`../views/test/AMap.vue`),
+    }
+  )
   router.addRoute({
     path: '/',
     name: 'layout',

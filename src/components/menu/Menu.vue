@@ -19,6 +19,7 @@
       </template>
       <template #title>测试模块</template>
       <a-menu-item key="map">百度地图</a-menu-item>
+      <a-menu-item key="amap">高德地图</a-menu-item>
     </a-sub-menu>
     <a-sub-menu v-for="item in subMenuItems" :key="item.key">
       <template #icon>

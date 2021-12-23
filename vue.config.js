@@ -36,12 +36,19 @@ const assetsCDN = {
     '//cdn.jsdelivr.net/npm/ant-design-vue@3.0.0-alpha.16/dist/antd-with-locales.min.js',
     '//api.map.baidu.com/api?type=webgl&v=1.0&ak=你自己的ak',
     '//mapopen.cdn.bcebos.com/github/BMapGLLib/DrawingManager/src/DrawingManager.min.js',
+    '//webapi.amap.com/maps?v=2.0&key=你自己的key',
+    '//webapi.amap.com/ui/1.1/main.js',
   ],
 }
 
 const assetsDevCDN = {
   css: ['//cdn.jsdelivr.net/npm/ant-design-vue@3.0.0-alpha.16/dist/antd.min.css', '//mapopen.cdn.bcebos.com/github/BMapGLLib/DrawingManager/src/DrawingManager.min.css'],
-  js: ['//api.map.baidu.com/api?type=webgl&v=1.0&ak=你自己的ak', '//mapopen.cdn.bcebos.com/github/BMapGLLib/DrawingManager/src/DrawingManager.min.js'],
+  js: [
+    '//api.map.baidu.com/api?type=webgl&v=1.0&ak=你自己的ak',
+    '//mapopen.cdn.bcebos.com/github/BMapGLLib/DrawingManager/src/DrawingManager.min.js',
+    '//webapi.amap.com/maps?v=2.0&key=你自己的key',
+    '//webapi.amap.com/ui/1.1/main.js',
+  ],
 }
 
 const plugins = isProd

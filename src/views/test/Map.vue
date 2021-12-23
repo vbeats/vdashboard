@@ -56,7 +56,7 @@ onMounted(() => {
 
 // 鼠标绘图事件
 const draw = (e: any) => {
-  var arr = document.getElementsByClassName('bmap-btn')
+  const arr = document.getElementsByClassName('bmap-btn')
   for (let i = 0; i < arr.length; i++) {
     ;(arr[i] as HTMLElement).style.backgroundPositionY = '0'
   }
