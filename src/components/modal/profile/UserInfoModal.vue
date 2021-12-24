@@ -50,13 +50,14 @@ const props = defineProps({
   },
 })
 
-const formState: UnwrapRef<FormState> = reactive({
+const user = {
   account: props.item?.account,
   nick_name: props.item?.nick_name,
   gender: props.item?.gender,
   phone: props.item?.phone,
   password: '',
-})
+}
+const formState: UnwrapRef<FormState> = reactive({...user})
 
 const checkPassword = async (rule: RuleObject, value: string): Promise<any> => {
   const pattern = '^\\S*(?=\\S{6,})(?=\\S*\\d)(?=\\S*[A-Z])(?=\\S*[a-z])(?=\\S*[!@#$%^&*? ])\\S*$'

@@ -20,6 +20,7 @@
 import {defineEmits, defineProps, reactive, ref, toRaw, UnwrapRef, watchEffect} from 'vue'
 import {useStore} from 'vuex'
 import {UserType} from '@/util/const'
+import {deepCopy} from '@/util/util'
 
 interface FormState {
   id?: string
@@ -33,7 +34,8 @@ const adminType = UserType.ADMIN
 
 const emit = defineEmits(['handleOk', 'handleCancel'])
 const formRef = ref()
-const formState: UnwrapRef<FormState> = reactive({name: '', tenant_id: user.tenant_id})
+const defaultRole = {name: '', tenant_id: user.tenant_id}
+const formState: UnwrapRef<FormState> = reactive({...defaultRole})
 
 const props = defineProps({
   visible: {
@@ -73,15 +75,9 @@ const handleCancel = () => {
 watchEffect(() => {
   const item = props.item
   if (props.mode === 'update' && item) {
-    formState.id = item.id
-    formState.name = item.name
-    formState.action = item.action
-    formState.tenant_id = item.tenant_id
+    deepCopy(item, formState)
   } else {
-    formState.id = undefined
-    formState.name = ''
-    formState.action = undefined
-    formState.tenant_id = user.tenant_id
+    deepCopy(defaultRole, formState)
   }
 })
 </script>

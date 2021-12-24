@@ -22,7 +22,6 @@
 <script lang="ts" setup>
 import {defineEmits, defineProps, ref, toRaw, watchEffect} from 'vue'
 import {list} from '@/api/system/user'
-import _ from 'lodash'
 import {useStore} from 'vuex'
 
 interface DataItem {

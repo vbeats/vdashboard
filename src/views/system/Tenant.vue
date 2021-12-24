@@ -177,6 +177,7 @@ const showModal = (t: string, record: any = {}) => {
 }
 
 const handleModalCancel = () => {
+  mode.value = 'add'
   item.value = {}
   visible.value = false
 }

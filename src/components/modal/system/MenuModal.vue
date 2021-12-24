@@ -64,6 +64,7 @@
 <script lang="ts" setup>
 import {defineEmits, defineProps, reactive, ref, toRaw, UnwrapRef, watchEffect} from 'vue'
 import {RuleObject} from 'ant-design-vue/es/form'
+import {deepCopy} from '@/util/util'
 
 interface FormState {
   id?: string
@@ -83,14 +84,15 @@ interface FormState {
 
 const emit = defineEmits(['handleOk', 'handleCancel'])
 const formRef = ref()
-const formState: UnwrapRef<FormState> = reactive({
+const defaultMenu = {
   title: '',
   type: 0,
   sort: 0,
   show: true,
   default_select: false,
   default_open: false,
-})
+}
+const formState: UnwrapRef<FormState> = reactive({...defaultMenu})
 
 const props = defineProps({
   visible: {
@@ -153,33 +155,9 @@ const handleCancel = () => {
 watchEffect(() => {
   const item = props.item
   if (props.mode === 'update' && item) {
-    formState.id = item.id
-    formState.title = item.title
-    formState.pid = item.pid
-    formState.ptitle = item.ptitle
-    formState.key = item.key
-    formState.path = item.path
-    formState.icon = item.icon
-    formState.action = item.action
-    formState.type = item.type
-    formState.sort = item.sort
-    formState.show = item.show
-    formState.default_select = item.default_select
-    formState.default_open = item.default_open
+    deepCopy(item, formState)
   } else {
-    formState.id = undefined
-    formState.title = ''
-    formState.pid = undefined
-    formState.ptitle = undefined
-    formState.key = undefined
-    formState.path = undefined
-    formState.icon = undefined
-    formState.action = undefined
-    formState.type = 0
-    formState.sort = 0
-    formState.show = true
-    formState.default_select = false
-    formState.default_open = false
+    deepCopy(defaultMenu, formState)
   }
 })
 </script>

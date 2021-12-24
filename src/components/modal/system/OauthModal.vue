@@ -38,6 +38,7 @@
 
 <script lang="ts" setup>
 import {defineEmits, defineProps, reactive, ref, toRaw, UnwrapRef, watchEffect} from 'vue'
+import {deepCopy} from '@/util/util'
 
 interface FormState {
   id?: string
@@ -53,7 +54,7 @@ interface FormState {
 
 const emit = defineEmits(['handleOk', 'handleCancel'])
 const formRef = ref()
-const formState: UnwrapRef<FormState> = reactive({
+const defaultOauth = {
   client_id: '',
   secret: '',
   grant_type: '',
@@ -62,7 +63,8 @@ const formState: UnwrapRef<FormState> = reactive({
   access_token_expire: 7200,
   refresh_token_expire: 2592000,
   redirect_url: '',
-})
+}
+const formState: UnwrapRef<FormState> = reactive({...defaultOauth})
 
 const grantType = ref([])
 
@@ -87,8 +89,24 @@ const rules = {
   grant_type: [{required: true, message: '不能为空', trigger: 'blur'}],
   scope: [{required: true, message: '不能为空', trigger: 'blur'}],
   platform: [{required: true, type: 'number', message: '不能为空', trigger: 'blur'}],
-  access_token_expire: [{required: true, message: '不能为空', trigger: 'blur', type: 'number', transform: (v: string) => parseInt(v)}],
-  refresh_token_expire: [{required: true, message: '不能为空', trigger: 'blur', type: 'number', transform: (v: string) => parseInt(v)}],
+  access_token_expire: [
+    {
+      required: true,
+      message: '不能为空',
+      trigger: 'blur',
+      type: 'number',
+      transform: (v: string) => parseInt(v),
+    },
+  ],
+  refresh_token_expire: [
+    {
+      required: true,
+      message: '不能为空',
+      trigger: 'blur',
+      type: 'number',
+      transform: (v: string) => parseInt(v),
+    },
+  ],
 }
 const handleOk = () => {
   formRef.value &&
@@ -112,27 +130,11 @@ watchEffect(() => {
 watchEffect(() => {
   const item = props.item
   if (props.mode === 'update' && item) {
-    formState.id = item.id
-    formState.client_id = item.client_id
-    formState.secret = item.secret
-    formState.grant_type = item.grant_type
-    formState.scope = item.scope
-    formState.platform = item.platform
-    formState.access_token_expire = item.access_token_expire
-    formState.refresh_token_expire = item.refresh_token_expire
-    formState.redirect_url = item.redirect_url
-
+    deepCopy(item, formState)
     grantType.value = item.grant_type && item.grant_type.split(',')
   } else {
-    formState.id = ''
-    formState.client_id = ''
-    formState.secret = ''
-    formState.grant_type = ''
-    formState.scope = 'all'
-    formState.platform = 0
-    formState.access_token_expire = 7200
-    formState.refresh_token_expire = 2592000
-    formState.redirect_url = ''
+    deepCopy(defaultOauth, formState)
+    grantType.value = []
   }
 })
 </script>

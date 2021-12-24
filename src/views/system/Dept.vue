@@ -175,6 +175,7 @@ const showModal = async (t: string, record: any = {}) => {
 }
 
 const handleModalCancel = () => {
+  mode.value = 'add'
   item.value = {}
   ids.value = []
   visible.value = false

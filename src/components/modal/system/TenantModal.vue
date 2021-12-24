@@ -19,6 +19,7 @@
 
 <script lang="ts" setup>
 import {defineEmits, defineProps, reactive, ref, toRaw, UnwrapRef, watchEffect} from 'vue'
+import {deepCopy} from '@/util/util'
 
 interface FormState {
   id?: string
@@ -30,7 +31,8 @@ interface FormState {
 
 const emit = defineEmits(['handleOk', 'handleCancel'])
 const formRef = ref()
-const formState: UnwrapRef<FormState> = reactive({name: '', contact_name: '', contact_phone: ''})
+const defaultTenant = {name: '', contact_name: '', contact_phone: ''}
+const formState: UnwrapRef<FormState> = reactive({...defaultTenant})
 
 const props = defineProps({
   visible: {
@@ -67,17 +69,9 @@ const handleCancel = () => {
 watchEffect(() => {
   const item = props.item
   if (props.mode === 'update' && item) {
-    formState.id = item.id
-    formState.name = item.name
-    formState.code = item.code
-    formState.contact_name = item.contact_name
-    formState.contact_phone = item.contact_phone
+    deepCopy(item, formState)
   } else {
-    formState.id = undefined
-    formState.name = ''
-    formState.code = undefined
-    formState.contact_name = ''
-    formState.contact_phone = ''
+    deepCopy(item, formState)
   }
 })
 </script>

@@ -70,7 +70,6 @@ import {useRoute} from 'vue-router'
 import {checkPerms} from '@/util/authUtil'
 import {useStore} from 'vuex'
 import OauthModal from '@/components/modal/system/OauthModal.vue'
-import {listAll} from '@/api/system/tenant'
 
 interface FormState {
   client_id?: string
@@ -185,6 +184,7 @@ const showModal = (t: string, record: any = {}) => {
 }
 
 const handleModalCancel = () => {
+  mode.value = 'add'
   item.value = {}
   visible.value = false
   menuVisible.value = false

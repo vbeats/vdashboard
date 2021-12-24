@@ -51,6 +51,7 @@
 import {defineEmits, defineProps, reactive, ref, toRaw, UnwrapRef, watchEffect} from 'vue'
 import {useStore} from 'vuex'
 import {UserType} from '@/util/const'
+import {deepCopy} from '@/util/util'
 
 interface FormState {
   id?: string
@@ -70,12 +71,13 @@ const adminType = UserType.ADMIN
 
 const emit = defineEmits(['handleOk', 'handleCancel'])
 const formRef = ref()
-const formState: UnwrapRef<FormState> = reactive({
+const defaultDept = {
   tenant_id: user.tenant_id,
   name: '',
   type: 0,
   sort: 0,
-})
+}
+const formState: UnwrapRef<FormState> = reactive({...defaultDept})
 
 const props = defineProps({
   visible: {
@@ -126,27 +128,9 @@ const handleCancel = () => {
 watchEffect(() => {
   const item = props.item
   if (props.mode === 'update' && item) {
-    formState.id = item.id
-    formState.tenant_id = item.tenant_id
-    formState.name = item.name
-    formState.pid = item.pid
-    formState.pname = item.pname
-    formState.type = item.type
-    formState.sort = item.sort
-    formState.contact_name = item.contact_name
-    formState.contact_phone = item.contact_phone
-    formState.remark = item.remark
+    deepCopy(item, formState)
   } else {
-    formState.id = undefined
-    formState.tenant_id = user.tenant_id
-    formState.name = ''
-    formState.pid = undefined
-    formState.pname = undefined
-    formState.type = 0
-    formState.sort = 0
-    formState.contact_name = undefined
-    formState.contact_phone = undefined
-    formState.remark = undefined
+    deepCopy(defaultDept, formState)
   }
 })
 </script>

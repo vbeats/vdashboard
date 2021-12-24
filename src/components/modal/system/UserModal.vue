@@ -34,6 +34,7 @@ import {defineEmits, defineProps, reactive, ref, toRaw, UnwrapRef, watchEffect} 
 import {useStore} from 'vuex'
 import {RuleObject} from 'ant-design-vue/es/form'
 import {UserType} from '@/util/const'
+import {deepCopy} from '@/util/util'
 
 interface FormState {
   id?: string
@@ -51,13 +52,14 @@ const adminType = UserType.ADMIN
 
 const emit = defineEmits(['handleOk', 'handleCancel'])
 const formRef = ref()
-const formState: UnwrapRef<FormState> = reactive({
+const defaultUser = {
   account: '',
   tenant_id: user.tenant_id,
   nick_name: '',
   phone: '',
   gender: 0,
-})
+}
+const formState: UnwrapRef<FormState> = reactive({...defaultUser})
 
 const props = defineProps({
   visible: {
@@ -120,21 +122,10 @@ watchEffect(() => {
   const item = props.item
   formState.password = ''
   if (props.mode === 'update' && item) {
-    formState.id = item.id
-    formState.tenant_id = item.tenant_id
-    formState.account = item.account
-    formState.nick_name = item.nick_name
-    formState.phone = item.phone
-    formState.gender = item.gender
-    formState.avatar = item.avatar
+    deepCopy(item, formState)
   } else {
-    formState.id = undefined
-    formState.tenant_id = user.tenant_id
-    formState.account = ''
-    formState.nick_name = ''
-    formState.phone = ''
+    deepCopy(defaultUser, formState)
     formState.gender = 0
-    formState.avatar = ''
   }
 })
 </script>

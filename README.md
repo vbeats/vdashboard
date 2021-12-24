@@ -19,7 +19,7 @@ yarn build
 
 ### next plan
 
-- [ ] 大量object属性深拷贝不优雅
+- [x] 大量object属性深拷贝不优雅
 - [x] 整合百度map示例
 - [x] 整合高德map示例
 - [ ] 整合`antv`图表示例
