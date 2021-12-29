@@ -1,5 +1,7 @@
 # vdashboard
 
+![Alt](https://repobeats.axiom.co/api/embed/cc4ec4f1e399667a9131f74ac13adde99d92d6c6.svg "Repobeats analytics image")
+
 [后端接口参考](https://github.com/vbeats/vcloud)
 
 - `vue3` `typescript` `vuex` `i18n` `ant-design-vue` `webpack`
