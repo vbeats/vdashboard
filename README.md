@@ -1,6 +1,6 @@
 # vdashboard
 
-![Alt](https://repobeats.axiom.co/api/embed/cc4ec4f1e399667a9131f74ac13adde99d92d6c6.svg "Repobeats analytics image")
+![Alt](https://repobeats.axiom.co/api/embed/3788260d838e50a1eab4e4107eeb02d29a0c8139.svg "Repobeats analytics image")
 
 [后端接口参考](https://github.com/vbeats/vcloud)
 
