@@ -8,7 +8,7 @@
         <a-input v-model:value.trim="formState.secret" placeholder="secret" />
       </a-form-item>
       <a-form-item name="grant_type" label="认证类型">
-        <a-checkbox-group v-model:value="grantType" name="grant_type" :options="['code', 'password', 'refresh_token']" />
+        <a-checkbox-group v-model:value="grantType" name="grant_type" :options="['code', 'password', 'refresh_token', 'wechat']" />
       </a-form-item>
       <a-form-item name="scope" label="scope">
         <a-radio-group v-model:value="formState.scope" name="scope">

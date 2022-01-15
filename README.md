@@ -21,9 +21,6 @@ yarn build
 
 ### next plan
 
-- [x] 大量object属性深拷贝不优雅
-- [x] 整合百度map示例
-- [x] 整合高德map示例
 - [ ] 整合`antv`图表示例
 - [ ] 优化404页面
 - [ ] 尝试`pinia` 一般场景下是否能取代`vuex`

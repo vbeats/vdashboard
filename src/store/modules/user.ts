@@ -2,7 +2,7 @@ import {useLocalStorage} from '@vueuse/core'
 import dayjs from 'dayjs'
 import {UserInfo} from '@/store/interface/UserInfo'
 import initRoutes from '@/router/initRoutes'
-import {deepCopy} from '@/util/util'
+import {mapToState} from '@/util/util'
 
 const defaultUser: UserInfo = {
   tenant_code: process.env.VUE_APP_SHOW_TENANT === 'true' ? '' : process.env.VUE_APP_TENANT,
@@ -27,13 +27,13 @@ const user: any = {
   // 加载用户信息
   load_userinfo: (state: any) => {
     const user = useLocalStorage('user', defaultUser)
-    deepCopy(user.value, state)
+    mapToState(user.value, state)
     // menus
     user.value.menus && initRoutes()
   },
   // token && 用户信息
   update_userinfo: (state: any, info: UserInfo) => {
-    deepCopy(info, state)
+    mapToState(info, state)
     if (info.access_token && info.refresh_token) {
       state.access_token_expire = dayjs().unix() + 7200
       state.refresh_token_expire = dayjs().unix() + 30 * 24 * 3600
@@ -45,7 +45,7 @@ const user: any = {
   },
   // 退出登录
   logout: (state: any) => {
-    deepCopy(defaultUser, state)
+    mapToState(defaultUser, state)
     localStorage.removeItem('user')
   },
 }

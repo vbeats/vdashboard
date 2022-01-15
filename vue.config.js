@@ -25,15 +25,15 @@ const assetsCDN = {
     dayjs: 'dayjs',
     lodash: '_',
   },
-  css: ['//cdn.jsdelivr.net/npm/ant-design-vue@3.0.0-alpha.16/dist/antd.min.css', '//mapopen.cdn.bcebos.com/github/BMapGLLib/DrawingManager/src/DrawingManager.min.css'],
+  css: ['//cdn.jsdelivr.net/npm/ant-design-vue@3.0.0-beta.7/dist/antd.min.css', '//mapopen.cdn.bcebos.com/github/BMapGLLib/DrawingManager/src/DrawingManager.min.css'],
   js: [
-    '//cdn.jsdelivr.net/npm/vue@3.2.24/dist/vue.global.prod.js',
+    '//cdn.jsdelivr.net/npm/vue@3.2.26/dist/vue.global.prod.js',
     '//cdn.jsdelivr.net/npm/vue-router@4.0.12/dist/vue-router.global.min.js',
     '//cdn.jsdelivr.net/npm/vuex@4.0.2/dist/vuex.global.min.js',
     '//cdn.jsdelivr.net/npm/axios@0.24.0/dist/axios.min.js',
     '//cdn.jsdelivr.net/npm/dayjs@1.10.7/dayjs.min.js',
     '//cdn.jsdelivr.net/npm/lodash@4.17.21/lodash.min.js',
-    '//cdn.jsdelivr.net/npm/ant-design-vue@3.0.0-alpha.16/dist/antd-with-locales.min.js',
+    '//cdn.jsdelivr.net/npm/ant-design-vue@3.0.0-beta.7/dist/antd-with-locales.min.js',
     '//api.map.baidu.com/api?type=webgl&v=1.0&ak=你自己的ak',
     '//mapopen.cdn.bcebos.com/github/BMapGLLib/DrawingManager/src/DrawingManager.min.js',
     '//webapi.amap.com/maps?v=2.0&key=你自己的key',
@@ -42,7 +42,7 @@ const assetsCDN = {
 }
 
 const assetsDevCDN = {
-  css: ['//cdn.jsdelivr.net/npm/ant-design-vue@3.0.0-alpha.16/dist/antd.min.css', '//mapopen.cdn.bcebos.com/github/BMapGLLib/DrawingManager/src/DrawingManager.min.css'],
+  css: ['//cdn.jsdelivr.net/npm/ant-design-vue@3.0.0-beta.7/dist/antd.min.css', '//mapopen.cdn.bcebos.com/github/BMapGLLib/DrawingManager/src/DrawingManager.min.css'],
   js: [
     '//api.map.baidu.com/api?type=webgl&v=1.0&ak=你自己的ak',
     '//mapopen.cdn.bcebos.com/github/BMapGLLib/DrawingManager/src/DrawingManager.min.js',
@@ -84,19 +84,19 @@ module.exports = {
   },
 
   /* css: {
-      loaderOptions: {
-          less: {
-              lessOptions: {
-                  modifyVars: {
-                      'primary-color': '#1DA57A',
-                      'link-color': '#1DA57A',
-                      'border-radius-base': '2px',
-                  },
-                  javascriptEnabled: true,
-              },
-          },
-      },
-  }, */
+        loaderOptions: {
+            less: {
+                lessOptions: {
+                    modifyVars: {
+                        'primary-color': '#1DA57A',
+                        'link-color': '#1DA57A',
+                        'border-radius-base': '2px',
+                    },
+                    javascriptEnabled: true,
+                },
+            },
+        },
+    }, */
 
   productionSourceMap: false,
 
