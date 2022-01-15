@@ -21,7 +21,6 @@ yarn build
 
 ### next plan
 
-- [ ] 微信配置页面
 - [ ] 整合`antv`图表示例
 - [ ] 优化404页面
 - [ ] 尝试`pinia` 一般场景下是否能取代`vuex`

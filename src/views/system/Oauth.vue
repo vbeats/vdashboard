@@ -35,6 +35,11 @@
     :scroll="{x: 2048}"
   >
     <template #bodyCell="{column, record}">
+      <template v-if="column.key === 'secret'">
+        <span class="flex justify-between items-center"
+          >{{ record.secret.substring(0, 15) + '...' }} <CopyOutlined class="text-base cursor-pointer" @click="copySecret(record.secret)" />
+        </span>
+      </template>
       <template v-if="column.key === 'grant_type'">
         <a-space direction="vertical">
           <a-tag color="blue" v-for="(item, index) in record.grant_type.split(',')" :key="index">{{ item }}</a-tag>
@@ -62,7 +67,7 @@
 </template>
 
 <script lang="ts" setup>
-import {PlusCircleOutlined} from '@ant-design/icons-vue'
+import {PlusCircleOutlined, CopyOutlined} from '@ant-design/icons-vue'
 import {reactive, ref, UnwrapRef} from 'vue'
 import {message} from 'ant-design-vue'
 import {add, del, list, update} from '@/api/system/oauth'
@@ -83,6 +88,7 @@ const columns = [
   {
     title: 'Secret',
     dataIndex: 'secret',
+    key: 'secret',
     ellipsis: true,
   },
   {
@@ -211,6 +217,11 @@ const handleResult = (res: any) => {
 
 const reset = () => {
   formRef.value.resetFields()
+}
+
+const copySecret = (secret: string) => {
+  navigator.clipboard.writeText(secret)
+  message.success('secret已复制到剪贴板')
 }
 </script>
 
