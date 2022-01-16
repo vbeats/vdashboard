@@ -11,6 +11,14 @@
           <a-input v-model:value="formState.phone" placeholder="手机" />
         </a-form-item>
       </a-col>
+      <a-col :xs="{span: 24}" :md="{span: 6}" :xl="{span: 4}">
+        <a-form-item name="account_type">
+          <a-select v-model:value="formState.account_type" placeholder="账号类型">
+            <a-select-option :value="0">用户</a-select-option>
+            <a-select-option :value="user.type === adminType ? 2 : 1">管理人员</a-select-option>
+          </a-select>
+        </a-form-item>
+      </a-col>
       <a-col :xs="{span: 24}" :md="{span: 6}" :xl="{span: 4}" v-if="user.type === adminType">
         <a-form-item name="tenant_id">
           <a-select v-model:value="formState.tenant_id" placeholder="选择租户">
@@ -47,9 +55,16 @@
     :scroll="{x: 1500}"
   >
     <template #bodyCell="{column, record}">
+      <template v-if="column.key === 'account_type'">
+        <a-tag color="green" v-if="record.account_type === 0">用户</a-tag>
+        <a-tag color="purple" v-else-if="record.account_type === 1">{{ user.type === adminType ? '租户账号' : '管理人员' }} </a-tag>
+        <a-tag color="#87d068" v-else-if="record.account_type === 2">{{ user.type === adminType ? '平台账号' : '管理人员' }} </a-tag>
+      </template>
       <template v-if="column.key === 'roles'">
         <a-space direction="vertical">
-          <a-tag color="blue" v-for="(item, index) in (record.roles && record.roles.split(',')) || []" :key="index">{{ item }}</a-tag>
+          <a-tag color="blue" v-for="(item, index) in (record.roles && record.roles.split(',')) || []" :key="index">
+            {{ item }}
+          </a-tag>
         </a-space>
       </template>
       <template v-if="column.key === 'status'">
@@ -67,7 +82,11 @@
           <a-button danger type="primary" @click="updateStatus(record)" :disabled="record.delete_time && record.delete_time !== ''" v-if="checkPerms(actions, 'user:disable')">
             {{ record.status ? '禁用' : '启用' }}
           </a-button>
-          <a-button type="primary" @click="showModal('update', record)" :disabled="record.delete_time && record.delete_time !== ''" v-if="checkPerms(actions, 'user:update')"
+          <a-button
+            type="primary"
+            @click="showModal('update', record)"
+            :disabled="(record.delete_time && record.delete_time !== '') || record.account_type === 0"
+            v-if="checkPerms(actions, 'user:update')"
             >更新
           </a-button>
           <a-button danger type="primary" @click="handleDeleteUser(record)" :disabled="record.delete_time && record.delete_time !== ''" v-if="checkPerms(actions, 'user:delete')"
@@ -113,6 +132,7 @@ interface FormState {
   account?: string
   phone?: string
   tenant_id: string
+  account_type?: number
 }
 
 let columns = [
@@ -125,8 +145,14 @@ let columns = [
   {
     title: '昵称',
     dataIndex: 'nick_name',
-    width: 80,
+    width: 120,
     ellipsis: true,
+  },
+  {
+    title: '账号类型',
+    dataIndex: 'account_type',
+    width: 100,
+    key: 'account_type',
   },
   {
     title: '手机',
@@ -143,6 +169,7 @@ let columns = [
   {
     title: '状态',
     key: 'status',
+    width: 80,
   },
   {
     title: '创建时间',
@@ -207,6 +234,7 @@ const userList = () => {
     page_size: pageSize.value,
     account: formState.account,
     phone: formState.phone,
+    account_type: formState.account_type,
     tenant_id: formState.tenant_id,
   }).then((res) => {
     loading.value = false

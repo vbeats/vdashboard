@@ -32,6 +32,7 @@ yarn build
 3. `routerAuth.ts`:路由守卫
 4. `route` `meta`: 包含`title` `breads` `actions`
 5. `vue.config.js`中百度、高德地图相关api访问凭证`ak` `key`要更换为自己的
+6. `租户管理` `菜单管理` `Oauth2管理` `开放平台配置`等菜单项不要分配给平台下的其它租户使用
 
 ### Contact
 
