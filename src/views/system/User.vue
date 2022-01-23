@@ -163,13 +163,13 @@ let columns = [
   {
     title: '角色',
     key: 'roles',
-    width: 100,
+    width: 120,
     ellipsis: true,
   },
   {
     title: '状态',
     key: 'status',
-    width: 80,
+    width: 100,
   },
   {
     title: '创建时间',
@@ -179,6 +179,7 @@ let columns = [
   {
     title: '删除时间',
     dataIndex: 'delete_time',
+    width: 200,
   },
   {
     title: '操作',

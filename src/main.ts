@@ -3,9 +3,10 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 import i18n from './locale'
-import antd from 'ant-design-vue'
-import './assets/css/index.css'
 import bootstrap from './bootstrap'
+import antd from 'ant-design-vue'
+import 'ant-design-vue/dist/antd.css'
+import './assets/css/index.css'
 
 bootstrap()
 
