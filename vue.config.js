@@ -2,15 +2,6 @@ const path = require('path')
 const CompressionPlugin = require('compression-webpack-plugin')
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
 
-const addStylusResource = (rule) => {
-  rule
-    .use('style-resouce')
-    .loader('style-resources-loader')
-    .options({
-      patterns: [path.resolve(__dirname, 'src/assets/css/variable.styl')],
-    })
-}
-
 const isProd = process.env.NODE_ENV === 'production'
 
 console.log(isProd ? 'build production..... ' : 'build dev....')
@@ -108,9 +99,6 @@ module.exports = {
       .options({
         name: 'assets/[name].[hash:8].[ext]',
       })
-
-    const types = ['vue-modules', 'vue', 'normal-modules', 'normal']
-    types.forEach((type) => addStylusResource(config.module.rule('stylus').oneOf(type)))
 
     config.plugin('html').tap((args) => {
       args[0].cdn = isProd ? assetsCDN : assetsDevCDN

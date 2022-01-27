@@ -14,8 +14,8 @@
       <a-col :xs="{span: 24}" :md="{span: 6}" :xl="{span: 4}">
         <a-form-item name="account_type">
           <a-select v-model:value="formState.account_type" placeholder="账号类型">
-            <a-select-option :value="0">用户</a-select-option>
-            <a-select-option :value="user.type === adminType ? 2 : 1">管理人员</a-select-option>
+            <a-select-option :value="0">普通用户</a-select-option>
+            <a-select-option :value="accountType">管理用户</a-select-option>
           </a-select>
         </a-form-item>
       </a-col>
@@ -112,7 +112,7 @@
 
 <script lang="ts" setup>
 import {PlusCircleOutlined} from '@ant-design/icons-vue'
-import {reactive, ref, UnwrapRef} from 'vue'
+import {reactive, ref, UnwrapRef, watchEffect} from 'vue'
 import {message} from 'ant-design-vue'
 import {add, assignDept, assignRole, del, list, update, updateStatus as updateUserStatus} from '@/api/system/user'
 import {useRoute} from 'vue-router'
@@ -132,7 +132,7 @@ interface FormState {
   account?: string
   phone?: string
   tenant_id: string
-  account_type?: number
+  account_type: number
 }
 
 let columns = [
@@ -193,6 +193,7 @@ let columns = [
 const actions: Array<string> = useRoute().meta.actions as Array<string>
 const user = useStore().getters.getUserInfo
 const adminType = UserType.ADMIN
+const accountType = ref()
 
 user.type === adminType
   ? (columns = _.concat(
@@ -208,7 +209,7 @@ user.type === adminType
   : null
 
 const formRef = ref()
-const formState: UnwrapRef<FormState> = reactive({tenant_id: user.tenant_id})
+const formState: UnwrapRef<FormState> = reactive({tenant_id: user.tenant_id, account_type: user.type === adminType ? 2 : 1})
 const datasource = ref([])
 const loading = ref(false)
 const total = ref(0)
@@ -342,6 +343,12 @@ const handleAssignDept = async (params: any) => {
 const reset = () => {
   formRef.value.resetFields()
 }
+
+watchEffect(() => {
+  const tenantId = formState.tenant_id
+  accountType.value = user.type === adminType && tenantId === '1' ? 2 : 1
+  formState.account_type = accountType.value
+})
 </script>
 
 <style scoped lang="stylus"></style>

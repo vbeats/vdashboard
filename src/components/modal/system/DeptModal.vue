@@ -11,7 +11,7 @@
       </a-form-item>
       <a-form-item label="上级部门" name="pid">
         <a-tree-select
-          v-model:value="formState.pname"
+          v-model:value="pid"
           placeholder="上级部门"
           show-search
           :dropdown-style="{maxHeight: '500px', overflow: 'auto'}"
@@ -19,7 +19,6 @@
           :tree-data="props.deptList"
           :field-names="{children: 'children', label: 'name', key: 'id', value: 'id'}"
           tree-node-filter-prop="name"
-          @change="handleSelectMenu"
           :disabled="mode === 'update'"
         />
       </a-form-item>
@@ -48,7 +47,7 @@
 </template>
 
 <script lang="ts" setup>
-import {defineEmits, defineProps, reactive, ref, toRaw, UnwrapRef, watchEffect} from 'vue'
+import {defineEmits, defineProps, reactive, ref, toRaw, UnwrapRef, watch} from 'vue'
 import {useStore} from 'vuex'
 import {UserType} from '@/util/const'
 import {deepCopy} from '@/util/util'
@@ -68,6 +67,7 @@ interface FormState {
 
 const user = useStore().getters.getUserInfo
 const adminType = UserType.ADMIN
+const pid = ref<string>()
 
 const emit = defineEmits(['handleOk', 'handleCancel'])
 const formRef = ref()
@@ -109,10 +109,6 @@ const rules = {
   type: [{type: 'number', required: true, message: '类型不能为空', trigger: 'blur'}],
 }
 
-const handleSelectMenu = (value: string) => {
-  formState.pid = value
-}
-
 const handleOk = () => {
   formRef.value &&
     formRef.value.validate().then(() => {
@@ -125,14 +121,22 @@ const handleCancel = () => {
   emit('handleCancel')
 }
 
-watchEffect(() => {
-  const item = props.item
-  if (props.mode === 'update' && item) {
-    deepCopy(item, formState)
-  } else {
-    deepCopy(defaultDept, formState)
-  }
+watch(pid, () => {
+  formState.pid = pid.value
 })
+
+watch(
+  () => props.item,
+  (item) => {
+    pid.value = item?.pid === '0' ? undefined : item?.pid
+
+    if (props.mode === 'update' && item) {
+      deepCopy(item, formState)
+    } else {
+      deepCopy(defaultDept, formState)
+    }
+  }
+)
 </script>
 
 <style scoped lang="stylus"></style>

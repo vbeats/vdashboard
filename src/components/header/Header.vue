@@ -38,4 +38,8 @@ watchEffect(() => {
 })
 </script>
 
-<style scoped></style>
+<style lang="stylus">
+.active-item
+  background-color #fff1f0 !important
+  color #f5222d !important
+</style>

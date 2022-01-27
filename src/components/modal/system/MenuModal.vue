@@ -6,15 +6,14 @@
       </a-form-item>
       <a-form-item label="上级菜单" name="pid">
         <a-tree-select
-          v-model:value="formState.ptitle"
+          v-model:value="pid"
           placeholder="上级菜单"
           show-search
           :dropdown-style="{maxHeight: '500px', overflow: 'auto'}"
           allow-clear
           :tree-data="props.menuList"
-          :field-names="{children: 'children', label: 'title', key: 'id'}"
+          :field-names="{children: 'children', label: 'title', key: 'id', value: 'id'}"
           tree-node-filter-prop="title"
-          @change="handleSelectMenu"
           :disabled="mode === 'update'"
         />
       </a-form-item>
@@ -62,7 +61,7 @@
 </template>
 
 <script lang="ts" setup>
-import {defineEmits, defineProps, reactive, ref, toRaw, UnwrapRef, watchEffect} from 'vue'
+import {defineEmits, defineProps, reactive, ref, toRaw, UnwrapRef, watch} from 'vue'
 import {RuleObject} from 'ant-design-vue/es/form'
 import {deepCopy} from '@/util/util'
 
@@ -84,6 +83,8 @@ interface FormState {
 
 const emit = defineEmits(['handleOk', 'handleCancel'])
 const formRef = ref()
+const pid = ref<string>()
+
 const defaultMenu = {
   title: '',
   type: 0,
@@ -136,10 +137,6 @@ const rules = {
   sort: [{type: 'number', required: true, message: '顺序不能为空', trigger: 'blur'}],
 }
 
-const handleSelectMenu = (value: string) => {
-  formState.pid = value
-}
-
 const handleOk = () => {
   formRef.value &&
     formRef.value.validate().then(() => {
@@ -152,14 +149,22 @@ const handleCancel = () => {
   emit('handleCancel')
 }
 
-watchEffect(() => {
-  const item = props.item
-  if (props.mode === 'update' && item) {
-    deepCopy(item, formState)
-  } else {
-    deepCopy(defaultMenu, formState)
-  }
+watch(pid, () => {
+  formState.pid = pid.value
 })
+
+watch(
+  () => props.item,
+  (item) => {
+    pid.value = item?.pid === '0' ? undefined : item?.pid
+
+    if (props.mode === 'update' && item) {
+      deepCopy(item, formState)
+    } else {
+      deepCopy(defaultMenu, formState)
+    }
+  }
+)
 </script>
 
 <style scoped lang="stylus"></style>

@@ -38,8 +38,4 @@ const handleMenuClick = (item: any) => {
 }
 </script>
 
-<style lang="stylus" scoped>
-::v-deep(.active-item)
-  background-color #fff1f0
-  color #f5222d
-</style>
+<style lang="stylus" scoped></style>
