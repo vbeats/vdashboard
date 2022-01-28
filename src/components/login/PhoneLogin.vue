@@ -48,7 +48,7 @@ export default defineComponent({
   components: {ShopOutlined, KeyOutlined},
   setup(props, {emit}) {
     const formState: UnwrapRef<FormState> = reactive({
-      tenant_code: process.env.VUE_APP_SHOW_TENANT === 'true' ? '' : process.env.VUE_APP_TENANT,
+      tenant_code: process.env.VUE_APP_SHOW_TENANT === 'true' ? localStorage.getItem('tenant_code') || '' : process.env.VUE_APP_TENANT,
       phone: '',
       sms_code: '',
     })

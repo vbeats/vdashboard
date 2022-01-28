@@ -65,7 +65,7 @@ export default defineComponent({
   },
   setup(props, {emit}) {
     const formState: UnwrapRef<FormState> = reactive({
-      tenant_code: process.env.VUE_APP_SHOW_TENANT === 'true' ? '' : process.env.VUE_APP_TENANT,
+      tenant_code: process.env.VUE_APP_SHOW_TENANT === 'true' ? localStorage.getItem('tenant_code') || '' : process.env.VUE_APP_TENANT,
       account: '',
       password: '',
       captcha: '',
@@ -117,6 +117,7 @@ export default defineComponent({
       formRef.value &&
         formRef.value.validate().then(() => {
           data.disabled = true
+          localStorage.setItem('tenant_code', formState.tenant_code)
           emit('login', {
             ...formState,
             grant_type: 'PASSWORD',

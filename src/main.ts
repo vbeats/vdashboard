@@ -5,7 +5,7 @@ import store from './store'
 import i18n from './locale'
 import bootstrap from './bootstrap'
 import Antd from 'ant-design-vue'
-import 'ant-design-vue/dist/antd.css'
+import 'ant-design-vue/dist/antd.less'
 import './assets/css/index.css'
 
 bootstrap()
