@@ -6,6 +6,11 @@ declare module '*.vue' {
     export default component
 }
 
+interface ImportMetaEnv {
+    readonly VITE_ACCESS_TOKEN_EXPIRE: number
+    readonly VITE_REFRESH_TOKEN_EXPIRE: number
+}
+
 declare module '@smallwei/avue' {
     const Avue: any;
     export default Avue;

@@ -11,12 +11,12 @@
       </div>
     </div>
   </div>
-  <copyright class="fixed bottom-12 w-full mx-auto"/>
+  <copy-right class="fixed bottom-12 w-full mx-auto"/>
 </template>
 
 <script setup lang="ts">
 import AccountLogin from "../../components/login/AccountLogin.vue"
-import Copyright from '../../components/copyright/index.vue'
+import CopyRight from '../../components/copyright/index.vue'
 
 </script>
 

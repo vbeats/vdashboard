@@ -24,9 +24,9 @@
 
       <el-form-item class="flex flex-row items-center">
         <el-input class="w-1/2" v-model.trim="accountForm.code" placeholder="验证码" @keyup.enter="login(accountRef)"/>
-        <el-image class="w-1/3 h-[60px] ml-auto mr-0 cursor-pointer flex flex-col justify-center items-center"
+        <el-image class="w-[120px] h-[60px] ml-auto mr-0 cursor-pointer flex flex-col justify-center items-center"
                   :src="captchaImg"
-                  @click="getCaptcha">
+                  @click="loadCaptcha">
           <template #error>
             <div class="w-full flex flex-row justify-center items-center bg-gray-300">
               <el-icon class="h-[60px] text-3xl text-gray-400">
@@ -46,10 +46,16 @@
 
 <script setup lang="ts">
 import {reactive, ref} from "vue"
-import {ElMessage, FormInstance, FormRules} from "element-plus"
+import {FormInstance, FormRules} from "element-plus"
 import {getCaptcha} from "../../api/auth/captcha";
 import {getToken} from "../../api/auth/auth";
 import rsa from "../../util/rsa";
+import {useUserStore} from "../../store/user";
+import {useLocalStorage} from "@vueuse/core";
+import {useRouter} from "vue-router";
+
+const userStore = useUserStore()
+const router = useRouter()
 
 const formSize = ref('large')
 
@@ -58,7 +64,7 @@ const captchaImg = ref<string>('')
 const loading = ref<boolean>(false)
 
 const accountForm = reactive({
-  tenant_code: localStorage.getItem('tenant_code') || '',
+  tenant_code: useLocalStorage('user', {tenant_code: ''}).value.tenant_code,
   account: '',
   password: '',
   key: '',
@@ -98,18 +104,20 @@ const login = async (formEl: FormInstance | undefined) => {
       return
     }
     loading.value = true
-    const res = await getToken({
+    getToken({
       ...accountForm, grant_type: 'password',
       password: rsa(accountForm.password)
-    })
-    if (res.code !== 200) {
-      ElMessage({message: res.msg})
-      await loadCaptcha()
-      loading.value = false
-      return
-    }
+    }).then(async res => {
+      // 缓存 租户编号
+      useLocalStorage('user', {tenant_code: accountForm.tenant_code})
 
-    // todo login...
+      await userStore.saveToken({tenant_code: accountForm.tenant_code, access_token: res.data.access_token, refresh_token: res.data.refresh_token})
+
+      await router.replace({name: 'layout'})
+    }).catch(async () => {
+      loading.value = false
+      await loadCaptcha()
+    })
   })
 }
 

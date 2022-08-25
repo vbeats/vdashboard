@@ -1,27 +1,16 @@
 import {defineStore} from 'pinia'
-
-interface User {
-    user: {
-        username?: string
-        phone?: string
-        tenant_code?: string
-        access_token?: string
-        refresh_token?: string
-        access_token_expire: number
-        refresh_token_expire: number
-    }
-}
+import {Token, User} from "./IUser";
+import dayjs from "dayjs";
+import {useLocalStorage} from "@vueuse/core";
 
 const defaultUser: User = {
-    user: {
-        username: '',
-        phone: '',
-        tenant_code: '',
-        access_token: '',
-        refresh_token: '',
-        access_token_expire: -1,
-        refresh_token_expire: -1
-    }
+    username: '',
+    phone: '',
+    tenant_code: '',
+    access_token: '',
+    refresh_token: '',
+    access_token_expire: -1,
+    refresh_token_expire: -1
 }
 
 export const useUserStore = defineStore({
@@ -32,14 +21,39 @@ export const useUserStore = defineStore({
 
     actions: {
         async logout() {
-
+            const tenant_code = this.$state.tenant_code
+            this.$reset()
+            useLocalStorage('user', {...this.$state, tenant_code})
         },
         async loadUserInfo() {
+            const userInfo = useLocalStorage('user', {...defaultUser})
+            this.$patch({...userInfo.value})
+        },
+        // login 保存token
+        async saveToken(param: Token) {
+            const now = dayjs().unix()
+            this.$patch({
+                ...this.$state, ...param,
+                access_token_expire: now + import.meta.env.VITE_ACCESS_TOKEN_EXPIRE,
+                refresh_token_expire: now + import.meta.env.VITE_REFRESH_TOKEN_EXPIRE * 24 * 3600
+            })
 
+            // storage
+            useLocalStorage('user', {...this.$state})
+        },
+        // 只更新 access_token
+        async updateAccessToken(param: Token) {
+            const now = dayjs().unix()
+            this.$patch({
+                ...this.$state, ...param, access_token_expire: now + import.meta.env.VITE_ACCESS_TOKEN_EXPIRE,
+            })
+
+            // update storage
+            useLocalStorage('user', {...this.$state})
         }
     },
 
     getters: {
-        getUserInfo: (state) => state.user,
+        getUserInfo: (state) => state,
     },
 })
