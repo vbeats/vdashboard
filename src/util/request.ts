@@ -20,8 +20,8 @@ const errorHandler = (error: any): any => {
 
 // 请求拦截器
 request.interceptors.request.use((config: AxiosRequestConfig) => {
-    const {user} = storeToRefs(useUserStore())
-    config.headers && (config.headers.Authorization = 'Bearer ' + user.value.access_token)
+    const userStore = storeToRefs(useUserStore())
+    config.headers && (config.headers.Authorization = 'Bearer ' + userStore.access_token)
     return config
 }, errorHandler)
 
