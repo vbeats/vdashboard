@@ -6,7 +6,7 @@
         <div class="flex flex-col justify-center items-center sm:w-full lg:w-1/2">
           <span class="text-2xl font-bold">Vcloud 平台管理系统</span>
           <el-divider class="w-3/5 mb-12"/>
-          <account-login/>
+          <account-login @handle-login="handleLogin"/>
         </div>
       </div>
     </div>
@@ -17,7 +17,22 @@
 <script setup lang="ts">
 import AccountLogin from "../../components/login/AccountLogin.vue"
 import CopyRight from '../../components/copyright/index.vue'
+import {useUserStore} from "../../store/user";
+import {useRouter} from "vue-router";
+import {useMenuStore} from "../../store/menu";
 
+const router = useRouter()
+const userStore = useUserStore()
+const menuStore = useMenuStore()
+
+const handleLogin = async (param: any) => {
+
+  await userStore.saveToken({tenant_code: param.tenant_code, access_token: param.access_token, refresh_token: param.refresh_token})
+
+  await menuStore.initMenu()
+
+  await router.replace({name: 'layout'})
+}
 </script>
 
 <style scoped lang="stylus">

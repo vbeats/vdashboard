@@ -50,12 +50,12 @@ import {FormInstance, FormRules} from "element-plus"
 import {getCaptcha} from "../../api/auth/captcha";
 import {getToken} from "../../api/auth/auth";
 import rsa from "../../util/rsa";
+import {useStorage} from "@vueuse/core";
 import {useUserStore} from "../../store/user";
-import {useLocalStorage} from "@vueuse/core";
-import {useRouter} from "vue-router";
+
+const emit = defineEmits(['handleLogin'])
 
 const userStore = useUserStore()
-const router = useRouter()
 
 const formSize = ref('large')
 
@@ -64,7 +64,7 @@ const captchaImg = ref<string>('')
 const loading = ref<boolean>(false)
 
 const accountForm = reactive({
-  tenant_code: useLocalStorage('user', {tenant_code: ''}).value.tenant_code,
+  tenant_code: useStorage('user', userStore.getUserInfo).value.tenant_code,
   account: '',
   password: '',
   key: '',
@@ -108,12 +108,7 @@ const login = async (formEl: FormInstance | undefined) => {
       ...accountForm, grant_type: 'password',
       password: rsa(accountForm.password)
     }).then(async res => {
-      // 缓存 租户编号
-      useLocalStorage('user', {tenant_code: accountForm.tenant_code})
-
-      await userStore.saveToken({tenant_code: accountForm.tenant_code, access_token: res.data.access_token, refresh_token: res.data.refresh_token})
-
-      await router.replace({name: 'layout'})
+      emit('handleLogin', {tenant_code: accountForm.tenant_code, access_token: res.data.access_token, refresh_token: res.data.refresh_token})
     }).catch(async () => {
       loading.value = false
       await loadCaptcha()

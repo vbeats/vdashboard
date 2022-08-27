@@ -19,9 +19,9 @@
 
 <script setup lang="ts">
 import CopyRight from '../components/copyright/index.vue'
-import {useLocalStorage} from "@vueuse/core";
+import {useStorage} from "@vueuse/core";
 
-const storage = useLocalStorage('user', null)
+const storage = useStorage('user', null)
 
 </script>
 

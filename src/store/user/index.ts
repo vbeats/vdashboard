@@ -1,7 +1,7 @@
 import {defineStore} from 'pinia'
 import {Token, User} from "./IUser";
 import dayjs from "dayjs";
-import {useLocalStorage} from "@vueuse/core";
+import {useStorage} from "@vueuse/core";
 
 const defaultUser: User = {
     username: '',
@@ -21,35 +21,34 @@ export const useUserStore = defineStore({
 
     actions: {
         async logout() {
-            const tenant_code = this.$state.tenant_code
-            this.$reset()
-            useLocalStorage('user', {...this.$state, tenant_code})
+            this.access_token = ''
+            this.refresh_token = ''
+            this.access_token_expire = -1
+            this.refresh_token_expire = -1
         },
         async loadUserInfo() {
-            const userInfo = useLocalStorage('user', {...defaultUser})
+            const userInfo = useStorage('user', this.$state)
             this.$patch({...userInfo.value})
         },
         // login 保存token
         async saveToken(param: Token) {
             const now = dayjs().unix()
-            this.$patch({
-                ...this.$state, ...param,
-                access_token_expire: now + import.meta.env.VITE_ACCESS_TOKEN_EXPIRE,
-                refresh_token_expire: now + import.meta.env.VITE_REFRESH_TOKEN_EXPIRE * 24 * 3600
-            })
+            this.$patch((state) => {
+                state.tenant_code = param.tenant_code
+                state.access_token = param.access_token
+                state.refresh_token = param.refresh_token
+                state.access_token_expire = now + import.meta.env.VITE_ACCESS_TOKEN_EXPIRE,
+                    state.refresh_token_expire = now + import.meta.env.VITE_REFRESH_TOKEN_EXPIRE * 24 * 3600
 
-            // storage
-            useLocalStorage('user', {...this.$state})
+            })
         },
         // 只更新 access_token
         async updateAccessToken(param: Token) {
             const now = dayjs().unix()
-            this.$patch({
-                ...this.$state, ...param, access_token_expire: now + import.meta.env.VITE_ACCESS_TOKEN_EXPIRE,
+            this.$patch((state) => {
+                state.access_token = param.access_token
+                state.access_token_expire = now + import.meta.env.VITE_ACCESS_TOKEN_EXPIRE
             })
-
-            // update storage
-            useLocalStorage('user', {...this.$state})
         }
     },
 
