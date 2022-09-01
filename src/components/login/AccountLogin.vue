@@ -12,10 +12,10 @@
         v-loading="loading"
     >
       <el-form-item label="租户编号" prop="tenant_code">
-        <el-input v-model.trim="accountForm.tenant_code" placeholder="租户编号" prefix-icon="OfficeBuilding"/>
+        <el-input v-model.trim="accountForm.tenant_code" :autofocus="accountForm.tenant_code===''" placeholder="租户编号" prefix-icon="OfficeBuilding"/>
       </el-form-item>
       <el-form-item label="账 号" prop="account">
-        <el-input v-model.trim="accountForm.account" placeholder="账号" prefix-icon="User"/>
+        <el-input v-model.trim="accountForm.account" placeholder="账号" :autofocus="accountForm.tenant_code!==''" prefix-icon="User"/>
       </el-form-item>
       <el-form-item label="密 码" prop="password">
         <el-input v-model.trim="accountForm.password" type="password" show-password placeholder="密码"
@@ -50,7 +50,7 @@ import {FormInstance, FormRules} from "element-plus"
 import {getCaptcha} from "../../api/auth/captcha";
 import {getToken} from "../../api/auth/auth";
 import rsa from "../../util/rsa";
-import {useStorage} from "@vueuse/core";
+import {useLocalStorage} from "@vueuse/core";
 import {useUserStore} from "../../store/user";
 
 const emit = defineEmits(['handleLogin'])
@@ -64,7 +64,7 @@ const captchaImg = ref<string>('')
 const loading = ref<boolean>(false)
 
 const accountForm = reactive({
-  tenant_code: useStorage('user', userStore.getUserInfo).value.tenant_code,
+  tenant_code: useLocalStorage('user', userStore.getUserInfo).value.tenant_code,
   account: '',
   password: '',
   key: '',
@@ -90,6 +90,7 @@ const rules = reactive<FormRules>({
 const loadCaptcha = async () => {
   const res = await getCaptcha()
   accountForm.key = res.data.key
+  accountForm.code = ''
   captchaImg.value = res.data.image
 }
 
@@ -111,6 +112,7 @@ const login = async (formEl: FormInstance | undefined) => {
       emit('handleLogin', {tenant_code: accountForm.tenant_code, access_token: res.data.access_token, refresh_token: res.data.refresh_token})
     }).catch(async () => {
       loading.value = false
+      accountForm.code = ''
       await loadCaptcha()
     })
   })

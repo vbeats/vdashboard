@@ -13,12 +13,12 @@ import bootstrap from './bootstrap'
 const app = createApp(App)
 
 app.use(createPinia())
-app.use(router)
-app.use(bootstrap)
-app.use(ElementPlus)
-app.use(Avue)
+await bootstrap()
+
+app.use(ElementPlus).use(Avue).use(router)
 
 for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
     app.component(key, component)
 }
+
 app.mount('#app')

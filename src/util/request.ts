@@ -21,7 +21,7 @@ const errorHandler = (error: any): any => {
 // 请求拦截器
 request.interceptors.request.use((config: AxiosRequestConfig) => {
     const userStore = storeToRefs(useUserStore())
-    config.headers && (config.headers.Authorization = 'Bearer ' + userStore.access_token)
+    config.headers && (config.headers.Authorization = 'Bearer ' + userStore.access_token?.value)
     return config
 }, errorHandler)
 

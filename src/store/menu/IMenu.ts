@@ -9,5 +9,6 @@ export interface Menu {
     path: string,
     key: string,
     icon: string,
+    children?: Array<Menu>
     buttons?: Array<string>
 }

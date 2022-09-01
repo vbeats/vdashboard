@@ -7,8 +7,12 @@ declare module '*.vue' {
 }
 
 interface ImportMetaEnv {
-    readonly VITE_ACCESS_TOKEN_EXPIRE: number
-    readonly VITE_REFRESH_TOKEN_EXPIRE: number
+    readonly VITE_ACCESS_TOKEN_EXPIRE: string
+    readonly VITE_REFRESH_TOKEN_EXPIRE: string
+}
+
+interface ImportMeta {
+    readonly env: ImportMetaEnv
 }
 
 declare module '@smallwei/avue' {

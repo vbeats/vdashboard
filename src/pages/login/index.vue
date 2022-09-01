@@ -17,9 +17,10 @@
 <script setup lang="ts">
 import AccountLogin from "../../components/login/AccountLogin.vue"
 import CopyRight from '../../components/copyright/index.vue'
-import {useUserStore} from "../../store/user";
-import {useRouter} from "vue-router";
-import {useMenuStore} from "../../store/menu";
+import {useUserStore} from "../../store/user"
+import {useRouter} from "vue-router"
+import {useMenuStore} from "../../store/menu"
+import initRoutes from "../../router/initRoutes"
 
 const router = useRouter()
 const userStore = useUserStore()
@@ -29,7 +30,12 @@ const handleLogin = async (param: any) => {
 
   await userStore.saveToken({tenant_code: param.tenant_code, access_token: param.access_token, refresh_token: param.refresh_token})
 
-  await menuStore.initMenu()
+  await userStore.getProfile()
+
+  await menuStore.updateMenu()
+
+  // 初始化路由
+  await initRoutes()
 
   await router.replace({name: 'layout'})
 }

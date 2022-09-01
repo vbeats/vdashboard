@@ -11,7 +11,7 @@ const routes: Array<RouteRecordRaw> = [
     {
         path: '/:pathMatch(.*)*', // 404
         name: 'NotFound',
-        component: import.meta.glob('../pages/error/404.vue'),
+        redirect: '/index'
     },
 ]
 const router: Router = createRouter({

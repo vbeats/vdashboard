@@ -1,14 +1,15 @@
 <template>
   <el-container>
-    <el-aside width="200px">
-      菜单....
+    <el-aside :width="isCollapse?'64px':'200px'" class="h-screen">
+      <Logo/>
+      <Menu/>
     </el-aside>
     <el-container>
       <el-header>
-        header....
+        <Header/>
       </el-header>
       <el-main>
-        content....
+        <router-view/>
       </el-main>
       <el-footer>
         <copy-right/>
@@ -19,9 +20,32 @@
 
 <script setup lang="ts">
 import CopyRight from '../components/copyright/index.vue'
-import {useStorage} from "@vueuse/core";
+import Logo from '../components/logo/index.vue'
+import Menu from '../components/menu/index.vue'
+import Header from '../components/header/index.vue'
+import {checkToken} from "../util/auth"
 
-const storage = useStorage('user', null)
+import {ref, watch, watchEffect} from "vue";
+import {useMenuStore} from "../store/menu";
+import {breakpointsTailwind, useWindowSize} from "@vueuse/core";
+
+const menuStore = useMenuStore()
+const isCollapse = ref<boolean>(menuStore.is_collapse)
+const {width} = useWindowSize()
+
+watch(width, (v) => {
+  if (v < breakpointsTailwind.md) {
+    menuStore.is_collapse = true
+  } else {
+    menuStore.is_collapse = false
+  }
+})
+
+watchEffect(() => {
+  isCollapse.value = menuStore.is_collapse
+})
+
+checkToken()
 
 </script>
 
