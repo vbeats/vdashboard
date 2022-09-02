@@ -5,20 +5,29 @@ import router from './router'
 import ElementPlus from 'element-plus'
 import Avue from '@smallwei/avue'
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
-import 'element-plus/dist/index.css'
 import '@smallwei/avue/lib/index.css'
-import './style.css'
+import 'element-plus/dist/index.css'
 import bootstrap from './bootstrap'
+import zhCn from 'element-plus/es/locale/lang/zh-cn'
+import axios from "axios"
+import './style.css'
 
 const app = createApp(App)
 
 app.use(createPinia())
 await bootstrap()
 
-app.use(ElementPlus).use(Avue).use(router)
+app.use(ElementPlus, {
+    locale: zhCn
+})
+
+app.use(Avue, {
+    axios,
+    menuType: 'button',
+})
 
 for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
     app.component(key, component)
 }
 
-app.mount('#app')
+app.use(router).mount('#app')
