@@ -14,4 +14,7 @@ export default defineConfig({
             resolvers: [ElementPlusResolver()],
         }),
     ],
+    optimizeDeps: {
+        exclude: ['@smallwei/avue > vue']
+    }
 })

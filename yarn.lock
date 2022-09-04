@@ -1408,7 +1408,7 @@ vue-tsc@^0.40.5:
     "@volar/vue-language-core" "0.40.5"
     "@volar/vue-typescript" "0.40.5"
 
-vue@^3.2.37:
+vue@^3.2.37, vue@^3.2.38:
   version "3.2.38"
   resolved "https://registry.npmmirror.com/vue/-/vue-3.2.38.tgz#cda3a414631745b194971219318a792dbbccdec0"
   integrity sha512-hHrScEFSmDAWL0cwO4B6WO7D3sALZPbfuThDsGBebthrNlDxdJZpGR3WB87VbjpPh96mep1+KzukYEhpHDFa8Q==

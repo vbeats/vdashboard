@@ -1,10 +1,10 @@
 <template>
   <el-container>
-    <el-aside :width="isCollapse?'64px':'200px'" class="h-screen">
+    <el-aside :width="isCollapse?'64px':'200px'" class="h-screen overflow-y-auto">
       <Logo/>
       <Menu/>
     </el-aside>
-    <el-container>
+    <el-container class="h-screen">
       <el-header>
         <Header/>
       </el-header>
@@ -25,9 +25,9 @@ import Menu from '../components/menu/index.vue'
 import Header from '../components/header/index.vue'
 import {checkToken} from "../util/auth"
 
-import {ref, watch, watchEffect} from "vue";
-import {useMenuStore} from "../store/menu";
-import {breakpointsTailwind, useWindowSize} from "@vueuse/core";
+import {ref, watch, watchEffect} from "vue"
+import {useMenuStore} from "../store/menu"
+import {breakpointsTailwind, useWindowSize} from "@vueuse/core"
 
 const menuStore = useMenuStore()
 const isCollapse = ref<boolean>(menuStore.is_collapse)

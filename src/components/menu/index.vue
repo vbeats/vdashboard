@@ -34,8 +34,8 @@
 
 <script setup lang="ts">
 import {useMenuStore} from "../../store/menu"
-import {useRouter} from "vue-router";
-import {ref, watchEffect} from "vue";
+import {useRouter} from "vue-router"
+import {ref, watchEffect} from "vue"
 
 const menuStore = useMenuStore()
 const router = useRouter()

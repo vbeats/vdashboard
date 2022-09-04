@@ -1,5 +1,6 @@
 <template>
   <avue-crud :data="clients" v-model:search="search" :option="option" v-model:page="page"
+             :permission="permission" :table-loading="loading"
              @refresh-change="listClients" @search-change="listClients"
              @size-change="listClients" @current-change="listClients"
              @row-save="addClient" @row-update="updateClient" @row-del="delClient"
@@ -26,6 +27,7 @@ const clients = ref([])
 const search = ref({
   client_id: ''
 })
+const loading = ref(false)
 
 const page = ref({
   total: 0,
@@ -34,9 +36,11 @@ const page = ref({
 })
 
 const listClients = async (param?: any, done?: any) => {
+  loading.value = true
   const res = await list({current: page.value.currentPage, page_size: page.value.pageSize, client_id: search.value.client_id})
   clients.value = res.data.rows || []
   page.value.total = res.data.total || 0
+  loading.value = false
   done && done()
 }
 
@@ -68,20 +72,23 @@ const delClient = async (row: any, index: any) => {
   }, 800)
 }
 
-const option = ref({
+const permission = ref({
   addBtn: checkPerms(route, 'add'),
   editBtn: checkPerms(route, 'edit'),
   delBtn: checkPerms(route, 'del'),
+})
+const option = ref({
   border: true,
-  searchShowBtn: false,
   dialogWidth: '80%',
   column: [
     {
       label: '客户端ID',
       prop: 'client_id',
       search: true,
-      width: 120,
-      order: 10
+      order: 10,
+      rules: [
+        {required: true, message: 'id不能为空', trigger: 'blur'}
+      ]
     },
     {
       label: '客户端Secret',
@@ -89,12 +96,16 @@ const option = ref({
       overHidden: true,
       width: 120,
       labelWidth: 150,
-      order: 9
+      order: 9,
+      rules: [
+        {required: true, message: 'secret不能为空', trigger: 'blur'}
+      ]
     },
     {
       label: '授权类型',
       prop: 'grant_types',
       type: 'checkbox',
+      dataType: 'array',
       dicData: [
         {
           label: '微信小程序',
@@ -120,7 +131,10 @@ const option = ref({
       value: ['wx_app', 'wx_mp', 'password', 'sms', 'refresh_token'],
       width: 150,
       overHidden: true,
-      order: 8
+      order: 8,
+      rules: [
+        {type: 'array', required: true, message: '授权类型不能为空', trigger: 'change'}
+      ]
     },
     {
       label: 'access_token有效时间s',
@@ -131,6 +145,9 @@ const option = ref({
       align: 'center',
       type: 'number',
       controls: false,
+      rules: [
+        {required: true, message: 'expire不能为空', trigger: 'blur'}
+      ]
     },
     {
       label: 'refresh_token有效时间d',
@@ -141,20 +158,29 @@ const option = ref({
       value: 30,
       type: 'number',
       controls: false,
+      rules: [
+        {required: true, message: 'expire不能为空', trigger: 'blur'}
+      ]
     },
     {
       label: '公钥',
       prop: 'public_key',
       overHidden: true,
       width: 120,
-      type: 'textarea'
+      type: 'textarea',
+      rules: [
+        {required: true, message: '公钥不能为空', trigger: 'blur'}
+      ]
     },
     {
       label: '私钥',
       prop: 'private_key',
       overHidden: true,
       width: 120,
-      type: 'textarea'
+      type: 'textarea',
+      rules: [
+        {required: true, message: '私钥不能为空', trigger: 'blur'}
+      ]
     },
     {
       label: '备注',
