@@ -27,13 +27,13 @@ export const useUserStore = defineStore({
             this.tenant_code = tenant_code
             localStorage.setItem('user', JSON.stringify(this.$state))
         },
-        async loadUserInfo() {
+        loadUserInfo() {
             const initValue = localStorage.getItem('user')
             const userInfo = initValue ? JSON.parse(initValue) : this.$state
             this.$patch({...userInfo})
         },
         // login 保存token
-        async saveToken(param: Token) {
+        saveToken(param: Token) {
             const now = dayjs().unix()
             this.$patch((state) => {
                 state.tenant_code = param.tenant_code
@@ -45,7 +45,7 @@ export const useUserStore = defineStore({
             localStorage.setItem('user', JSON.stringify(this.$state))
         },
         // 只更新 access_token
-        async updateAccessToken(param: Token) {
+        updateAccessToken(param: Token) {
             const now = dayjs().unix()
             this.$patch((state) => {
                 state.access_token = param.access_token

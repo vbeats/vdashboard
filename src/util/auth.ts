@@ -1,8 +1,9 @@
 import dayjs from 'dayjs'
-import {useUserStore} from "../store/user";
-import router from "../router";
-import {getToken} from "../api/auth/auth";
-import {useMenuStore} from "../store/menu";
+import {useUserStore} from "../store/user"
+import router from "../router"
+import {getToken} from "../api/auth/auth"
+import {useMenuStore} from "../store/menu"
+import initRoutes from "../router/initRoutes"
 
 // 校验token
 const checkToken = async (): Promise<void> => {
@@ -39,16 +40,17 @@ const checkToken = async (): Promise<void> => {
     })
     await userStore.updateAccessToken({...res.data})
 
-    await loadUserProfile()
+    await updateState()
 }
 
 // 用户基本信息 菜单...
-const loadUserProfile = async () => {
+const updateState = async () => {
     const menuStore = useMenuStore()
     const userStore = useUserStore()
 
     await userStore.getProfile()
     await menuStore.updateMenu()
+    initRoutes()
 }
 
 export {checkToken}

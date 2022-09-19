@@ -3,8 +3,6 @@
     <el-icon class="text-2xl cursor-pointer transition-colors" @click="toggleMenu">
       <Component :is="icon"/>
     </el-icon>
-    <!--  顶部菜单  -->
-    <top-menu/>
     <!--  消息  -->
     <top-msg/>
     <!--  账号  -->
@@ -14,7 +12,6 @@
 
 <script lang="ts" setup>
 import {ref, watchEffect} from "vue"
-import TopMenu from '../top-menu/index.vue'
 import TopMsg from '../top-msg/index.vue'
 import TopAccount from '../top-account/index.vue'
 import {useMenuStore} from "../../store/menu"

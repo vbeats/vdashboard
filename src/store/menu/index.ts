@@ -1,35 +1,28 @@
 import {defineStore} from 'pinia'
-import {menus, topMenus} from "../../api/menu";
+import {menus} from "../../api/menu";
 
-const indexMenu = {
-    title: '首页',
-    key: 'index',
-    icon: 'Menu'
-}
 export const useMenuStore = defineStore({
     id: 'menu',
     state: () => ({
-        top_menus: [indexMenu],
         menus: [],
         default_opens: [''],
         default_active: 'index',
-        is_collapse: false
+        is_collapse: false,
+        path: '/index'
     }),
 
     actions: {
         // 初始化菜单数据
-        async loadMenu() {
+        loadMenu() {
             const initValue = localStorage.getItem('menu')
             const menuInfo = initValue ? JSON.parse(initValue) : this.$state
             this.$patch({...menuInfo, is_collapse: false})
         },
         // 更新菜单数据
         async updateMenu() {
-            const topMenuRes = await topMenus()
             const menuRes = await menus()
             this.$patch(state => {
                 state.menus = menuRes.data
-                state.top_menus = topMenuRes.data || [indexMenu]
             })
             localStorage.setItem('menu', JSON.stringify(this.$state))
         },

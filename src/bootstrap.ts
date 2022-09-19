@@ -1,18 +1,21 @@
 import {useUserStore} from "./store/user"
-import {useMenuStore} from "./store/menu";
-import initRoutes from "./router/initRoutes";
+import {useMenuStore} from "./store/menu"
+import initRoutes from "./router/initRoutes"
+import {App} from "vue"
 
 // 初始化storage数据
-const initData = async () => {
+const initData = () => {
     const userStore = useUserStore()
-    await userStore.loadUserInfo()
+    userStore.loadUserInfo()
 
     // 菜单 & 路由
     const menuStore = useMenuStore()
-    await menuStore.loadMenu()
-    await initRoutes()
+    menuStore.loadMenu()
+    initRoutes()
 }
 
-export default async () => {
-    await initData()
+export default {
+    install: (app: App, option: any) => {
+        initData()
+    }
 }

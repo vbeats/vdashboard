@@ -9,7 +9,10 @@ export function handleRouterAuth(router: Router): void {
     router.beforeEach(async (to: RouteLocationNormalized, from: RouteLocationNormalized, next: NavigationGuardNext) => {
         NProgress.start()
         const userStore = useUserStore()
-        if (!userStore.access_token || userStore.access_token === '' || !userStore.access_token_expire || userStore.access_token_expire - dayjs().unix() <= 0) {
+        const useStorage = localStorage.getItem("user")
+        const access_token = userStore.access_token || (useStorage ? JSON.parse(useStorage).access_token : '')
+        const access_token_expire = userStore.access_token_expire || (useStorage ? JSON.parse(useStorage).access_token_expire : -1)
+        if (!access_token || access_token === '' || !access_token_expire || access_token_expire - dayjs().unix() <= 0) {
             // access_token过期
             await userStore.logout()
             if (to.path === '/login') {

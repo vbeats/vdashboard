@@ -9,13 +9,13 @@ import '@smallwei/avue/lib/index.css'
 import 'element-plus/dist/index.css'
 import bootstrap from './bootstrap'
 import zhCn from 'element-plus/es/locale/lang/zh-cn'
-import axios from "axios"
+import axios from "./util/request"
 import './style.css'
 
 const app = createApp(App)
 
 app.use(createPinia())
-await bootstrap()
+app.use(bootstrap, {})
 
 app.use(ElementPlus, {
     locale: zhCn
@@ -23,7 +23,7 @@ app.use(ElementPlus, {
 
 app.use(Avue, {
     axios,
-    menuType: 'button',
+    menuType: 'text',
 })
 
 for (const [key, component] of Object.entries(ElementPlusIconsVue)) {

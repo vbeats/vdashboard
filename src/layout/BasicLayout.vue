@@ -8,18 +8,19 @@
       <el-header>
         <Header/>
       </el-header>
-      <el-main class="p-8">
-        <router-view/>
+      <el-main class="p-4">
+        <Suspense>
+          <router-view/>
+          <template #fallback>
+            <div v-loading="true"></div>
+          </template>
+        </Suspense>
       </el-main>
-      <el-footer>
-        <copy-right/>
-      </el-footer>
     </el-container>
   </el-container>
 </template>
 
 <script setup lang="ts">
-import CopyRight from '../components/copyright/index.vue'
 import Logo from '../components/logo/index.vue'
 import Menu from '../components/menu/index.vue'
 import Header from '../components/header/index.vue'

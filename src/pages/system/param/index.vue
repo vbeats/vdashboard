@@ -12,17 +12,14 @@
 <script setup lang="ts">
 import {ref} from "vue"
 import {add, del, list, update} from "../../../api/config"
-import {useRoute} from "vue-router"
-import {useTitle} from "@vueuse/core"
 import checkPerms from "../../../util/checkPerms"
 import {ElMessage} from "element-plus";
+import setTitle from '../../../util/title'
+import {useRoute} from "vue-router"
+
+setTitle()
 
 const route = useRoute()
-
-const title = useTitle()
-
-title.value += ' | ' + route.meta.title
-
 const configs = ref([])
 const search = ref({
   config_key: ''
@@ -45,6 +42,7 @@ const listConfig = async (param?: any, done?: any) => {
   done && done()
 }
 
+await listConfig()
 
 const addConfig = async (row: any, done: any, loading: any) => {
   await add(row)

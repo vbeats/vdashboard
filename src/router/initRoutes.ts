@@ -6,9 +6,9 @@ import router from "./index"
 import {Menu} from "../store/menu/IMenu"
 import {useMenuStore} from "../store/menu"
 
-export default async function (): Promise<void> {
+export default function (): void {
 
-    const childrenRoutes = await childrenRoute()
+    const childrenRoutes = childrenRoute()
 
     childrenRoutes.unshift(
         {
@@ -39,8 +39,12 @@ export default async function (): Promise<void> {
 }
 
 // 子路由
-async function childrenRoute(): Promise<RouteRecordRaw[]> {
-    const menus: Array<Menu> = useMenuStore().menus || []
+function childrenRoute(): RouteRecordRaw[] {
+    let menus: Array<Menu> = useMenuStore().menus || []
+    if (!menus || menus.length === 0) {
+        const menuStorage = localStorage.getItem('menu')
+        menus = menuStorage ? JSON.parse(menuStorage).menus : []
+    }
     const routes = new Array<RouteRecordRaw>()
 
     const modules = import.meta.glob('../pages/**/index.vue')

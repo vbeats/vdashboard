@@ -28,14 +28,14 @@ const menuStore = useMenuStore()
 
 const handleLogin = async (param: any) => {
 
-  await userStore.saveToken({tenant_code: param.tenant_code, access_token: param.access_token, refresh_token: param.refresh_token})
+  userStore.saveToken({tenant_code: param.tenant_code, access_token: param.access_token, refresh_token: param.refresh_token})
 
   await userStore.getProfile()
 
   await menuStore.updateMenu()
 
   // 初始化路由
-  await initRoutes()
+  initRoutes()
 
   await router.replace({name: menuStore.default_active || 'index'})
 }

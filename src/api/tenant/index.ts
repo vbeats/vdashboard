@@ -4,6 +4,10 @@ export function list(param: any): Promise<any> {
     return axios.post('/admin/tenant/list', {...param})
 }
 
+export function listV2(): Promise<any> {
+    return axios.post('/admin/tenant/listV2')
+}
+
 export function load(param: any): Promise<any> {
     return axios.post('/admin/tenant/load', {...load})
 }

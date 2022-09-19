@@ -12,17 +12,14 @@
 <script setup lang="ts">
 import {ref} from "vue"
 import {add, del, list, update} from "../../../api/client"
-import {useRoute} from "vue-router"
-import {useTitle} from "@vueuse/core"
 import checkPerms from "../../../util/checkPerms"
-import {ElMessage} from "element-plus";
+import {ElMessage} from "element-plus"
+import setTitle from '../../../util/title'
+import {useRoute} from "vue-router"
+
+setTitle()
 
 const route = useRoute()
-
-const title = useTitle()
-
-title.value += ' | ' + route.meta.title
-
 const clients = ref([])
 const search = ref({
   client_id: ''
@@ -44,6 +41,7 @@ const listClients = async (param?: any, done?: any) => {
   done && done()
 }
 
+await listClients()
 
 const addClient = async (row: any, done: any, loading: any) => {
   row.grant_types = row.grant_types.join(',')
@@ -133,7 +131,7 @@ const option = ref({
       overHidden: true,
       order: 8,
       rules: [
-        {type: 'array', required: true, message: '授权类型不能为空', trigger: 'change'}
+        {required: true, message: '授权类型不能为空', trigger: 'change'}
       ]
     },
     {
