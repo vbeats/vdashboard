@@ -6,7 +6,7 @@
              @row-save="addRole" @row-update="updateRole" @row-del="delRole"
   >
     <template #menu="{type,size,row}" v-if="checkPerms(route,'menu')">
-      <el-button icon="el-icon-check" text :size="size" :type="type" @click.stop="showMenuModal(row)">菜单配置</el-button>
+      <el-button icon="el-icon-menu" text :size="size" :type="type" @click.stop="showMenuModal(row)">菜单配置</el-button>
     </template>
   </avue-crud>
 

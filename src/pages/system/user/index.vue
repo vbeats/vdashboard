@@ -10,14 +10,23 @@
                  :permission="permission" :table-loading="loading"
                  @refresh-change="listAdmin" @search-change="listAdmin"
                  @size-change="listAdmin" @current-change="listAdmin" :before-open="beforeOpen"
-                 @row-save="addAdmin" @row-update="updateRole" @row-del="delRole"
+                 @row-save="addAdmin" @row-update="updateAdmin" @row-del="delAdmin" @selection-change="selectList"
       >
         <template #status="scope">
-          <el-tag :type="scope.row.status?'success':'dange'">{{ scope.row.status ? '正常' : '禁用' }}</el-tag>
+          <el-tag :type="scope.row.status?'success':'danger'">{{ scope.row.status ? '正常' : '禁用' }}</el-tag>
         </template>
 
         <template #role="scope">
-          <el-tag>{{ scope.row.role_name }}</el-tag>
+          <el-tag v-if="scope.row.role_name&&scope.row.role_name!==''">{{ scope.row.role_name }}</el-tag>
+        </template>
+
+        <template #menu-left="{size}">
+          <el-button icon="close" :size="size" type="warning" @click.stop="blockAdmin" v-if="checkPerms(route,'block')">禁用</el-button>
+          <el-button icon="el-icon-check" :size="size" type="success" @click.stop="unBlockAdmin" v-if="checkPerms(route,'unblock')">解封</el-button>
+        </template>
+
+        <template #menu="{type,size,row}" v-if="checkPerms(route,'resetpwd')">
+          <el-button icon="el-icon-switch" text :size="size" :type="type" @click.stop="resetAdminPwd(row)">重置密码</el-button>
         </template>
       </avue-crud>
     </el-col>
@@ -29,12 +38,13 @@ import Tenant from '../../../components/tenant/index.vue'
 import setTitle from '../../../util/title'
 import {useRoute} from "vue-router"
 import {ref, watchEffect} from "vue";
-import {add, list} from "../../../api/admin"
+import {add, block, del, list, resetPwd, unBlock, update} from "../../../api/admin"
 import checkPerms from "../../../util/checkPerms"
 import {useTenantStore} from "../../../store/tenant"
 import {listV2} from "../../../api/role"
-import _ from "lodash";
-import {ElMessage} from "element-plus";
+import encrypt from '../../../util/rsa'
+import _ from "lodash"
+import {ElMessage} from "element-plus"
 
 setTitle()
 
@@ -52,6 +62,8 @@ const loading = ref(false)
 const tenantId = ref()
 const tenantName = ref()
 const showTenant = ref(tenantStore.tenantState.show)
+const formType = ref('add')
+const selectRows = ref<Array<any>>([])
 
 const page = ref({
   total: 0,
@@ -88,6 +100,7 @@ const onTenantChange = async (param: any) => {
 }
 
 const beforeOpen = async (done: any, type: any) => {
+  formType.value = type
   if ('add' === type && !tenantId.value) {
     ElMessage.warning({message: '请先选择租户'})
     return
@@ -111,10 +124,83 @@ const beforeOpen = async (done: any, type: any) => {
 }
 
 const addAdmin = async (row: any, done: any, loading: any) => {
-  const res = await add({tenant_id: row.tenant, account: row.account, username: row.username, phone: row.phone, role_id: row.role})
+  const res = await add({
+    tenant_id: row.tenant,
+    account: row.account,
+    username: row.username,
+    phone: row.phone,
+    role_id: row.role,
+    password: row.password && row.password !== '' ? encrypt(row.password) : undefined
+  })
   ElMessage.success({message: '添加成功'})
   row.id = res.data
   done(row)
+}
+
+const updateAdmin = async (row: any, index: any, done: any, loading: any) => {
+  await update({
+    id: row.id,
+    tenant_id: row.tenant,
+    username: row.username,
+    phone: row.phone,
+    role_id: row.role,
+    password: row.password && row.password !== '' ? encrypt(row.password) : undefined
+  })
+  ElMessage.success({message: '更新成功'})
+  setTimeout(async () => {
+    done()
+    await listAdmin()
+  }, 800)
+}
+
+const delAdmin = async (row: any, index: any, done: any, loading: any) => {
+  await del({id: row.id})
+  ElMessage.success({message: '删除成功'})
+  setTimeout(async () => {
+    done()
+    await listAdmin()
+  }, 800)
+}
+
+const blockAdmin = async () => {
+  if (selectRows.value.length === 0) {
+    ElMessage.warning({message: '请选择至少一条数据'})
+    return
+  }
+  await block(selectRows.value)
+  ElMessage.success({message: '更新成功'})
+  setTimeout(async () => {
+    await listAdmin()
+  }, 800)
+}
+
+const unBlockAdmin = async () => {
+  if (selectRows.value.length === 0) {
+    ElMessage.warning({message: '请选择至少一条数据'})
+    return
+  }
+  await unBlock(selectRows.value)
+  ElMessage.success({message: '更新成功'})
+  setTimeout(async () => {
+    await listAdmin()
+  }, 800)
+}
+
+const selectList = (rows: any) => {
+  selectRows.value = rows
+}
+
+const validPassword = (rule: any, value: string, callback: any) => {
+  if ('add' === formType.value && (!value || value === '')) {
+    callback(new Error('请输入密码'))
+  } else {
+    callback()
+  }
+}
+
+const resetAdminPwd = async (row: any) => {
+  await resetPwd(row)
+  ElMessage.success({message: '密码重置成功'})
 }
 
 const permission = ref({
@@ -125,6 +211,7 @@ const permission = ref({
 const option = ref({
   border: true,
   menuWidth: 380,
+  selection: true,
   dialogWidth: '50%',
   column: [
     {
@@ -136,11 +223,12 @@ const option = ref({
       hide: true,
       disabled: true,
       addDisplay: true,
-      editDisplay: true,
+      editDisplay: false,
     },
     {
       label: '账号',
       prop: 'account',
+      editDisabled: true,
       search: true,
       rules: [
         {required: true, message: '账号不能为空', trigger: 'blur'}
@@ -161,21 +249,19 @@ const option = ref({
       value: '',
       hide: true,
       rules: [
-        {required: true, message: '密码不能为空', trigger: 'blur'}
+        {validator: validPassword, trigger: 'blur'}
       ]
     },
     {
       label: '手机号',
       prop: 'phone',
-      search: true,
-      rules: [
-        {required: true, message: '手机号不能为空', trigger: 'blur'}
-      ]
+      search: true
     },
     {
       label: '状态',
       prop: 'status',
       slot: true,
+      value: 1,
       addDisplay: false,
       editDisplay: false
     },

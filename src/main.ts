@@ -18,7 +18,10 @@ app.use(createPinia())
 app.use(bootstrap, {})
 
 app.use(ElementPlus, {
-    locale: zhCn
+    locale: zhCn,
+    message: {
+        duration: 5000
+    }
 })
 
 app.use(Avue, {

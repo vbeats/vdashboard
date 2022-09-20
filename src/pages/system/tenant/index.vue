@@ -15,7 +15,7 @@
       <el-button icon="el-icon-check" :size="size" type="success" @click.stop="unBlockTenant" v-if="checkPerms(route,'unblock')">解封</el-button>
     </template>
     <template #menu="{type,size,row}" v-if="checkPerms(route,'addsub')">
-      <el-button icon="el-icon-check" text :size="size" :type="type" @click.stop="addSub(row)">新增子级</el-button>
+      <el-button icon="el-icon-arrow-down" text :size="size" :type="type" @click.stop="addSub(row)">新增子级</el-button>
     </template>
   </avue-crud>
 </template>
