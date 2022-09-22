@@ -1,6 +1,8 @@
 <template>
-  <avue-tree :loading="loading" :option="option" @node-click="nodeClick">
-  </avue-tree>
+  <el-scrollbar height="820px">
+    <avue-tree :loading="loading" :option="option" @node-click="nodeClick">
+    </avue-tree>
+  </el-scrollbar>
 </template>
 
 <script setup lang="ts">
