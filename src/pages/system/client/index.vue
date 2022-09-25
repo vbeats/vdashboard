@@ -107,11 +107,23 @@ const option = ref({
       dicData: [
         {
           label: '微信小程序',
-          value: 'wx_app'
+          value: 'wx_miniapp'
         },
         {
-          label: '微信公众号',
+          label: '微信公众平台',
           value: 'wx_mp'
+        },
+        {
+          label: '企业微信',
+          value: 'wx_cp'
+        },
+        {
+          label: '微信开放平台',
+          value: 'wx_open'
+        },
+        {
+          label: '支付宝小程序',
+          value: 'ali_miniapp'
         },
         {
           label: '密码登陆',
@@ -126,7 +138,7 @@ const option = ref({
           value: 'refresh_token'
         }
       ],
-      value: ['wx_app', 'wx_mp', 'password', 'sms', 'refresh_token'],
+      value: ['wx_miniapp', 'wx_mp', 'wx_cp', 'wx_open', 'ali_miniapp', 'password', 'sms', 'refresh_token'],
       width: 150,
       overHidden: true,
       order: 8,

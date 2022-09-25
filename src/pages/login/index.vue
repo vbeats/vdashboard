@@ -28,7 +28,7 @@ const menuStore = useMenuStore()
 
 const handleLogin = async (param: any) => {
 
-  userStore.saveToken({tenant_code: param.tenant_code, access_token: param.access_token, refresh_token: param.refresh_token})
+  userStore.saveToken({id: param.id, tenant_id: param.tenant_id, tenant_code: param.tenant_code, access_token: param.access_token, refresh_token: param.refresh_token})
 
   await userStore.getProfile()
 

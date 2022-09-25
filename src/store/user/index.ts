@@ -5,6 +5,8 @@ import {parseInt} from "lodash";
 import {profile} from "../../api/auth/auth";
 
 const defaultUser: User = {
+    id: '',
+    tenant_id: '',
     username: '',
     phone: '',
     tenant_code: '',
@@ -36,6 +38,8 @@ export const useUserStore = defineStore({
         saveToken(param: Token) {
             const now = dayjs().unix()
             this.$patch((state) => {
+                state.id = param.id
+                state.tenant_id = param.tenant_id
                 state.tenant_code = param.tenant_code
                 state.access_token = param.access_token
                 state.refresh_token = param.refresh_token
@@ -48,6 +52,8 @@ export const useUserStore = defineStore({
         updateAccessToken(param: Token) {
             const now = dayjs().unix()
             this.$patch((state) => {
+                state.id = param.id
+                state.tenant_id = param.tenant_id
                 state.access_token = param.access_token
                 state.access_token_expire = now + parseInt(import.meta.env.VITE_ACCESS_TOKEN_EXPIRE)
             })

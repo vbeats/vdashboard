@@ -109,7 +109,13 @@ const login = async (formEl: FormInstance | undefined) => {
       ...accountForm, grant_type: 'password',
       password: rsa(accountForm.password)
     }).then(async res => {
-      emit('handleLogin', {tenant_code: accountForm.tenant_code, access_token: res.data.access_token, refresh_token: res.data.refresh_token})
+      emit('handleLogin', {
+        id: res.data.id,
+        tenant_id: res.data.tenant_id,
+        tenant_code: accountForm.tenant_code,
+        access_token: res.data.access_token,
+        refresh_token: res.data.refresh_token
+      })
     }).catch(async () => {
       loading.value = false
       accountForm.code = ''

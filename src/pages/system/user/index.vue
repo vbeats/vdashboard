@@ -12,6 +12,10 @@
                  @size-change="listAdmin" @current-change="listAdmin" :before-open="beforeOpen"
                  @row-save="addAdmin" @row-update="updateAdmin" @row-del="delAdmin" @selection-change="selectList"
       >
+        <template #tenant_name="scope">
+          <el-tag>{{ scope.row.tenant_name }}</el-tag>
+        </template>
+
         <template #status="scope">
           <el-tag :type="scope.row.status?'success':'danger'">{{ scope.row.status ? '正常' : '禁用' }}</el-tag>
         </template>
@@ -133,8 +137,10 @@ const addAdmin = async (row: any, done: any, loading: any) => {
     password: row.password && row.password !== '' ? encrypt(row.password) : undefined
   })
   ElMessage.success({message: '添加成功'})
-  row.id = res.data
-  done(row)
+  setTimeout(async () => {
+    done()
+    await listAdmin()
+  }, 800)
 }
 
 const updateAdmin = async (row: any, index: any, done: any, loading: any) => {
@@ -233,6 +239,14 @@ const option = ref({
       rules: [
         {required: true, message: '账号不能为空', trigger: 'blur'}
       ]
+    },
+    {
+      label: '所属租户',
+      prop: 'tenant_name',
+      slot: true,
+      disabled: true,
+      addDisplay: false,
+      editDisplay: true,
     },
     {
       label: '用户名',
