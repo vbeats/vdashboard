@@ -99,7 +99,7 @@ const beforeOpen = async (done: any, type: any) => {
     }
   })
 
-  if ('edit' === type) {
+  if ('edit' === type || 'view' === type) {
     option.value.column.filter(v => {
       const config = form.value.config ? JSON.parse(form.value.config) : null
       if (v.prop === 'appid') {
@@ -108,8 +108,18 @@ const beforeOpen = async (done: any, type: any) => {
       if (v.prop === 'secret') {
         v.value = config ? config.secret : ''
       }
+      if (v.prop === 'token') {
+        v.value = config ? config.token : ''
+      }
+      if (v.prop === 'aes_key') {
+        v.value = config ? config.aesKey : ''
+      }
+      if (v.prop === 'cloud_env') {
+        v.value = config ? config.cloudEnv : ''
+      }
     })
   }
+
   done && done()
 }
 
@@ -117,7 +127,7 @@ const getConfig = (row: any) => {
   let config = {}
   switch (row.type) {
     case 0:
-      config = {appid: row.appid, secret: row.secret}
+      config = {appid: row.appid, secret: row.secret, token: row.token, aesKey: row.aes_key, cloudEnv: row.cloud_env}
       break
     default:
       config = {}
@@ -168,6 +178,7 @@ const permission = ref({
 })
 const option = ref({
   border: true,
+  viewBtn: true,
   menuWidth: 380,
   dialogWidth: '60%',
   column: [
@@ -181,6 +192,7 @@ const option = ref({
       disabled: true,
       addDisplay: true,
       editDisplay: false,
+      viewDisplay: false
     },
     {
       label: '名称',
@@ -242,13 +254,31 @@ const option = ref({
           display: false,
           value: ''
         }
+        let token = {
+          display: false,
+          value: ''
+        }
+        let aes_key = {
+          display: false,
+          value: ''
+        }
+        let cloud_env = {
+          display: false,
+          value: ''
+        }
         const config = form.config ? JSON.parse(form.config) : null
         switch (v) {
           case 0:
             appid.value = config ? config.appid : ''
             secret.value = config ? config.sceret : ''
+            token.value = config ? config.token : ''
+            aes_key.value = config ? config.aes_key : ''
+            cloud_env.value = config ? config.cloud_env : ''
             appid.display = true
             secret.display = true
+            token.display = true
+            aes_key.display = true
+            cloud_env.display = true
             break
           case 1:
             break
@@ -263,7 +293,7 @@ const option = ref({
         }
 
         return {
-          appid, secret
+          appid, secret, token, aes_key, cloud_env
         }
       }
     },
@@ -286,6 +316,27 @@ const option = ref({
       rules: [
         {required: true, message: 'secret不能为空', trigger: 'blur'}
       ]
+    },
+    {
+      label: 'token',
+      prop: 'token',
+      value: '',
+      hide: true,
+      display: false,
+    },
+    {
+      label: 'aes_key',
+      prop: 'aes_key',
+      value: '',
+      hide: true,
+      display: false,
+    },
+    {
+      label: 'cloud_env',
+      prop: 'cloud_env',
+      value: '',
+      hide: true,
+      display: false,
     },
     {
       label: '配置信息',
