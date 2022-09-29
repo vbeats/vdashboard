@@ -22,8 +22,8 @@ const errorHandler = (error: any): any => {
 request.interceptors.request.use((config: AxiosRequestConfig) => {
     const userStore = storeToRefs(useUserStore())
     config.headers && (config.headers.Authorization = 'Bearer ' + userStore.access_token?.value)
-    config.headers && (config.headers['X-USER-ID'] = userStore.id?.value || '')
-    config.headers && (config.headers['X-TENANT-ID'] = userStore.tenant_id?.value || '')
+    config.headers && (config.headers['x-user-id'] = userStore.id?.value || '')
+    config.headers && (config.headers['x-tenant-id'] = userStore.tenant_id?.value || '')
 
     return config
 }, errorHandler)
