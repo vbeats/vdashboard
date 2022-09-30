@@ -27,7 +27,6 @@ const toggleMenu = async () => {
 watchEffect(() => {
   icon.value = menuStore.is_collapse ? 'Expand' : 'Fold'
 })
-
 </script>
 
 <style scoped lang="stylus">

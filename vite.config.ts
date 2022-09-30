@@ -4,10 +4,12 @@ import AutoImport from 'unplugin-auto-import/vite'
 import Components from 'unplugin-vue-components/vite'
 import {ElementPlusResolver} from 'unplugin-vue-components/resolvers'
 import Compression from 'vite-compression-plugin'
+import vueSetupExtend from 'vite-plugin-vue-setup-extend'
 
 export default defineConfig({
     plugins: [
         vue(),
+        vueSetupExtend(),
         AutoImport({
             resolvers: [ElementPlusResolver()],
         }),
@@ -17,7 +19,7 @@ export default defineConfig({
         Compression({
             algorithm: 'gzip',
             deleteOriginalAssets: false
-        })
+        }),
     ],
     optimizeDeps: {
         exclude: ['@smallwei/avue > vue']

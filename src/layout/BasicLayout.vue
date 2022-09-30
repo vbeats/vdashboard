@@ -9,12 +9,18 @@
         <Header/>
       </el-header>
       <el-main class="p-4">
-        <Suspense>
-          <router-view/>
-          <template #fallback>
-            <div v-loading="true"></div>
-          </template>
-        </Suspense>
+        <router-view v-slot="{ Component, route }">
+          <keep-alive :include="needKeepAlive">
+            <suspense>
+              <template #default>
+                <component :is="Component"/>
+              </template>
+              <template #fallback>
+                <div v-loading="true"></div>
+              </template>
+            </suspense>
+          </keep-alive>
+        </router-view>
       </el-main>
     </el-container>
   </el-container>
@@ -47,6 +53,9 @@ watchEffect(() => {
 })
 
 checkToken()
+
+// 需要缓存的组件
+const needKeepAlive = ref([''])
 
 </script>
 
