@@ -34,10 +34,9 @@
 <script lang="ts" setup>
 import {useUserStore} from "../../store/user"
 import {reactive, ref} from "vue"
-import {ElMessage, FormInstance, FormRules} from "element-plus";
-import {updateAccountInfo} from "../../api/auth/auth";
-import encrypt from "../../util/rsa";
-import {useRouter} from "vue-router";
+import {ElMessage, FormInstance, FormRules} from "element-plus"
+import {updateAccountInfo} from "../../api/auth/auth"
+import {useRouter} from "vue-router"
 
 const accountRef = ref<FormInstance>()
 const userStore = useUserStore()
@@ -75,7 +74,7 @@ const rules = reactive<FormRules>({
 const changAccountInfo = (formEl: FormInstance | undefined) => {
   formEl && formEl.validate(async valid => {
     if (valid) {
-      const res = await updateAccountInfo({password: encrypt(accountInfo.password), new_password: encrypt(accountInfo.new_password)})
+      const res = await updateAccountInfo({password: accountInfo.password, new_password: accountInfo.new_password})
       if (res.code === 200) {
         ElMessage.success({message: '修改成功', duration: 8000})
         setTimeout(async () => {

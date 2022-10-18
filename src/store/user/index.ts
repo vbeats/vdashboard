@@ -1,8 +1,6 @@
 import {defineStore} from 'pinia'
 import {Token, User} from "./IUser";
-import dayjs from "dayjs";
-import {parseInt} from "lodash";
-import {profile} from "../../api/auth/auth";
+import {profile} from "../../api/auth/auth"
 
 const defaultUser: User = {
     id: '',
@@ -10,10 +8,7 @@ const defaultUser: User = {
     username: '',
     phone: '',
     tenant_code: '',
-    access_token: '',
-    refresh_token: '',
-    access_token_expire: -1,
-    refresh_token_expire: -1
+    token: '',
 }
 
 export const useUserStore = defineStore({
@@ -36,26 +31,11 @@ export const useUserStore = defineStore({
         },
         // login 保存token
         saveToken(param: Token) {
-            const now = dayjs().unix()
             this.$patch((state) => {
                 state.id = param.id
                 state.tenant_id = param.tenant_id
                 state.tenant_code = param.tenant_code
-                state.access_token = param.access_token
-                state.refresh_token = param.refresh_token
-                state.access_token_expire = now + parseInt(import.meta.env.VITE_ACCESS_TOKEN_EXPIRE)
-                state.refresh_token_expire = now + parseInt(import.meta.env.VITE_REFRESH_TOKEN_EXPIRE) * 24 * 3600
-            })
-            localStorage.setItem('user', JSON.stringify(this.$state))
-        },
-        // 只更新 access_token
-        updateAccessToken(param: Token) {
-            const now = dayjs().unix()
-            this.$patch((state) => {
-                state.id = param.id
-                state.tenant_id = param.tenant_id
-                state.access_token = param.access_token
-                state.access_token_expire = now + parseInt(import.meta.env.VITE_ACCESS_TOKEN_EXPIRE)
+                state.token = param.token
             })
             localStorage.setItem('user', JSON.stringify(this.$state))
         },

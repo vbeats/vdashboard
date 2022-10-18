@@ -1,6 +1,6 @@
 import {JSEncrypt} from 'jsencrypt'
 
-const publicKey = import.meta.env.VITE_PUBLIC_KEY
+const publicKey = ''
 const jsEncrypt = new JSEncrypt({default_key_size: '4096'})
 jsEncrypt.setPublicKey(publicKey)
 

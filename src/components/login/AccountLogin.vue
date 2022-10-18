@@ -49,7 +49,6 @@ import {reactive, ref} from "vue"
 import {FormInstance, FormRules} from "element-plus"
 import {getCaptcha} from "../../api/auth/captcha";
 import {getToken} from "../../api/auth/auth";
-import rsa from "../../util/rsa";
 import {useLocalStorage} from "@vueuse/core";
 import {useUserStore} from "../../store/user";
 
@@ -107,14 +106,13 @@ const login = async (formEl: FormInstance | undefined) => {
     loading.value = true
     getToken({
       ...accountForm, grant_type: 'password',
-      password: rsa(accountForm.password)
+      password: accountForm.password
     }).then(async res => {
       emit('handleLogin', {
         id: res.data.id,
         tenant_id: res.data.tenant_id,
         tenant_code: accountForm.tenant_code,
-        access_token: res.data.access_token,
-        refresh_token: res.data.refresh_token
+        token: res.data.token.token_value,
       })
     }).catch(async () => {
       loading.value = false

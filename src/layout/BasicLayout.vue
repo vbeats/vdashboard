@@ -30,7 +30,6 @@
 import Logo from '../components/logo/index.vue'
 import Menu from '../components/menu/index.vue'
 import Header from '../components/header/index.vue'
-import {checkToken} from "../util/auth"
 
 import {ref, watch, watchEffect} from "vue"
 import {useMenuStore} from "../store/menu"
@@ -51,8 +50,6 @@ watch(width, (v) => {
 watchEffect(() => {
   isCollapse.value = menuStore.is_collapse
 })
-
-checkToken()
 
 // 需要缓存的组件
 const needKeepAlive = ref([''])

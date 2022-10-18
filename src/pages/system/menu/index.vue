@@ -13,7 +13,7 @@
         <Component :is="scope.row.icon"/>
       </el-icon>
     </template>
-    <template #menu="{type,size,row}" v-if="checkPerms(route,'addsub')">
+    <template #menu="{type,size,row}" v-if="checkPerms(route,'menu.addsub')">
       <el-button icon="el-icon-check" text :size="size" :type="type" @click.stop="addSub(row)">新增子级</el-button>
     </template>
   </avue-crud>
@@ -90,9 +90,9 @@ const beforeClose = (done: any, type: any) => {
 }
 
 const permission = ref({
-  addBtn: checkPerms(route, 'add'),
-  editBtn: checkPerms(route, 'edit'),
-  delBtn: checkPerms(route, 'del'),
+  addBtn: checkPerms(route, 'menu.add'),
+  editBtn: checkPerms(route, 'menu.edit'),
+  delBtn: checkPerms(route, 'menu.del'),
 })
 
 const option = ref({
@@ -131,11 +131,12 @@ const option = ref({
       slot: true
     },
     {
-      label: '唯一标识',
-      prop: 'key',
-      rules: [
-        {required: true, message: 'key不能为空', trigger: 'blur'}
-      ]
+      label: '菜单Key',
+      prop: 'key'
+    },
+    {
+      label: '权限字段',
+      prop: 'action',
     },
     {
       label: '类型',

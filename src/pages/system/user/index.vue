@@ -25,11 +25,11 @@
         </template>
 
         <template #menu-left="{size}">
-          <el-button icon="close" :size="size" type="warning" @click.stop="blockAdmin" v-if="checkPerms(route,'block')">禁用</el-button>
-          <el-button icon="el-icon-check" :size="size" type="success" @click.stop="unBlockAdmin" v-if="checkPerms(route,'unblock')">解封</el-button>
+          <el-button icon="close" :size="size" type="warning" @click.stop="blockAdmin" v-if="checkPerms(route,'user.block')">禁用</el-button>
+          <el-button icon="el-icon-check" :size="size" type="success" @click.stop="unBlockAdmin" v-if="checkPerms(route,'user.unblock')">解封</el-button>
         </template>
 
-        <template #menu="{type,size,row}" v-if="checkPerms(route,'resetpwd')">
+        <template #menu="{type,size,row}" v-if="checkPerms(route,'user.resetpwd')">
           <el-button icon="el-icon-switch" text :size="size" :type="type" @click.stop="resetAdminPwd(row)">重置密码</el-button>
         </template>
       </avue-crud>
@@ -46,7 +46,6 @@ import {add, block, del, list, resetPwd, unBlock, update} from "../../../api/adm
 import checkPerms from "../../../util/checkPerms"
 import {useTenantStore} from "../../../store/tenant"
 import {listV2} from "../../../api/role"
-import encrypt from '../../../util/rsa'
 import _ from "lodash"
 import {ElMessage} from "element-plus"
 
@@ -134,7 +133,7 @@ const addAdmin = async (row: any, done: any, loading: any) => {
     username: row.username,
     phone: row.phone,
     role_id: row.role,
-    password: row.password && row.password !== '' ? encrypt(row.password) : undefined
+    password: row.password && row.password !== '' ? row.password : undefined
   })
   ElMessage.success({message: '添加成功'})
   setTimeout(async () => {
@@ -150,7 +149,7 @@ const updateAdmin = async (row: any, index: any, done: any, loading: any) => {
     username: row.username,
     phone: row.phone,
     role_id: row.role,
-    password: row.password && row.password !== '' ? encrypt(row.password) : undefined
+    password: row.password && row.password !== '' ? row.password : undefined
   })
   ElMessage.success({message: '更新成功'})
   setTimeout(async () => {
@@ -210,9 +209,9 @@ const resetAdminPwd = async (row: any) => {
 }
 
 const permission = ref({
-  addBtn: checkPerms(route, 'add'),
-  editBtn: checkPerms(route, 'edit'),
-  delBtn: checkPerms(route, 'del'),
+  addBtn: checkPerms(route, 'user.add'),
+  editBtn: checkPerms(route, 'user.edit'),
+  delBtn: checkPerms(route, 'user.del'),
 })
 const option = ref({
   border: true,

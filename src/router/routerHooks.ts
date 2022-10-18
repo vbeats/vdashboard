@@ -1,6 +1,5 @@
 import {NavigationGuardNext, RouteLocationNormalized, Router} from 'vue-router'
 import {useUserStore} from '../store/user'
-import dayjs from 'dayjs'
 import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
 
@@ -10,10 +9,8 @@ export function handleRouterAuth(router: Router): void {
         NProgress.start()
         const userStore = useUserStore()
         const useStorage = localStorage.getItem("user")
-        const access_token = userStore.access_token || (useStorage ? JSON.parse(useStorage).access_token : '')
-        const access_token_expire = userStore.access_token_expire || (useStorage ? JSON.parse(useStorage).access_token_expire : -1)
-        if (!access_token || access_token === '' || !access_token_expire || access_token_expire - dayjs().unix() <= 0) {
-            // access_token过期
+        const token = userStore.token || (useStorage ? JSON.parse(useStorage).token : '')
+        if (!token || token === '') {
             await userStore.logout()
             if (to.path === '/login') {
                 next()

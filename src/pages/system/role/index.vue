@@ -5,7 +5,7 @@
              @size-change="listRole" @current-change="listRole"
              @row-save="addRole" @row-update="updateRole" @row-del="delRole"
   >
-    <template #menu="{type,size,row}" v-if="checkPerms(route,'menu')">
+    <template #menu="{type,size,row}" v-if="checkPerms(route,'role.menu')">
       <el-button icon="el-icon-menu" text :size="size" :type="type" @click.stop="showMenuModal(row)">菜单配置</el-button>
     </template>
   </avue-crud>
@@ -46,7 +46,7 @@ import {listRoleMenu, menus as listMenus} from "../../../api/menu"
 import checkPerms from "../../../util/checkPerms"
 import {ElMessage, ElTree} from "element-plus"
 import setTitle from '../../../util/title'
-import {useRoute} from "vue-router";
+import {useRoute} from "vue-router"
 
 setTitle()
 
@@ -54,7 +54,7 @@ const route = useRoute()
 const roles = ref([])
 const search = ref({
   role_name: '',
-  code: ''
+  action: ''
 })
 const loading = ref(false)
 
@@ -73,7 +73,7 @@ const page = ref({
 
 const listRole = async (param?: any, done?: any) => {
   loading.value = true
-  const res = await list({current: page.value.currentPage, page_size: page.value.pageSize, role_name: search.value.role_name, code: search.value.code})
+  const res = await list({current: page.value.currentPage, page_size: page.value.pageSize, role_name: search.value.role_name, action: search.value.action})
   roles.value = res.data.rows || []
   page.value.total = res.data.total || 0
   loading.value = false
@@ -141,9 +141,9 @@ const defaultProps = {
 }
 
 const permission = ref({
-  addBtn: checkPerms(route, 'add'),
-  editBtn: checkPerms(route, 'edit'),
-  delBtn: checkPerms(route, 'del'),
+  addBtn: checkPerms(route, 'role.add'),
+  editBtn: checkPerms(route, 'role.edit'),
+  delBtn: checkPerms(route, 'role.del'),
 })
 const option = ref({
   border: true,
@@ -159,8 +159,8 @@ const option = ref({
       ]
     },
     {
-      label: '角色编号',
-      prop: 'code',
+      label: '权限字段',
+      prop: 'action',
       search: true,
       rules: [
         {required: true, message: '编号不能为空', trigger: 'blur'}
