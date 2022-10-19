@@ -20,17 +20,19 @@
           <el-tag type="success">{{ scope.row.$type }}</el-tag>
         </template>
 
-        <template #items-form="{}">
-          <avue-crud :option="itemOption" :data="items" @row-save="addOpenItem" @row-del="delOpenItem" @row-update="updateOpenItem">
-          </avue-crud>
+        <template #menu="{type,size,row}" v-if="checkPerms(route,'open_item.list')">
+          <el-button icon="el-icon-set-up" text :size="size" :type="type" v-if="row.type===3" @click.stop="bindItem(row)">绑定应用</el-button>
         </template>
       </avue-crud>
     </el-col>
   </el-row>
+
+  <open-item :show="showOpenItem" @on-close="handleOpenItemClose" :id="openConfigId" :open-name="openConfigName"/>
 </template>
 
 <script setup lang="ts">
 import Tenant from '../../../components/tenant/index.vue'
+import OpenItem from './OpenItem.vue'
 import setTitle from '../../../util/title'
 import {useRoute} from "vue-router"
 import {ref, watchEffect} from "vue"
@@ -50,7 +52,6 @@ const search = ref({
 })
 
 const form = ref()
-const items = ref<Array<any>>([])
 
 const loading = ref(false)
 const tenantId = ref()
@@ -122,7 +123,6 @@ const beforeOpen = async (done: any, type: any) => {
 
   if ('edit' === type || 'view' === type) {
     const config = form.value.config ? JSON.parse(form.value.config) : null
-    items.value = config && config.items ? config.items : []
     option.value.column.filter(v => {
       if (v.prop === 'appid') {
         v.value = config ? config.appid : ''
@@ -151,10 +151,8 @@ const getConfig = (row: any) => {
     case 0:
     case 1:
     case 2:
-      config = {appid: row.appid, secret: row.secret, token: row.token, aesKey: row.aes_key, cloudEnv: row.cloud_env}
-      break
     case 3:
-      config = {appid: row.appid, secret: row.secret, token: row.token, aesKey: row.aes_key, cloudEnv: row.cloud_env, items: items.value}
+      config = {appid: row.appid, secret: row.secret, token: row.token, aesKey: row.aes_key, cloudEnv: row.cloud_env}
       break
     default:
       config = {}
@@ -174,10 +172,6 @@ const addOpenConfig = async (row: any, done: any, loading: any) => {
   }, 800)
 }
 
-const addOpenItem = async (row: any, done: any, loading: any) => {
-  items.value.push({...row})
-  done()
-}
 
 const updateOpenConfig = async (row: any, index: any, done: any, loading: any) => {
   await update({
@@ -194,11 +188,6 @@ const updateOpenConfig = async (row: any, index: any, done: any, loading: any) =
   }, 800)
 }
 
-const updateOpenItem = async (row: any, index: any, done: any, loading: any) => {
-  items.value[index] = {...row}
-  done()
-}
-
 const delOpenConfig = async (row: any, index: any, done: any, loading: any) => {
   await del({id: row.id})
   ElMessage.success({message: '删除成功'})
@@ -208,8 +197,19 @@ const delOpenConfig = async (row: any, index: any, done: any, loading: any) => {
   }, 800)
 }
 
-const delOpenItem = async (row: any, index: any, done: any, loading: any) => {
-  done()
+const showOpenItem = ref(false)
+const openConfigId = ref()
+const openConfigName = ref()
+const bindItem = async (row: any) => {
+  openConfigId.value = row.id
+  openConfigName.value = row.name
+  showOpenItem.value = true
+}
+
+const handleOpenItemClose = () => {
+  openConfigId.value = ''
+  openConfigName.value = ''
+  showOpenItem.value = false
 }
 
 const permission = ref({
@@ -307,10 +307,7 @@ const option = ref({
           display: false,
           value: ''
         }
-        let items = {
-          display: false,
-          value: []
-        }
+
         const config = form.config ? JSON.parse(form.config) : null
         switch (v) {
           case 0:
@@ -333,13 +330,11 @@ const option = ref({
             token.value = config ? config.token : ''
             aes_key.value = config ? config.aes_key : ''
             cloud_env.value = config ? config.cloud_env : ''
-            items.value = config ? config.items : []
             appid.display = true
             secret.display = true
             token.display = true
             aes_key.display = true
             cloud_env.display = true
-            items.display = true
             break
           case 4:
             break
@@ -348,7 +343,7 @@ const option = ref({
         }
 
         return {
-          appid, secret, token, aes_key, cloud_env, items
+          appid, secret, token, aes_key, cloud_env
         }
       }
     },
@@ -394,15 +389,6 @@ const option = ref({
       display: false,
     },
     {
-      labelWidth: 0,
-      label: '',
-      prop: 'items',
-      span: 24,
-      hide: true,
-      formslot: true,
-      display: false
-    },
-    {
       label: '配置信息',
       prop: 'config',
       addDisplay: false,
@@ -421,52 +407,6 @@ const option = ref({
       width: 160,
       hide: true,
       display: false
-    }
-  ]
-})
-
-const itemOption = ref({
-  refreshBtn: false,
-  column: [
-    {
-      label: '类型',
-      prop: 'type',
-      type: 'radio',
-      slot: true,
-      dataType: 'array',
-      dicData: [
-        {
-          label: '微信小程序',
-          value: 0
-        },
-        {
-          label: '微信公众平台',
-          value: 1
-        },
-        {
-          label: '企业微信',
-          value: 2
-        }
-      ],
-      value: 0,
-      overHidden: true,
-      rules: [
-        {required: true, message: '类型不能为空', trigger: 'change'}
-      ],
-    },
-    {
-      label: '名称',
-      prop: "name",
-      rules: [
-        {required: true, message: '名称不能为空', trigger: 'blur'}
-      ],
-    },
-    {
-      label: 'appid',
-      prop: "appid",
-      rules: [
-        {required: true, message: 'appid不能为空', trigger: 'blur'}
-      ],
     }
   ]
 })

@@ -37,7 +37,7 @@ const handleLogin = async (param: any) => {
   // 初始化路由
   initRoutes()
 
-  await router.replace({name: menuStore.default_active || 'index'})
+  await router.replace({name: 'index'})
 }
 </script>
 
