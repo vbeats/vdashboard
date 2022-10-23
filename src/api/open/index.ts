@@ -16,20 +16,3 @@ export function update(param: any): Promise<any> {
 export function del(param: any): Promise<any> {
     return axios.post('/admin/open/delete', {...param})
 }
-
-// open config item
-export function listOpenItems(param: any): Promise<any> {
-    return axios.post('/admin/open/listItems', {...param})
-}
-
-export function addOpenItem(param: any): Promise<any> {
-    return axios.post('/admin/open/addItem', {...param})
-}
-
-export function updateOpenItem(param: any): Promise<any> {
-    return axios.post('/admin/open/updateItem', {...param})
-}
-
-export function delOpenItem(param: any): Promise<any> {
-    return axios.post('/admin/open/deleteItem', {...param})
-}

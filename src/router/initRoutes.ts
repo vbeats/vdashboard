@@ -1,14 +1,18 @@
 import {RouteRecordRaw} from 'vue-router'
 import Layout from '../layout/BasicLayout.vue'
-import Index from '../pages/index/index.vue'
-import Profile from '../components/profile/index.vue'
 import router from "./index"
 import {Menu} from "../store/menu/IMenu"
 import {useMenuStore} from "../store/menu"
 
+const Index = import.meta.glob('../pages/index/index.vue')['../pages/index/index.vue']
+const Profile = import.meta.glob('../components/profile/index.vue')['../components/profile/index.vue']
+const OpenItems = import.meta.glob('../pages/system/open/OpenItem.vue')['../pages/system/open/OpenItem.vue']
+
 export default function (): void {
 
     const childrenRoutes = childrenRoute()
+
+    // ---------公共route
 
     childrenRoutes.unshift(
         {
@@ -26,6 +30,19 @@ export default function (): void {
             meta: {
                 title: '个人信息',
             }
+        }
+    )
+
+    //  ---------不在后端Menu中的route
+    childrenRoutes.push(
+        {
+            path: '/open/items/:id',
+            name: 'openItems',
+            component: OpenItems,
+            meta: {
+                title: '授权应用'
+            },
+            props: true
         }
     )
 

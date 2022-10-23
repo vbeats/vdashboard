@@ -21,18 +21,15 @@
         </template>
 
         <template #menu="{type,size,row}" v-if="checkPerms(route,'open_item.list')">
-          <el-button icon="el-icon-set-up" text :size="size" :type="type" v-if="row.type===3" @click.stop="bindItem(row)">绑定应用</el-button>
+          <el-button icon="el-icon-set-up" text :size="size" :type="type" v-if="row.type===3" @click.stop="clickItem(row)">授权应用</el-button>
         </template>
       </avue-crud>
     </el-col>
   </el-row>
-
-  <open-item :show="showOpenItem" @on-close="handleOpenItemClose" :id="openConfigId" :open-name="openConfigName"/>
 </template>
 
 <script setup lang="ts">
 import Tenant from '../../../components/tenant/index.vue'
-import OpenItem from './OpenItem.vue'
 import setTitle from '../../../util/title'
 import {useRoute} from "vue-router"
 import {ref, watchEffect} from "vue"
@@ -41,6 +38,7 @@ import checkPerms from "../../../util/checkPerms"
 import {useTenantStore} from "../../../store/tenant"
 import {listV2} from "../../../api/role"
 import {ElMessage} from "element-plus"
+import router from "../../../router";
 
 setTitle()
 
@@ -48,7 +46,8 @@ const tenantStore = useTenantStore()
 const route = useRoute()
 const openConfigs = ref([])
 const search = ref({
-  name: ''
+  name: '',
+  appid: ''
 })
 
 const form = ref()
@@ -71,7 +70,8 @@ const listOpenConfig = async (param?: any, done?: any) => {
     current: page.value.currentPage,
     page_size: page.value.pageSize,
     tenant_id: tenantId.value,
-    name: search.value.name
+    name: search.value.name,
+    appid: search.value.appid
   })
   openConfigs.value = res.data.rows || []
   page.value.total = res.data.total || 0
@@ -197,19 +197,8 @@ const delOpenConfig = async (row: any, index: any, done: any, loading: any) => {
   }, 800)
 }
 
-const showOpenItem = ref(false)
-const openConfigId = ref()
-const openConfigName = ref()
-const bindItem = async (row: any) => {
-  openConfigId.value = row.id
-  openConfigName.value = row.name
-  showOpenItem.value = true
-}
-
-const handleOpenItemClose = () => {
-  openConfigId.value = ''
-  openConfigName.value = ''
-  showOpenItem.value = false
+const clickItem = (row: any) => {
+  router.push({name: 'openItems', params: {id: row.id}})
 }
 
 const permission = ref({
@@ -351,6 +340,7 @@ const option = ref({
       label: 'appid',
       prop: 'appid',
       value: '',
+      search: true,
       hide: true,
       display: false,
       rules: [
@@ -363,9 +353,6 @@ const option = ref({
       value: '',
       hide: true,
       display: false,
-      rules: [
-        {required: true, message: 'secret不能为空', trigger: 'blur'}
-      ]
     },
     {
       label: 'token',
