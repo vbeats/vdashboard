@@ -4,6 +4,8 @@ import router from "../router";
 import {storeToRefs} from "pinia";
 import {ElMessage} from 'element-plus'
 
+const queue = new Map()
+
 const request: AxiosInstance = axios.create({
     baseURL: import.meta.env.VITE_BASE_API,
     headers: {
@@ -20,16 +22,28 @@ const errorHandler = (error: any): any => {
 
 // 请求拦截器
 request.interceptors.request.use((config: AxiosRequestConfig) => {
+
+    const abortController = new AbortController()
     const userStore = storeToRefs(useUserStore())
     config.headers && (config.headers['token'] = userStore.token?.value)
     config.headers && (config.headers['X-USER-ID'] = userStore.id?.value || '')
     config.headers && (config.headers['X-TENANT-ID'] = userStore.tenant_id?.value || '')
+
+    if (queue.get(config.url)) {
+        abortController.abort()
+        throw new Error('Cancel')
+    }
+    queue.set(config.url, abortController)
+    config.signal = abortController.signal
 
     return config
 }, errorHandler)
 
 // 响应拦截器
 request.interceptors.response.use((response: AxiosResponse): Promise<AxiosResponse> | AxiosResponse => {
+
+    queue.delete(response.config.url)
+
     if (response.data.code) {
         switch (response.data.code) {
             case 401:
