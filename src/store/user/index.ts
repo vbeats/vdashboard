@@ -1,6 +1,7 @@
 import {defineStore} from 'pinia'
 import {Token, User} from "./IUser";
 import {profile} from "../../api/auth/auth"
+import {useMenuStore} from "../menu";
 
 const defaultUser: User = {
     id: '',
@@ -23,6 +24,9 @@ export const useUserStore = defineStore({
             this.$reset()
             this.tenant_code = tenant_code
             localStorage.setItem('user', JSON.stringify(this.$state))
+            const menuStore = useMenuStore()
+            menuStore.$reset()
+            localStorage.setItem('menu', JSON.stringify(menuStore.$state))
         },
         loadUserInfo() {
             const initValue = localStorage.getItem('user')

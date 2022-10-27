@@ -119,6 +119,9 @@ const beforeOpen = async (done: any, type: any) => {
     if (v.prop === 'cloud_env') {
       v.value = ''
     }
+    if (v.prop === 'prefix') {
+      v.value = ''
+    }
   })
 
   if ('edit' === type || 'view' === type) {
@@ -139,6 +142,9 @@ const beforeOpen = async (done: any, type: any) => {
       if (v.prop === 'cloud_env') {
         v.value = config ? config.cloudEnv : ''
       }
+      if (v.prop === 'prefix') {
+        v.value = config ? config.prefix : ''
+      }
     })
   }
 
@@ -148,8 +154,10 @@ const beforeOpen = async (done: any, type: any) => {
 const getConfig = (row: any) => {
   let config = {}
   switch (row.type) {
-    case 0:
     case 1:
+      config = {appid: row.appid, secret: row.secret, token: row.token, aesKey: row.aes_key, cloudEnv: row.cloud_env, prefix: row.prefix}
+      break
+    case 0:
     case 2:
     case 3:
       config = {appid: row.appid, secret: row.secret, token: row.token, aesKey: row.aes_key, cloudEnv: row.cloud_env}
@@ -296,23 +304,15 @@ const option = ref({
           display: false,
           value: ''
         }
+        let prefix = {
+          display: false,
+          value: ''
+        }
 
         const config = form.config ? JSON.parse(form.config) : null
         switch (v) {
           case 0:
-          case 1:
           case 2:
-            appid.value = config ? config.appid : ''
-            secret.value = config ? config.sceret : ''
-            token.value = config ? config.token : ''
-            aes_key.value = config ? config.aes_key : ''
-            cloud_env.value = config ? config.cloud_env : ''
-            appid.display = true
-            secret.display = true
-            token.display = true
-            aes_key.display = true
-            cloud_env.display = true
-            break
           case 3:
             appid.value = config ? config.appid : ''
             secret.value = config ? config.sceret : ''
@@ -325,6 +325,20 @@ const option = ref({
             aes_key.display = true
             cloud_env.display = true
             break
+          case 1:
+            appid.value = config ? config.appid : ''
+            secret.value = config ? config.sceret : ''
+            token.value = config ? config.token : ''
+            aes_key.value = config ? config.aes_key : ''
+            cloud_env.value = config ? config.cloud_env : ''
+            prefix.value = config ? config.prefix : ''
+            appid.display = true
+            secret.display = true
+            token.display = true
+            aes_key.display = true
+            cloud_env.display = true
+            prefix.display = true
+            break
           case 4:
             break
           default:
@@ -332,7 +346,7 @@ const option = ref({
         }
 
         return {
-          appid, secret, token, aes_key, cloud_env
+          appid, secret, token, aes_key, cloud_env, prefix
         }
       }
     },
@@ -371,6 +385,13 @@ const option = ref({
     {
       label: 'cloud_env',
       prop: 'cloud_env',
+      value: '',
+      hide: true,
+      display: false,
+    },
+    {
+      label: 'prefix',
+      prop: 'prefix',
       value: '',
       hide: true,
       display: false,

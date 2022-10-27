@@ -26,13 +26,6 @@ export const useMenuStore = defineStore({
             })
             localStorage.setItem('menu', JSON.stringify(this.$state))
         },
-        // 更新左侧菜单
-        async updateSideMenu(menus: any) {
-            this.$patch(state => {
-                state.menus = menus
-            })
-            localStorage.setItem('menu', JSON.stringify(this.$state))
-        },
         // -----------------更新菜单状态
         async updateDefaultOpens(defaultOpens: string[]) {
             this.$patch(state => state.default_opens = defaultOpens)
