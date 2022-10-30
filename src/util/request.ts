@@ -3,6 +3,7 @@ import {useUserStore} from "../store/user";
 import router from "../router";
 import {storeToRefs} from "pinia";
 import {ElMessage} from 'element-plus'
+import dayjs from "dayjs"
 
 const queue = new Map()
 
@@ -29,11 +30,12 @@ request.interceptors.request.use((config: AxiosRequestConfig) => {
     config.headers && (config.headers['X-USER-ID'] = userStore.id?.value || '')
     config.headers && (config.headers['X-TENANT-ID'] = userStore.tenant_id?.value || '')
 
-    if (queue.get(config.url)) {
+    const q = queue.get(config.url)
+    if (q && dayjs().unix() - q < 5) {
         abortController.abort()
         throw new Error('Cancel')
     }
-    queue.set(config.url, abortController)
+    queue.set(config.url, dayjs().unix())
     config.signal = abortController.signal
 
     return config
