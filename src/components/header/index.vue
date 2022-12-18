@@ -1,5 +1,5 @@
 <template>
-  <div class="header w-full h-[64px] flex flex-row items-center">
+  <div class="header px-4 h-[48px] flex flex-row items-center">
     <el-icon class="text-2xl cursor-pointer transition-colors" @click="toggleMenu">
       <Component :is="icon"/>
     </el-icon>
@@ -8,12 +8,15 @@
     <!--  账号  -->
     <top-account/>
   </div>
+
+  <tabs/>
 </template>
 
 <script lang="ts" setup>
 import {ref, watchEffect} from "vue"
 import TopMsg from '../top-msg/index.vue'
 import TopAccount from '../top-account/index.vue'
+import Tabs from './tabs.vue'
 import {useMenuStore} from "../../store/menu"
 
 const menuStore = useMenuStore()

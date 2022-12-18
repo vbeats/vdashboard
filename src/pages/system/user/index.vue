@@ -37,7 +37,7 @@
   </el-row>
 </template>
 
-<script setup lang="ts">
+<script setup lang="ts" name="user">
 import Tenant from '../../../components/tenant/index.vue'
 import setTitle from '../../../util/title'
 import {useRoute} from "vue-router"

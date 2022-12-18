@@ -35,7 +35,7 @@
 <script setup lang="ts">
 import {useMenuStore} from "../../store/menu"
 import {useRouter} from "vue-router"
-import {ref, watchEffect} from "vue"
+import {computed, ref, watchEffect} from "vue"
 
 const menuStore = useMenuStore()
 const router = useRouter()
@@ -43,10 +43,14 @@ const router = useRouter()
 const menus = menuStore.menus
 const isCollapse = ref<boolean>(menuStore.is_collapse)
 const defaultOpens = menuStore.default_opens
-const defaultActive = menuStore.default_active
+const defaultActive = computed(() => menuStore.default_active)
 
 const clickMenu = (item: any, path: string) => {
-  menuStore.updateDefaultActive(item.key)
+  if (item.key !== 'index') {
+    menuStore.addTab({...item, path})
+  } else {
+    menuStore.updateCurrentTab('0', 'index')
+  }
   router.replace({path})
 }
 

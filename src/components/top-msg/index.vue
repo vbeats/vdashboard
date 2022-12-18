@@ -2,7 +2,7 @@
   <div class="ml-auto mr-[30px] cursor-pointer">
     <el-popover :width="300" trigger="hover">
       <template #reference>
-        <div class="relative w-20 h-[64px] flex justify-center items-center">
+        <div class="relative w-20 h-[48px] flex justify-center items-center">
           <el-icon class="text-lg">
             <Bell/>
           </el-icon>

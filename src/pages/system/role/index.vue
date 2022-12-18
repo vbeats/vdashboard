@@ -39,7 +39,7 @@
   </el-dialog>
 </template>
 
-<script setup lang="ts">
+<script setup lang="ts" name="role">
 import {ref} from "vue"
 import {add, assignRoleMenu, del, list, update} from "../../../api/role"
 import {listRoleMenu, menus as listMenus} from "../../../api/menu"

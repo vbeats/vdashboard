@@ -20,7 +20,7 @@
   </avue-crud>
 </template>
 
-<script setup lang="ts">
+<script setup lang="ts" name="tenant">
 import {ref} from "vue"
 import {add, block, del, list, sub, unBlock, update} from "../../../api/tenant"
 import checkPerms from "../../../util/checkPerms"

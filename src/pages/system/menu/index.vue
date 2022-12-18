@@ -19,7 +19,7 @@
   </avue-crud>
 </template>
 
-<script setup lang="ts">
+<script setup lang="ts" name="menu">
 import {ref} from "vue"
 import {add, del, list, sub, update} from "../../../api/menu"
 import checkPerms from "../../../util/checkPerms"

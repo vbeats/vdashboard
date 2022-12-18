@@ -4,7 +4,7 @@
       <div class="flex flex-row items-center bg-white rounded-lg shadow-2xl h-screen w-full lg:h-full">
         <img src="../../assets/img/login.svg" alt="" class="hidden w-1/2 md:flex">
         <div class="flex flex-col justify-center items-center sm:w-full lg:w-1/2">
-          <span class="text-2xl font-bold">Vcloud 平台管理系统</span>
+          <span class="text-2xl font-bold">Vcloud 运营平台</span>
           <el-divider class="w-3/5 mb-12"/>
           <account-login @handle-login="handleLogin"/>
         </div>
@@ -42,5 +42,5 @@ const handleLogin = async (param: any) => {
 </script>
 
 <style scoped lang="stylus">
-@import './index.styl'
+@import './index.styl';
 </style>
