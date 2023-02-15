@@ -3,7 +3,7 @@ import {MenuQueryParam} from "./IMenuParam"
 
 // 菜单
 export function menus(param?: MenuQueryParam): Promise<any> {
-    return axios.post('/admin/menus', {...param})
+    return axios.post('/admin/menu/menus', {...param})
 }
 
 // -------------

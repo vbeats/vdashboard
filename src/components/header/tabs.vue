@@ -10,7 +10,7 @@
       <div v-for="item in tabs" :key="item.id" @mouseenter="onMouseEnter(item)" @mouseleave="onMouseLeave(item)" @click.stop="clickTab(item.path,item.id,item.key)"
            :class="[currentTab===item.id || activeTab===item.id ? 'active':'', 'tab', 'h-[26px]', 'px-2' ,'ml-2', 'flex', 'flex-row', 'justify-between' ,'items-center', 'text-xs', 'cursor-pointer', 'hover:text-blue-500']">
         {{ item.title }}
-        <el-icon class="ml-2 hover:text-base" v-show="activeTab===item.id" @click.stop="closeTab(item)">
+        <el-icon class="ml-2 hover:text-base" @click.stop="closeTab(item)">
           <Close/>
         </el-icon>
       </div>

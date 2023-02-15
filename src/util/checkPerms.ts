@@ -1,5 +1,7 @@
 import _ from 'lodash'
+import {useUserStore} from "../store/user";
 
 export default (route: any, perm: string): boolean => {
-    return _.findIndex(route.meta.buttons, (item: any) => item.action === perm) >= 0
+    const userStore = useUserStore()
+    return (userStore.roles.length === 1 && userStore.roles[0] === '*') || _.findIndex(route.meta.permissions, (item: any) => item.permission === perm) >= 0
 }

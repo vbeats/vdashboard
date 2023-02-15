@@ -77,7 +77,7 @@ function childrenRoute(): RouteRecordRaw[] {
                     component: modules[`../pages${item.path + child.path}/index.vue`],
                     meta: {
                         title: child.title,
-                        buttons: child.children,
+                        permissions: child.children,
                     },
                 })
             })
@@ -88,7 +88,7 @@ function childrenRoute(): RouteRecordRaw[] {
                 component: modules[`../pages${item.path}/index.vue`],
                 meta: {
                     title: item.title,
-                    buttons: item.buttons,
+                    permissions: item.permissions,
                 },
             })
         }

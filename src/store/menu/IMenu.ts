@@ -5,5 +5,5 @@ export interface Menu {
     action?: string,
     icon: string,
     children?: Array<Menu>
-    buttons?: Array<string>
+    permissions?: Array<string>
 }

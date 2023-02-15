@@ -22,13 +22,13 @@ const errorHandler = (error: any): any => {
 }
 
 // 请求拦截器
-request.interceptors.request.use((config: AxiosRequestConfig) => {
+request.interceptors.request.use((config: AxiosRequestConfig): any => {
 
     const abortController = new AbortController()
     const userStore = storeToRefs(useUserStore())
-    config.headers && (config.headers['token'] = userStore.token?.value)
-    config.headers && (config.headers['X-USER-ID'] = userStore.id?.value || '')
-    config.headers && (config.headers['X-TENANT-ID'] = userStore.tenant_id?.value || '')
+    config.headers && (config.headers['Authorization'] = 'Bearer ' + userStore.token?.value)
+    config.headers && (config.headers['X-User-Id'] = userStore.id?.value || '')
+    config.headers && (config.headers['X-Tenant-Id'] = userStore.tenant_id?.value || '')
 
     const q = queue.get(config.url)
     if (q && dayjs().unix() - q < 5) {

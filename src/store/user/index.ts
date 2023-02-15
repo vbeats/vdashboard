@@ -1,15 +1,18 @@
 import {defineStore} from 'pinia'
-import {Token, User} from "./IUser";
-import {profile} from "../../api/auth/auth"
-import {useMenuStore} from "../menu";
+import {User} from "./IUser";
+import {useMenuStore} from "../menu"
+import {logOut} from "../../api/auth/auth";
 
 const defaultUser: User = {
     id: '',
     tenant_id: '',
-    username: '',
+    account: '',
+    nick_name: '',
     phone: '',
     tenant_code: '',
     token: '',
+    roles: [],
+    permissions: []
 }
 
 export const useUserStore = defineStore({
@@ -20,6 +23,7 @@ export const useUserStore = defineStore({
 
     actions: {
         async logout() {
+            await logOut()
             const tenant_code = this.tenant_code
             this.$reset()
             this.tenant_code = tenant_code
@@ -34,21 +38,9 @@ export const useUserStore = defineStore({
             this.$patch({...userInfo})
         },
         // login 保存token
-        saveToken(param: Token) {
+        saveToken(param: User) {
             this.$patch((state) => {
-                state.id = param.id
-                state.tenant_id = param.tenant_id
-                state.tenant_code = param.tenant_code
-                state.token = param.token
-            })
-            localStorage.setItem('user', JSON.stringify(this.$state))
-        },
-        // 个人信息
-        async getProfile() {
-            const res = await profile()
-            this.$patch(state => {
-                state.username = res.data.username || ''
-                state.phone = res.data.phone || ''
+                Object.assign(state, param)
             })
             localStorage.setItem('user', JSON.stringify(this.$state))
         }

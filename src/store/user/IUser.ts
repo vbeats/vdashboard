@@ -1,15 +1,11 @@
 export interface User {
     id?: string,
     tenant_id?: string,
-    username?: string
+    account?: string
+    nick_name?: string
     phone?: string
     tenant_code: string
     token?: string
-}
-
-export interface Token {
-    id: string,
-    tenant_id: string,
-    tenant_code: string
-    token?: string
+    roles: Array<string>
+    permissions: Array<string>
 }

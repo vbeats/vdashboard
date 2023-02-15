@@ -3,7 +3,7 @@
     <el-dropdown @command="handleItem">
         <span class="flex flex-row items-center">
             <img src="../../assets/img/avatar.png" alt="" class="w-[32px] h-[32px]">
-            <span class="mx-2 text-xs">{{ userStore.username }}</span>
+            <span class="mx-2 text-xs">{{ userStore.account }}</span>
             <el-icon class="ml-4">
               <ArrowDown/>
             </el-icon>

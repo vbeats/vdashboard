@@ -21,16 +21,15 @@ import {useUserStore} from "../../store/user"
 import {useRouter} from "vue-router"
 import {useMenuStore} from "../../store/menu"
 import initRoutes from "../../router/initRoutes"
+import {User} from "../../store/user/IUser"
 
 const router = useRouter()
 const userStore = useUserStore()
 const menuStore = useMenuStore()
 
-const handleLogin = async (param: any) => {
+const handleLogin = async (param: User) => {
 
-  userStore.saveToken({id: param.id, tenant_id: param.tenant_id, tenant_code: param.tenant_code, token: param.token})
-
-  await userStore.getProfile()
+  userStore.saveToken({...param})
 
   await menuStore.updateMenu()
 

@@ -2,8 +2,8 @@
   <div class="profile w-2/3 mx-auto flex flex-col items-center">
     <img src="../../assets/img/avatar.png" alt="" class="w-28 mt-8 mb-12">
     <el-form :model="userInfo" label-width="120px">
-      <el-form-item label="昵称">
-        <el-input v-model="userInfo.username" disabled/>
+      <el-form-item label="账号">
+        <el-input v-model="userInfo.account" disabled/>
       </el-form-item>
       <el-form-item label="手机号">
         <el-input v-model="userInfo.phone" disabled/>
@@ -19,7 +19,7 @@
         <el-input v-model.trim="accountInfo.new_password" type="password" show-password placeholder="新密码"
                   prefix-icon="Lock"/>
       </el-form-item>
-      <el-form-item label="重新输入" prop="re_password">
+      <el-form-item label="重新输入新密码" prop="re_password">
         <el-input v-model.trim="accountInfo.re_password" type="password" show-password placeholder="重新输入"
                   prefix-icon="Lock"/>
       </el-form-item>
