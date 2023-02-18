@@ -1,5 +1,5 @@
 <template>
-  <div class="ml-auto mr-[30px] cursor-pointer">
+  <div class="ml-auto mr-[25px] cursor-pointer">
     <el-popover :width="300" trigger="hover">
       <template #reference>
         <div class="relative w-20 h-[48px] flex justify-center items-center">
@@ -23,37 +23,37 @@ const msgs = [
   {
     id: 1,
     msg: 'test.............',
-    create_time: '2022-09-01 10:10:10',
+    createTime: '2022-09-01 10:10:10',
     status: 0
   },
   {
     id: 2,
     msg: 'test.............',
-    create_time: '2022-09-01 10:10:10',
+    createTime: '2022-09-01 10:10:10',
     status: 0
   },
   {
     id: 3,
     msg: 'test.............',
-    create_time: '2022-09-01 10:10:10',
+    createTime: '2022-09-01 10:10:10',
     status: 2
   },
   {
     id: 4,
     msg: 'test.............',
-    create_time: '2022-09-01 10:10:10',
+    createTime: '2022-09-01 10:10:10',
     status: 1
   },
   {
     id: 5,
     msg: 'test.............',
-    create_time: '2022-09-01 10:10:10',
+    createTime: '2022-09-01 10:10:10',
     status: 1
   },
 ]
 
 </script>
 
-<style scoped lang="stylus">
+<style lang="stylus" scoped>
 
 </style>

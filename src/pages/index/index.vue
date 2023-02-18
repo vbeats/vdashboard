@@ -6,6 +6,6 @@
 
 </script>
 
-<style scoped lang="stylus">
+<style lang="stylus" scoped>
 
 </style>

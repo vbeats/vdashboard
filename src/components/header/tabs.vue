@@ -2,13 +2,13 @@
   <el-scrollbar>
     <div class="tabs px-4 flex flex-row h-[28px] items-center">
       <div
-          @mouseenter="()=>currentTab='0'" @mouseleave="()=>currentTab=''" @click.stop="clickTab('/index','0','index')"
-          :class="[tabs.length===0 || currentTab==='0' ||activeTab==='0' ? 'active':'', 'tab', 'h-[26px]', 'px-2' ,'ml-2', 'flex', 'flex-row', 'justify-between' ,'items-center', 'text-xs', 'cursor-pointer', 'hover:text-blue-500']">
+          :class="[tabs.length===0 || currentTab==='0' ||activeTab==='0' ? 'active':'', 'tab', 'h-[26px]', 'px-2' ,'ml-2', 'flex', 'flex-row', 'justify-between' ,'items-center', 'text-xs', 'cursor-pointer', 'hover:text-blue-500']" @mouseenter="()=>currentTab='0'" @mouseleave="()=>currentTab=''"
+          @click.stop="clickTab('/index','0','index')">
         首页
       </div>
 
-      <div v-for="item in tabs" :key="item.id" @mouseenter="onMouseEnter(item)" @mouseleave="onMouseLeave(item)" @click.stop="clickTab(item.path,item.id,item.key)"
-           :class="[currentTab===item.id || activeTab===item.id ? 'active':'', 'tab', 'h-[26px]', 'px-2' ,'ml-2', 'flex', 'flex-row', 'justify-between' ,'items-center', 'text-xs', 'cursor-pointer', 'hover:text-blue-500']">
+      <div v-for="item in tabs" :key="item.id" :class="[currentTab===item.id || activeTab===item.id ? 'active':'', 'tab', 'h-[26px]', 'px-2' ,'ml-2', 'flex', 'flex-row', 'justify-between' ,'items-center', 'text-xs', 'cursor-pointer', 'hover:text-blue-500']" @mouseenter="onMouseEnter(item)" @mouseleave="onMouseLeave(item)"
+           @click.stop="clickTab(item.path,item.id,item.key)">
         {{ item.title }}
         <el-icon class="ml-2 hover:text-base" @click.stop="closeTab(item)">
           <Close/>
@@ -18,7 +18,7 @@
   </el-scrollbar>
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
 import {computed, ref} from "vue"
 import {useMenuStore} from "../../store/menu"
 import {useRouter} from "vue-router"
@@ -55,7 +55,7 @@ const clickTab = (path: string, tabId: string, key: string) => {
 
 </script>
 
-<style scoped lang="stylus">
+<style lang="stylus" scoped>
 .tabs
   border-bottom 1px solid rgb(246, 246, 246)
 

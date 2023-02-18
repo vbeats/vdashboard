@@ -1,9 +1,9 @@
 <template>
-  <avue-crud :data="menus" :option="option"
-             :permission="permission" @tree-load="loadSub" :table-loading="loading"
-             @row-save="addTenant" @row-update="updateMenu" @row-del="delMenu"
-             :before-close="beforeClose"
-             ref="crud"
+  <avue-crud ref="menuRef" :before-close="beforeClose"
+             :data="menus" :option="option" :permission="permission"
+             :table-loading="loading" @tree-load="loadSub" @row-save="addMenu"
+             @row-update="updateMenu" @row-del="delMenu"
+             @refresh-change="listMenu"
   >
     <template #type="scope">
       <el-tag :type="scope.row.type===0?'':'success'">{{ scope.row.type === 0 ? '菜单' : '按钮' }}</el-tag>
@@ -13,13 +13,13 @@
         <Component :is="scope.row.icon"/>
       </el-icon>
     </template>
-    <template #menu="{type,size,row}" v-if="checkPerms(route,'menu.addsub')">
-      <el-button icon="el-icon-check" text :size="size" :type="type" @click.stop="addSub(row)">新增子级</el-button>
+    <template v-if="checkPerms(route,'admin.menu.addsub')" #menu="{type,size,row}">
+      <el-button v-if="row.type===0" :size="size" :type="type" icon="el-icon-check" text @click.stop="addSub(row)">新增子级</el-button>
     </template>
   </avue-crud>
 </template>
 
-<script setup lang="ts" name="menu">
+<script lang="ts" name="menus" setup>
 import {ref} from "vue"
 import {add, del, list, sub, update} from "../../../api/menu"
 import checkPerms from "../../../util/checkPerms"
@@ -30,11 +30,11 @@ import {useRoute} from "vue-router"
 setTitle()
 
 const route = useRoute()
-const crud = ref()
+const menuRef = ref()
 
 const menus = ref([])
 
-const loading = ref(false)
+const loading = ref(true)
 
 const listMenu = async () => {
   loading.value = true
@@ -45,7 +45,7 @@ const listMenu = async () => {
 
 await listMenu()
 
-const addTenant = async (row: any, done: any, loading: any) => {
+const addMenu = async (row: any, done: any, loading: any) => {
   const res = await add(row)
   ElMessage.success({message: '添加成功'})
   row.id = res.data
@@ -76,7 +76,7 @@ const addSub = async (row: any) => {
       v.value = row.id
     }
   })
-  crud.value.rowAdd()
+  menuRef.value.rowAdd()
 }
 
 const beforeClose = (done: any, type: any) => {
@@ -90,9 +90,9 @@ const beforeClose = (done: any, type: any) => {
 }
 
 const permission = ref({
-  addBtn: checkPerms(route, 'menu.add'),
-  editBtn: checkPerms(route, 'menu.edit'),
-  delBtn: checkPerms(route, 'menu.del'),
+  addBtn: checkPerms(route, 'admin.menu.add'),
+  editBtn: checkPerms(route, 'admin.menu.edit'),
+  delBtn: checkPerms(route, 'admin.menu.del'),
 })
 
 const option = ref({
@@ -136,7 +136,8 @@ const option = ref({
     },
     {
       label: '权限字段',
-      prop: 'action',
+      prop: 'permission',
+      overHidden: true
     },
     {
       label: '类型',
@@ -147,34 +148,54 @@ const option = ref({
       value: 0,
       rules: [
         {required: true, message: '类型不能为空', trigger: 'blur'}
-      ]
+      ],
+      control: (v: any, form: any) => {
+        const path = {
+          display: true
+        }
+        const icon = {
+          display: true
+        }
+        const key = {
+          display: true
+        }
+        const permission = {
+          display: false
+        }
+        const sort = {
+          display: true
+        }
+        if (v === 0) {
+          path.display = true
+          icon.display = true
+          key.display = true
+          sort.display = true
+          permission.display = false
+        } else {
+          path.display = false
+          icon.display = false
+          key.display = false
+          sort.display = false
+          permission.display = true
+        }
+        return {
+          path, icon, key, sort, permission
+        }
+      }
     },
     {
       label: '顺序',
       prop: 'sort',
-      value: 1
+      value: 0
     },
     {
       label: '备注',
       prop: 'remark',
-    },
-    {
-      label: '创建时间',
-      prop: 'create_time',
-      width: 160,
-      display: false
-    },
-    {
-      label: '更新时间',
-      prop: 'update_time',
-      width: 160,
-      hide: true,
-      display: false
     }
   ]
 })
 </script>
 
-<style scoped lang="stylus">
+<style lang="stylus" scoped>
 
 </style>

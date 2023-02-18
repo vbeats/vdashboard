@@ -1,6 +1,6 @@
 <template>
   <div class="profile w-2/3 mx-auto flex flex-col items-center">
-    <img src="../../assets/img/avatar.png" alt="" class="w-28 mt-8 mb-12">
+    <img alt="" class="w-28 mt-8 mb-12" src="../../assets/img/avatar.png">
     <el-form :model="userInfo" label-width="120px">
       <el-form-item label="账号">
         <el-input v-model="userInfo.account" disabled/>
@@ -12,16 +12,16 @@
     <el-divider/>
     <el-form ref="accountRef" :model="accountInfo" :rules="rules" label-width="120px">
       <el-form-item label="原始密码" prop="password">
-        <el-input v-model.trim="accountInfo.password" type="password" show-password placeholder="原始密码"
-                  prefix-icon="Lock"/>
+        <el-input v-model.trim="accountInfo.password" placeholder="原始密码" prefix-icon="Lock" show-password
+                  type="password"/>
       </el-form-item>
-      <el-form-item label="新密码" prop="new_password">
-        <el-input v-model.trim="accountInfo.new_password" type="password" show-password placeholder="新密码"
-                  prefix-icon="Lock"/>
+      <el-form-item label="新密码" prop="newPassword">
+        <el-input v-model.trim="accountInfo.newPassword" placeholder="新密码" prefix-icon="Lock" show-password
+                  type="password"/>
       </el-form-item>
-      <el-form-item label="重新输入新密码" prop="re_password">
-        <el-input v-model.trim="accountInfo.re_password" type="password" show-password placeholder="重新输入"
-                  prefix-icon="Lock"/>
+      <el-form-item label="重新输入新密码" prop="rePassword">
+        <el-input v-model.trim="accountInfo.rePassword" placeholder="重新输入" prefix-icon="Lock" show-password
+                  type="password"/>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="changAccountInfo(accountRef)">确定</el-button>
@@ -45,14 +45,14 @@ const userInfo = userStore.getUserInfo
 
 const accountInfo = reactive({
   password: '',
-  new_password: '',
-  re_password: ''
+  newPassword: '',
+  rePassword: ''
 })
 
 const checkPass = (rule: any, value: any, callback: any) => {
   if (value === '') {
     callback(new Error('密码不能为空'))
-  } else if (value !== accountInfo.new_password) {
+  } else if (value !== accountInfo.newPassword) {
     callback(new Error("两次输入不一致"))
   } else {
     callback()
@@ -63,10 +63,10 @@ const rules = reactive<FormRules>({
   password: [
     {required: true, message: '原始密码不能为空', trigger: 'blur'},
   ],
-  new_password: [
+  newPassword: [
     {required: true, message: '新密码不能为空', trigger: 'blur'},
   ],
-  re_password: [
+  rePassword: [
     {validator: checkPass, trigger: 'blur'}
   ]
 })
@@ -74,7 +74,7 @@ const rules = reactive<FormRules>({
 const changAccountInfo = (formEl: FormInstance | undefined) => {
   formEl && formEl.validate(async valid => {
     if (valid) {
-      const res = await updateAccountInfo({password: accountInfo.password, new_password: accountInfo.new_password})
+      const res = await updateAccountInfo({password: accountInfo.password, newPassword: accountInfo.newPassword})
       if (res.code === 200) {
         ElMessage.success({message: '修改成功', duration: 8000})
         setTimeout(async () => {
@@ -91,6 +91,6 @@ const resetForm = (formEl: FormInstance | undefined) => {
 }
 </script>
 
-<style scoped lang="stylus">
+<style lang="stylus" scoped>
 
 </style>

@@ -1,18 +1,17 @@
 import axios from '../../util/request'
-import {MenuQueryParam} from "./IMenuParam"
 
 // 菜单
-export function menus(param?: MenuQueryParam): Promise<any> {
-    return axios.post('/admin/menu/menus', {...param})
+export function menus(): Promise<any> {
+    return axios.get('/admin/menu/menus')
 }
 
 // -------------
 export function list(): Promise<any> {
-    return axios.post('/admin/menu/list')
+    return axios.get('/admin/menu/list')
 }
 
 export function sub(param: any): Promise<any> {
-    return axios.post('/admin/menu/sub', {...param})
+    return axios.get('/admin/menu/sub', {params: {...param}})
 }
 
 export function add(param: any): Promise<any> {
@@ -28,5 +27,5 @@ export function del(param: any): Promise<any> {
 }
 
 export function listRoleMenu(param?: any): Promise<any> {
-    return axios.post("/admin/menu/listRoleMenu", {...param})
+    return axios.get("/admin/menu/listRoleMenu", {params: {...param}})
 }

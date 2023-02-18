@@ -1,16 +1,17 @@
 import {defineStore} from 'pinia'
 import {User} from "./IUser";
 import {useMenuStore} from "../menu"
-import {logOut} from "../../api/auth/auth";
+import dayjs from "dayjs";
 
 const defaultUser: User = {
     id: '',
-    tenant_id: '',
+    tenantId: '',
     account: '',
-    nick_name: '',
+    nickName: '',
     phone: '',
-    tenant_code: '',
+    tenantCode: '',
     token: '',
+    expire: -1,
     roles: [],
     permissions: []
 }
@@ -23,10 +24,9 @@ export const useUserStore = defineStore({
 
     actions: {
         async logout() {
-            await logOut()
-            const tenant_code = this.tenant_code
+            const tenantCode = this.tenantCode
             this.$reset()
-            this.tenant_code = tenant_code
+            this.tenantCode = tenantCode
             localStorage.setItem('user', JSON.stringify(this.$state))
             const menuStore = useMenuStore()
             menuStore.$reset()
@@ -40,7 +40,14 @@ export const useUserStore = defineStore({
         // login 保存token
         saveToken(param: User) {
             this.$patch((state) => {
-                Object.assign(state, param)
+                Object.assign(state, {...param, expire: dayjs().unix() + 4 * 3600})
+            })
+            localStorage.setItem('user', JSON.stringify(this.$state))
+        },
+        // 刷新token过期时间
+        refreshToken() {
+            this.$patch(state => {
+                state.expire = dayjs().unix() + 4 * 3600
             })
             localStorage.setItem('user', JSON.stringify(this.$state))
         }

@@ -1,19 +1,15 @@
 import axios from '../../util/request'
 
 export function list(param: any): Promise<any> {
-    return axios.post('/admin/tenant/list', {...param})
+    return axios.get('/admin/tenant/list', {params: {...param}})
 }
 
-export function listV2(): Promise<any> {
-    return axios.post('/admin/tenant/listV2')
-}
-
-export function load(param: any): Promise<any> {
-    return axios.post('/admin/tenant/load', {...load})
+export function listTenantTree(): Promise<any> {
+    return axios.get('/admin/tenant/listTenantTree')
 }
 
 export function sub(param: any): Promise<any> {
-    return axios.post('/admin/tenant/sub', {...param})
+    return axios.get('/admin/tenant/sub', {params: {...param}})
 }
 
 export function add(param: any): Promise<any> {
@@ -22,16 +18,4 @@ export function add(param: any): Promise<any> {
 
 export function update(param: any): Promise<any> {
     return axios.post('/admin/tenant/update', {...param})
-}
-
-export function del(param: any): Promise<any> {
-    return axios.post('/admin/tenant/delete', {...param})
-}
-
-export function block(param: any): Promise<any> {
-    return axios.post('/admin/tenant/block', param)
-}
-
-export function unBlock(param: any): Promise<any> {
-    return axios.post('/admin/tenant/unblock', param)
 }

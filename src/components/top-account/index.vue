@@ -2,7 +2,7 @@
   <div class="avatar flex flex-row items-center mr-4 cursor-pointer">
     <el-dropdown @command="handleItem">
         <span class="flex flex-row items-center">
-            <img src="../../assets/img/avatar.png" alt="" class="w-[32px] h-[32px]">
+            <img alt="" class="w-[32px] h-[32px]" src="../../assets/img/avatar.png">
             <span class="mx-2 text-xs">{{ userStore.account }}</span>
             <el-icon class="ml-4">
               <ArrowDown/>
@@ -11,7 +11,7 @@
       <template #dropdown>
         <el-dropdown-menu>
           <el-dropdown-item command="profile">个人信息</el-dropdown-item>
-          <el-dropdown-item divided command="logout">退&nbsp;&nbsp;&nbsp;&nbsp;出</el-dropdown-item>
+          <el-dropdown-item command="logout" divided>退&nbsp;&nbsp;&nbsp;&nbsp;出</el-dropdown-item>
         </el-dropdown-menu>
       </template>
     </el-dropdown>
@@ -40,6 +40,6 @@ const handleItem = async (cmd: string) => {
 }
 </script>
 
-<style scoped lang="stylus">
+<style lang="stylus" scoped>
 
 </style>

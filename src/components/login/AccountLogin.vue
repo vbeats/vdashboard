@@ -2,30 +2,30 @@
   <div class="account w-4/5">
     <el-form
         ref="accountRef"
+        v-loading="loading"
         :model="accountForm"
         :rules="rules"
-        label-width="86px"
         :size="formSize"
-        label-position="left"
         class="w-full"
+        label-position="left"
+        label-width="86px"
         status-icon
-        v-loading="loading"
     >
-      <el-form-item label="租户编号" prop="tenant_code">
-        <el-input v-model.trim="accountForm.tenant_code" :autofocus="accountForm.tenant_code===''" placeholder="租户编号" prefix-icon="OfficeBuilding"/>
+      <el-form-item label="租户编号" prop="tenantCode">
+        <el-input v-model.trim="accountForm.tenantCode" :autofocus="accountForm.tenantCode===''" placeholder="租户编号" prefix-icon="OfficeBuilding"/>
       </el-form-item>
       <el-form-item label="账 号" prop="account">
-        <el-input v-model.trim="accountForm.account" placeholder="账号" :autofocus="accountForm.tenant_code!==''" prefix-icon="User"/>
+        <el-input v-model.trim="accountForm.account" :autofocus="accountForm.tenantCode!==''" placeholder="账号" prefix-icon="User"/>
       </el-form-item>
       <el-form-item label="密 码" prop="password">
-        <el-input v-model.trim="accountForm.password" type="password" show-password placeholder="密码"
-                  prefix-icon="Lock"/>
+        <el-input v-model.trim="accountForm.password" placeholder="密码" prefix-icon="Lock" show-password
+                  type="password"/>
       </el-form-item>
 
       <el-form-item class="flex flex-row items-center">
-        <el-input class="w-1/2" v-model.trim="accountForm.code" placeholder="验证码" @keyup.enter="login(accountRef)"/>
-        <el-image class="w-[120px] h-[60px] ml-auto mr-0 cursor-pointer flex flex-col justify-center items-center"
-                  :src="captchaImg"
+        <el-input v-model.trim="accountForm.code" class="w-1/2" placeholder="验证码" @keyup.enter="login(accountRef)"/>
+        <el-image :src="captchaImg"
+                  class="w-[120px] h-[60px] ml-auto mr-0 cursor-pointer flex flex-col justify-center items-center"
                   @click="loadCaptcha">
           <template #error>
             <div class="w-full flex flex-row justify-center items-center bg-gray-300">
@@ -38,19 +38,19 @@
       </el-form-item>
 
       <el-form-item class="w-2/3 mx-auto mt-12" label-width="0">
-        <el-button type="primary" @click="login(accountRef)" class="w-full">登录</el-button>
+        <el-button class="w-full" type="primary" @click="login(accountRef)">登录</el-button>
       </el-form-item>
     </el-form>
   </div>
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
 import {reactive, ref} from "vue"
 import {FormInstance, FormRules} from "element-plus"
-import {getCaptcha} from "../../api/auth/captcha";
-import {getToken} from "../../api/auth/auth";
-import {useLocalStorage} from "@vueuse/core";
-import {useUserStore} from "../../store/user";
+import {getCaptcha} from "../../api/auth/captcha"
+import {getToken} from "../../api/auth/auth"
+import {useLocalStorage} from "@vueuse/core"
+import {useUserStore} from "../../store/user"
 
 const emit = defineEmits(['handleLogin'])
 
@@ -63,7 +63,7 @@ const captchaImg = ref<string>('')
 const loading = ref<boolean>(false)
 
 const accountForm = reactive({
-  tenant_code: useLocalStorage('user', userStore.getUserInfo).value.tenant_code,
+  tenantCode: useLocalStorage('user', userStore.getUserInfo).value.tenantCode,
   account: '',
   password: '',
   key: '',
@@ -71,7 +71,7 @@ const accountForm = reactive({
 })
 
 const rules = reactive<FormRules>({
-  tenant_code: [
+  tenantCode: [
     {required: true, message: '租户编号不能为空', trigger: 'blur'},
   ],
   account: [
@@ -105,18 +105,18 @@ const login = async (formEl: FormInstance | undefined) => {
     }
     loading.value = true
     getToken({
-      ...accountForm, grant_type: 'password',
+      ...accountForm, grantType: 'password',
       password: accountForm.password
     }).then(async res => {
       const user = res.data.user
       emit('handleLogin', {
         id: user.id,
-        tenant_id: user.tenant_id,
+        tenantId: user.tenantId,
         account: accountForm.account,
-        nick_name: user.nick_name,
+        nickName: user.nickName,
         phone: user.phone,
-        tenant_code: accountForm.tenant_code,
-        token: res.data.token.token_value,
+        tenantCode: accountForm.tenantCode,
+        token: res.data.token.tokenValue,
         roles: user.roles || [],
         permissions: user.permissions || []
       })
@@ -130,6 +130,6 @@ const login = async (formEl: FormInstance | undefined) => {
 
 </script>
 
-<style scoped lang="stylus">
+<style lang="stylus" scoped>
 @import "account.styl"
 </style>

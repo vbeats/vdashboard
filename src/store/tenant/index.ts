@@ -4,8 +4,8 @@ export const useTenantStore = defineStore({
     id: 'tenant',
     state: () => ({
         show: true,
-        tenant_id: '',
-        tenant_name: ''
+        tenantId: '',
+        tenantName: ''
     }),
 
     actions: {

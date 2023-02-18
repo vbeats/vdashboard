@@ -26,7 +26,7 @@
   </el-container>
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
 import Logo from '../components/logo/index.vue'
 import Menu from '../components/menu/index.vue'
 import Header from '../components/header/index.vue'
@@ -34,22 +34,26 @@ import Header from '../components/header/index.vue'
 import {computed, ref, watch, watchEffect} from "vue"
 import {useMenuStore} from "../store/menu"
 import {breakpointsTailwind, useWindowSize} from "@vueuse/core"
-import _ from "lodash";
+import _ from "lodash"
+import {checkToken} from "../util/auth"
+
+// 检查token
+checkToken()
 
 const menuStore = useMenuStore()
-const isCollapse = ref<boolean>(menuStore.is_collapse)
+const isCollapse = ref<boolean>(menuStore.isCollapse)
 const {width} = useWindowSize()
 
 watch(width, (v) => {
   if (v < breakpointsTailwind.md) {
-    menuStore.is_collapse = true
+    menuStore.isCollapse = true
   } else {
-    menuStore.is_collapse = false
+    menuStore.isCollapse = false
   }
 })
 
 watchEffect(() => {
-  isCollapse.value = menuStore.is_collapse
+  isCollapse.value = menuStore.isCollapse
 })
 
 // 需要缓存的组件
@@ -57,6 +61,6 @@ const tabs = computed(() => _.map(menuStore.tabs, (item: any) => item.key || '')
 
 </script>
 
-<style scoped lang="stylus">
+<style lang="stylus" scoped>
 
 </style>

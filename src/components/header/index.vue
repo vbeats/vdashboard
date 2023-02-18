@@ -21,18 +21,18 @@ import {useMenuStore} from "../../store/menu"
 
 const menuStore = useMenuStore()
 
-const icon = ref<string>(menuStore.is_collapse ? 'Expand' : 'Fold')
+const icon = ref<string>(menuStore.isCollapse ? 'Expand' : 'Fold')
 
 const toggleMenu = async () => {
   await menuStore.toggleCollapse()
 }
 
 watchEffect(() => {
-  icon.value = menuStore.is_collapse ? 'Expand' : 'Fold'
+  icon.value = menuStore.isCollapse ? 'Expand' : 'Fold'
 })
 </script>
 
-<style scoped lang="stylus">
+<style lang="stylus" scoped>
 .header
   color rgb(96, 98, 102)
   fill rgb(96, 98, 102)

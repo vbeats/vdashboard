@@ -6,9 +6,9 @@ export const useMenuStore = defineStore({
     id: 'menu',
     state: () => ({
         menus: [],
-        default_opens: [''],
-        default_active: 'index',
-        is_collapse: false,
+        defaultOpens: [''],
+        defaultActive: 'index',
+        isCollapse: false,
         tabs: [],
         currentTab: ''
     }),
@@ -18,7 +18,7 @@ export const useMenuStore = defineStore({
         loadMenu() {
             const initValue = localStorage.getItem('menu')
             const menuInfo = initValue ? JSON.parse(initValue) : this.$state
-            this.$patch({...menuInfo, is_collapse: false})
+            this.$patch({...menuInfo, isCollapse: false})
         },
         // 更新菜单数据
         async updateMenu() {
@@ -30,12 +30,12 @@ export const useMenuStore = defineStore({
         },
         // -----------------更新菜单状态
         async updateDefaultOpens(defaultOpens: string[]) {
-            this.$patch(state => state.default_opens = defaultOpens)
+            this.$patch(state => state.defaultOpens = defaultOpens)
             localStorage.setItem('menu', JSON.stringify(this.$state))
         },
         // ---------菜单折叠
         async toggleCollapse() {
-            this.$patch(state => state.is_collapse = !state.is_collapse)
+            this.$patch(state => state.isCollapse = !state.isCollapse)
             localStorage.setItem('menu', JSON.stringify(this.$state))
         },
         // ----------add tab页
@@ -45,7 +45,7 @@ export const useMenuStore = defineStore({
                 tabs.push(item)
             }
             this.$patch(state => {
-                state.default_active = item.key
+                state.defaultActive = item.key
                 state.tabs = tabs
                 state.currentTab = item.id
             })
@@ -54,8 +54,9 @@ export const useMenuStore = defineStore({
         async updateCurrentTab(id: any, key: string) {
             this.$patch(state => {
                 state.currentTab = id
-                state.default_active = key
+                state.defaultActive = key
             })
+            localStorage.setItem('menu', JSON.stringify(this.$state))
         },
         async removeTab(item: any) {
             const tabs: any = this.tabs
@@ -64,7 +65,7 @@ export const useMenuStore = defineStore({
             const currentTab = tabs[tabs.length - 1]
 
             this.$patch(state => {
-                state.default_active = currentTab?.key || 'index'
+                state.defaultActive = currentTab?.key || 'index'
                 state.tabs = tabs || []
                 state.currentTab = currentTab?.id || '0'
             })

@@ -1,28 +1,21 @@
 <template>
-  <avue-crud :data="tenants" v-model:search="search" :option="option" v-model:page="page"
-             :permission="permission" @tree-load="loadSub" :table-loading="loading"
+  <avue-crud ref="crud" v-model:page="page" v-model:search="search" :before-close="beforeClose"
+             :data="tenants" :option="option" :permission="permission"
+             :table-loading="loading" @tree-load="loadSub"
              @refresh-change="listTenant" @search-change="listTenant"
              @size-change="listTenant" @current-change="listTenant"
-             @row-save="addTenant" @row-update="updateTenant" @row-del="delTenant"
-             @selection-change="selectList" :before-close="beforeClose"
-             ref="crud"
+             @row-save="addTenant" @row-update="updateTenant"
+             @selection-change="selectList"
   >
-    <template #status="scope">
-      <el-tag :type="scope.row.status?'':'danger'">{{ scope.row.status ? '正常' : '禁用' }}</el-tag>
-    </template>
-    <template #menu-left="{size}">
-      <el-button icon="close" :size="size" type="warning" @click.stop="blockTenant" v-if="checkPerms(route,'tenant.block')">禁用</el-button>
-      <el-button icon="el-icon-check" :size="size" type="success" @click.stop="unBlockTenant" v-if="checkPerms(route,'tenant.unblock')">解封</el-button>
-    </template>
-    <template #menu="{type,size,row}" v-if="checkPerms(route,'tenant.addsub')">
-      <el-button icon="el-icon-arrow-down" text :size="size" :type="type" @click.stop="addSub(row)">新增子级</el-button>
+    <template v-if="checkPerms(route,'admin.tenant.addsub')" #menu="{type,size,row}">
+      <el-button :size="size" :type="type" icon="el-icon-arrow-down" text @click.stop="addSub(row)">新增子级</el-button>
     </template>
   </avue-crud>
 </template>
 
-<script setup lang="ts" name="tenant">
+<script lang="ts" name="tenant" setup>
 import {ref} from "vue"
-import {add, block, del, list, sub, unBlock, update} from "../../../api/tenant"
+import {add, list, sub, update} from "../../../api/tenant"
 import checkPerms from "../../../util/checkPerms"
 import {ElMessage} from "element-plus"
 import setTitle from '../../../util/title'
@@ -36,9 +29,9 @@ const crud = ref()
 const tenants = ref([])
 const search = ref({
   code: '',
-  tenant_name: ''
+  tenantName: ''
 })
-const loading = ref(false)
+const loading = ref(true)
 const selectRows = ref([])
 
 const page = ref({
@@ -49,7 +42,7 @@ const page = ref({
 
 const listTenant = async (param?: any, done?: any) => {
   loading.value = true
-  const res = await list({current: page.value.currentPage, page_size: page.value.pageSize, code: search.value.code, tenant_name: search.value.tenant_name})
+  const res = await list({current: page.value.currentPage, pageSize: page.value.pageSize, code: search.value.code, tenantName: search.value.tenantName})
   tenants.value = res.data.rows || []
   page.value.total = res.data.total || 0
   loading.value = false
@@ -64,20 +57,14 @@ const selectList = (rows: any) => {
 
 const addTenant = async (row: any, done: any, loading: any) => {
   const res = await add(row)
+  row = {...res.data}
   ElMessage.success({message: '添加成功'})
-  row.id = res.data
   done(row)
 }
 
 const updateTenant = async (row: any, index: any, done: any, loading: any) => {
   await update(row)
   ElMessage.success({message: '更新成功'})
-  done(row)
-}
-
-const delTenant = async (row: any, index: any, done: any) => {
-  await del(row)
-  ElMessage.success({message: '删除成功'})
   done(row)
 }
 
@@ -89,7 +76,7 @@ const loadSub = async (tree: any, node: any, resolve: any) => {
 const addSub = async (row: any) => {
   option.value.column.filter(v => {
     if (v.prop === 'pid') {
-      v.dicData = [{label: row.tenant_name, value: row.id}]
+      v.dicData = [{label: row.tenantName, value: row.id}]
       v.value = row.id
     }
   })
@@ -106,35 +93,10 @@ const beforeClose = (done: any, type: any) => {
   done()
 }
 
-const blockTenant = async () => {
-  if (selectRows.value.length === 0) {
-    ElMessage.warning({message: '请选择至少一条数据'})
-    return
-  }
-  await block(selectRows.value)
-  ElMessage.success({message: '更新成功'})
-  setTimeout(async () => {
-    crud.value.refreshTable()
-  }, 800)
-}
-
-
-const unBlockTenant = async () => {
-  if (selectRows.value.length === 0) {
-    ElMessage.warning({message: '请选择至少一条数据'})
-    return
-  }
-  await unBlock(selectRows.value)
-  ElMessage.success({message: '更新成功'})
-  setTimeout(async () => {
-    crud.value.refreshTable()
-  }, 800)
-}
-
 const permission = ref({
-  addBtn: checkPerms(route, 'tenant.add'),
-  editBtn: checkPerms(route, 'tenant.edit'),
-  delBtn: checkPerms(route, 'tenant.del'),
+  addBtn: checkPerms(route, 'admin.tenant.add'),
+  editBtn: checkPerms(route, 'admin.tenant.edit'),
+  delBtn: false
 })
 
 const option = ref({
@@ -161,25 +123,18 @@ const option = ref({
       label: '租户编号',
       prop: 'code',
       search: true,
-      rules: [
-        {required: true, message: '编号不能为空', trigger: 'blur'}
-      ]
+      addDisplay: false,
+      editDisplay: true,
+      disabled: true
     },
     {
       label: '租户名称',
-      prop: 'tenant_name',
+      prop: 'tenantName',
       search: true,
       overHidden: true,
       rules: [
         {required: true, message: '名称不能为空', trigger: 'blur'}
       ]
-    },
-    {
-      label: '状态',
-      prop: 'status',
-      value: true,
-      display: false,
-      slot: true
     },
     {
       label: '备注',
@@ -188,13 +143,13 @@ const option = ref({
     },
     {
       label: '创建时间',
-      prop: 'create_time',
+      prop: 'createTime',
       width: 160,
       display: false
     },
     {
       label: '更新时间',
-      prop: 'update_time',
+      prop: 'updateTime',
       width: 160,
       hide: true,
       display: false
@@ -203,6 +158,6 @@ const option = ref({
 })
 </script>
 
-<style scoped lang="stylus">
+<style lang="stylus" scoped>
 
 </style>

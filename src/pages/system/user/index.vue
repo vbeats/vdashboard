@@ -1,19 +1,19 @@
 <template>
   <el-row>
-    <el-col :span="4" v-show="showTenant">
+    <el-col v-show="showTenant" :span="4">
       <el-card>
         <tenant @change-tenant="onTenantChange"/>
       </el-card>
     </el-col>
-    <el-col :span="showTenant?19:24" :offset="showTenant?1:0">
-      <avue-crud :data="admins" v-model:search="search" :option="option" v-model:page="page" v-model="form"
-                 :permission="permission" :table-loading="loading"
-                 @refresh-change="listAdmin" @search-change="listAdmin"
-                 @size-change="listAdmin" @current-change="listAdmin" :before-open="beforeOpen"
+    <el-col :offset="showTenant?1:0" :span="showTenant?19:24">
+      <avue-crud ref="userRef" v-model="form" v-model:page="page" v-model:search="search" :before-open="beforeOpen" :data="admins"
+                 :option="option" :permission="permission"
+                 :table-loading="loading" @refresh-change="listAdmin"
+                 @search-change="listAdmin" @size-change="listAdmin" @current-change="listAdmin"
                  @row-save="addAdmin" @row-update="updateAdmin" @row-del="delAdmin" @selection-change="selectList"
       >
-        <template #tenant_name="scope">
-          <el-tag>{{ scope.row.tenant_name }}</el-tag>
+        <template #tenantName="scope">
+          <el-tag>{{ scope.row.tenantName }}</el-tag>
         </template>
 
         <template #status="scope">
@@ -21,33 +21,36 @@
         </template>
 
         <template #role="scope">
-          <el-tag v-if="scope.row.role_name&&scope.row.role_name!==''">{{ scope.row.role_name }}</el-tag>
+          <el-tag v-if="scope.row.roleName&&scope.row.roleName!==''">{{ scope.row.roleName }}</el-tag>
         </template>
 
         <template #menu-left="{size}">
-          <el-button icon="close" :size="size" type="warning" @click.stop="blockAdmin" v-if="checkPerms(route,'user.block')">禁用</el-button>
-          <el-button icon="el-icon-check" :size="size" type="success" @click.stop="unBlockAdmin" v-if="checkPerms(route,'user.unblock')">解封</el-button>
+          <el-button v-if="checkPerms(route,'admin.user.block')" :size="size" icon="close" type="warning" @click.stop="blockAdmin">禁用</el-button>
+          <el-button v-if="checkPerms(route,'admin.user.unblock')" :size="size" icon="el-icon-check" type="success" @click.stop="unBlockAdmin">解封</el-button>
         </template>
 
-        <template #menu="{type,size,row}" v-if="checkPerms(route,'user.resetpwd')">
-          <el-button icon="el-icon-switch" text :size="size" :type="type" @click.stop="resetAdminPwd(row)">重置密码</el-button>
+        <template #menu="{type,size,row}">
+          <el-button v-if="checkPerms(route,'admin.user.resetpwd')" :size="size" :type="type" icon="el-icon-switch" text @click.stop="resetAdminPwd(row)">重置密码</el-button>
+          <el-button v-if="checkPerms(route,'admin.user.role')" :size="size" :type="type" icon="el-icon-connection" text @click.stop="showRoleModal(row)">角色配置</el-button>
         </template>
       </avue-crud>
     </el-col>
   </el-row>
+
+  <role :visible="roleVisible" :user-id="currentUserId" @close-role-modal="closeRoleModal" v-if="roleVisible"/>
 </template>
 
-<script setup lang="ts" name="user">
+<script lang="ts" name="user" setup>
 import Tenant from '../../../components/tenant/index.vue'
 import setTitle from '../../../util/title'
 import {useRoute} from "vue-router"
 import {ref, watchEffect} from "vue";
 import {add, block, del, list, resetPwd, unBlock, update} from "../../../api/admin"
+import {listTenantTree} from "../../../api/tenant"
 import checkPerms from "../../../util/checkPerms"
 import {useTenantStore} from "../../../store/tenant"
-import {listV2} from "../../../api/role"
-import _ from "lodash"
 import {ElMessage} from "element-plus"
+import Role from "./role.vue"
 
 setTitle()
 
@@ -59,14 +62,18 @@ const search = ref({
   phone: ''
 })
 
+const userRef = ref()
 const form = ref()
 
-const loading = ref(false)
+const loading = ref(true)
 const tenantId = ref()
 const tenantName = ref()
 const showTenant = ref(tenantStore.tenantState.show)
 const formType = ref('add')
 const selectRows = ref<Array<any>>([])
+const currentUserId = ref()
+
+const roleVisible = ref(false)
 
 const page = ref({
   total: 0,
@@ -78,8 +85,8 @@ const listAdmin = async (param?: any, done?: any) => {
   loading.value = true
   const res = await list({
     current: page.value.currentPage,
-    page_size: page.value.pageSize,
-    tenant_id: tenantId.value,
+    pageSize: page.value.pageSize,
+    tenantId: tenantId.value,
     account: search.value.account,
     phone: search.value.phone
   })
@@ -92,13 +99,13 @@ const listAdmin = async (param?: any, done?: any) => {
 await listAdmin()
 
 watchEffect(async () => {
-  tenantId.value = tenantStore.tenantState.tenant_id
-  tenantName.value = tenantStore.tenantState.tenant_name
+  tenantId.value = tenantStore.tenantState.tenantId
+  tenantName.value = tenantStore.tenantState.tenantName
   showTenant.value = tenantStore.tenantState.show
 })
 
 const onTenantChange = async (param: any) => {
-  tenantId.value = param.tenant_id
+  tenantId.value = param.tenantId
   await listAdmin()
 }
 
@@ -108,19 +115,11 @@ const beforeOpen = async (done: any, type: any) => {
     ElMessage.warning({message: '请先选择租户'})
     return
   }
-  const res = await listV2()
+  const res = await listTenantTree()
   option.value.column.filter(v => {
     if (v.prop === 'tenant') {
       v.dicData = [{label: tenantName.value, value: tenantId.value}]
-      v.value = tenantId.value
-    }
-    if (v.prop === 'role') {
-      v.dicData = _.map(res.data, (item: any) => ({label: item.role_name, value: item.id}))
-      if ('edit' === type) {
-        v.value = form.value.role_id + ''
-      } else {
-        v.value = undefined
-      }
+      v.value = tenantName.value
     }
   })
   done && done()
@@ -128,11 +127,8 @@ const beforeOpen = async (done: any, type: any) => {
 
 const addAdmin = async (row: any, done: any, loading: any) => {
   const res = await add({
-    tenant_id: row.tenant,
-    account: row.account,
-    username: row.username,
-    phone: row.phone,
-    role_id: row.role,
+    ...row,
+    tenantId: tenantId.value,
     password: row.password && row.password !== '' ? row.password : undefined
   })
   ElMessage.success({message: '添加成功'})
@@ -144,11 +140,7 @@ const addAdmin = async (row: any, done: any, loading: any) => {
 
 const updateAdmin = async (row: any, index: any, done: any, loading: any) => {
   await update({
-    id: row.id,
-    tenant_id: row.tenant,
-    username: row.username,
-    phone: row.phone,
-    role_id: row.role,
+    ...row,
     password: row.password && row.password !== '' ? row.password : undefined
   })
   ElMessage.success({message: '更新成功'})
@@ -159,12 +151,16 @@ const updateAdmin = async (row: any, index: any, done: any, loading: any) => {
 }
 
 const delAdmin = async (row: any, index: any, done: any, loading: any) => {
-  await del({id: row.id})
-  ElMessage.success({message: '删除成功'})
-  setTimeout(async () => {
-    done()
-    await listAdmin()
-  }, 800)
+  userRef.value.$confirm(`确定删除${row.account}?`, {type: 'warning'})
+      .then(async () => {
+        await del({id: row.id})
+        ElMessage.success({message: '删除成功'})
+        setTimeout(async () => {
+          done()
+          await listAdmin()
+        }, 800)
+      }).catch(() => {
+  })
 }
 
 const blockAdmin = async () => {
@@ -204,14 +200,29 @@ const validPassword = (rule: any, value: string, callback: any) => {
 }
 
 const resetAdminPwd = async (row: any) => {
-  await resetPwd(row)
-  ElMessage.success({message: '密码重置成功'})
+  userRef.value.$confirm(`确定重置${row.account}密码?`, {type: 'warning'})
+      .then(async () => {
+        await resetPwd(row)
+        ElMessage.success({message: '密码重置成功'})
+      }).catch(() => {
+  })
+}
+
+// 角色分配
+const showRoleModal = async (row: any) => {
+  currentUserId.value = row.id
+  roleVisible.value = true
+}
+
+const closeRoleModal = () => {
+  currentUserId.value = ''
+  roleVisible.value = false
 }
 
 const permission = ref({
-  addBtn: checkPerms(route, 'user.add'),
-  editBtn: checkPerms(route, 'user.edit'),
-  delBtn: checkPerms(route, 'user.del'),
+  addBtn: checkPerms(route, 'admin.user.add'),
+  editBtn: checkPerms(route, 'admin.user.edit'),
+  delBtn: checkPerms(route, 'admin.user.del'),
 })
 const option = ref({
   border: true,
@@ -224,7 +235,7 @@ const option = ref({
       prop: 'tenant',
       type: 'select',
       dicData: [{label: tenantName.value, value: tenantId.value}],
-      value: tenantId.value,
+      value: tenantName.value,
       hide: true,
       disabled: true,
       addDisplay: true,
@@ -241,18 +252,15 @@ const option = ref({
     },
     {
       label: '所属租户',
-      prop: 'tenant_name',
+      prop: 'tenantName',
       slot: true,
       disabled: true,
       addDisplay: false,
       editDisplay: true,
     },
     {
-      label: '用户名',
-      prop: 'username',
-      rules: [
-        {required: true, message: '用户名不能为空', trigger: 'blur'}
-      ]
+      label: '昵称',
+      prop: 'nickName'
     },
     {
       label: '密码',
@@ -277,19 +285,11 @@ const option = ref({
       value: 1,
       addDisplay: false,
       editDisplay: false
-    },
-    {
-      label: '角色',
-      prop: 'role',
-      type: 'select',
-      dicData: [{}],
-      value: undefined,
-      slot: true
     }
   ]
 })
 </script>
 
-<style scoped lang="stylus">
+<style lang="stylus" scoped>
 
 </style>

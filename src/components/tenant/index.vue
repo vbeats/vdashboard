@@ -5,10 +5,10 @@
   </el-scrollbar>
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
 
 import {ref} from "vue"
-import {listV2, sub} from "../../api/tenant"
+import {listTenantTree, sub} from "../../api/tenant"
 import _ from "lodash"
 import {useTenantStore} from "../../store/tenant"
 
@@ -25,7 +25,7 @@ const option = ref({
   editBtn: false,
   delBtn: false,
   props: {
-    label: 'tenant_name',
+    label: 'tenantName',
     value: 'id',
     children: 'children'
   },
@@ -45,10 +45,10 @@ const option = ref({
 
 const listTenant = async () => {
   loading.value = true
-  const res = await listV2()
+  const res = await listTenantTree()
   tenants.value = res.data || []
   if (tenants.value.length === 1 && !tenants.value[0].hasChildren) {
-    tenantStore.update({tenant_id: tenants.value[0].id, tenant_name: tenants.value[0].tenant_name, show: false})
+    tenantStore.update({tenantId: tenants.value[0].id, tenantName: tenants.value[0].tenantName, show: false})
   }
   loading.value = false
 }
@@ -56,12 +56,12 @@ const listTenant = async () => {
 await listTenant()
 
 const nodeClick = (node: any) => {
-  emit('changeTenant', {tenant_id: node.id})
-  tenantStore.update({tenant_id: node.id, tenant_name: node.tenant_name})
+  emit('changeTenant', {tenantId: node.id})
+  tenantStore.update({tenantId: node.id, tenantName: node.tenantName})
 }
 </script>
 
-<style scoped lang="stylus">
+<style lang="stylus" scoped>
 .avue-tree
   :deep(.el-input-group__append)
     display none !important

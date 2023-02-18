@@ -2,11 +2,11 @@ import axios from '../../util/request'
 
 // 角色
 export function list(param: any): Promise<any> {
-    return axios.post('/admin/role/list', {...param})
+    return axios.get('/admin/role/list', {params: {...param}})
 }
 
-export function listV2(): Promise<any> {
-    return axios.post('/admin/role/listV2')
+export function listAdminRoles(param: any): Promise<any> {
+    return axios.get('/admin/role/listAdminRoles', {params: {...param}})
 }
 
 export function add(param: any): Promise<any> {

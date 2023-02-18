@@ -4,8 +4,7 @@ import router from "../router";
 import {storeToRefs} from "pinia";
 import {ElMessage} from 'element-plus'
 import dayjs from "dayjs"
-
-const queue = new Map()
+import {useStorage} from "@vueuse/core";
 
 const request: AxiosInstance = axios.create({
     baseURL: import.meta.env.VITE_BASE_API,
@@ -18,7 +17,7 @@ const request: AxiosInstance = axios.create({
 // 异常处理
 const errorHandler = (error: any): any => {
     ElMessage({message: error.toString(), type: 'error'})
-    return Promise.reject(error)
+    return Promise.reject(error.toString())
 }
 
 // 请求拦截器
@@ -27,15 +26,24 @@ request.interceptors.request.use((config: AxiosRequestConfig): any => {
     const abortController = new AbortController()
     const userStore = storeToRefs(useUserStore())
     config.headers && (config.headers['Authorization'] = 'Bearer ' + userStore.token?.value)
-    config.headers && (config.headers['X-User-Id'] = userStore.id?.value || '')
-    config.headers && (config.headers['X-Tenant-Id'] = userStore.tenant_id?.value || '')
+    config.headers && (config.headers['x-user-id'] = userStore.id?.value || '')
+    config.headers && (config.headers['x-tenant-id'] = userStore.tenantId?.value || '')
 
-    const q = queue.get(config.url)
-    if (q && dayjs().unix() - q < 5) {
-        abortController.abort()
-        throw new Error('Cancel')
+    const data = {
+        url: config.url,
+        method: config.method?.toUpperCase() || '',
+        time: dayjs()
     }
-    queue.set(config.url, dayjs().unix())
+
+    const rateLimit = useStorage('rate-limit', data, sessionStorage)
+
+    const limitMethods = ['POST', 'DELETE', 'PUT']
+
+    if (config.url === rateLimit.value.url && limitMethods.includes(config.method?.toUpperCase() || '') && dayjs().diff(rateLimit.value.time) < 1500) {
+        abortController.abort()
+        throw new Error('操作过快~')
+    }
+    rateLimit.value = data
     config.signal = abortController.signal
 
     return config
@@ -43,8 +51,6 @@ request.interceptors.request.use((config: AxiosRequestConfig): any => {
 
 // 响应拦截器
 request.interceptors.response.use((response: AxiosResponse): Promise<AxiosResponse> | AxiosResponse => {
-
-    queue.delete(response.config.url)
 
     if (response.data.code) {
         switch (response.data.code) {
