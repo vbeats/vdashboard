@@ -20,5 +20,5 @@ export function refreshToken(param: AuthParam): Promise<any> {
 
 // 修改个人密码等...
 export function updateAccountInfo(param: any): Promise<any> {
-    return axios.post('/admin/updateProfile', {...param})
+    return axios.post('/admin/admin/updateProfile', {...param})
 }

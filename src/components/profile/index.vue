@@ -79,7 +79,7 @@ const changAccountInfo = (formEl: FormInstance | undefined) => {
         ElMessage.success({message: '修改成功', duration: 8000})
         setTimeout(async () => {
           await userStore.logout()
-          await router.replace({name: 'login'})
+          location.href = '/login'
         }, 2000)
       }
     }

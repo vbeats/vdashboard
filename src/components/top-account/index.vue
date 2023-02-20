@@ -34,7 +34,7 @@ const handleItem = async (cmd: string) => {
       break
     case 'logout':
       await userStore.logout()
-      await router.replace({name: 'login'})
+      location.href = '/login'
       break
   }
 }
