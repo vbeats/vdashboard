@@ -195,6 +195,7 @@ const option = ref({
     {
       label: '备注',
       prop: 'remark',
+      overHidden: true,
     }
   ]
 })

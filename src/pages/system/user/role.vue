@@ -6,6 +6,7 @@
       title="角色配置"
       width="50%"
       @opened="afterModalOpen"
+      @close="closeRoleModal"
   >
     <avue-crud ref="roleRef" v-model:page="page" :data="roles" :option="option" :table-loading="loading"
                @refresh-change="listRole" @search-change="listRole" @selection-change="selectList"
