@@ -187,6 +187,7 @@ const option = ref({
       label: '分组',
       prop: 'category',
       search: true,
+      editDisabled: true,
       rules: [
         {required: true, message: '分组不能为空', trigger: 'blur'}
       ]
