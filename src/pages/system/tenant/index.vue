@@ -16,7 +16,7 @@
 <script lang="ts" name="tenant" setup>
 import {ref} from "vue"
 import {add, list, sub, update} from "../../../api/tenant"
-import checkPerms from "../../../util/checkPerms"
+import {checkPerms} from "../../../util/permission"
 import {ElMessage} from "element-plus"
 import setTitle from '../../../util/title'
 import {useRoute} from "vue-router"

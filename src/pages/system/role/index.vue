@@ -45,11 +45,11 @@
 import {ref} from "vue"
 import {add, assignRoleMenu, del, list, update} from "../../../api/role"
 import {listRoleMenu, menus as listMenus} from "../../../api/menu"
-import checkPerms from "../../../util/checkPerms"
+import {checkPerms} from "../../../util/permission"
 import {ElMessage, ElTree} from "element-plus"
 import setTitle from '../../../util/title'
 import {useRoute} from "vue-router"
-import _ from "lodash";
+import _ from "lodash"
 
 setTitle()
 

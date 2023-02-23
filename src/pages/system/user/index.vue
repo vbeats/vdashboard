@@ -47,7 +47,7 @@ import {useRoute} from "vue-router"
 import {ref, watchEffect} from "vue";
 import {add, block, del, list, resetPwd, unBlock, update} from "../../../api/admin"
 import {listTenantTree} from "../../../api/tenant"
-import checkPerms from "../../../util/checkPerms"
+import {checkPerms} from "../../../util/permission"
 import {useTenantStore} from "../../../store/tenant"
 import {ElMessage} from "element-plus"
 import Role from "./role.vue"

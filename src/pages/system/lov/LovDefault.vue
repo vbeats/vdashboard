@@ -3,7 +3,7 @@
       v-model="props.visible"
       :close-on-click-modal="false"
       destroy-on-close
-      title="值集配置"
+      title="默认值集配置"
       width="60%"
       @opened="afterModalOpen"
       @close="closeModal"
@@ -25,7 +25,7 @@
 import {ref} from "vue"
 import {checkPerms} from "../../../util/permission"
 import {useRoute} from "vue-router"
-import {addLov, deleteLov, listLov, updateLov} from "../../../api/lov"
+import {addLovDefault, deleteLovDefault, listLovDefault, updateLovDefault} from "../../../api/lov"
 import {ElMessage} from "element-plus";
 
 const props = defineProps({
@@ -33,18 +33,6 @@ const props = defineProps({
     type: Boolean,
     required: false,
     default: false
-  },
-  tenantId: {
-    type: String,
-    required: true
-  },
-  lovCategoryId: {
-    type: String,
-    required: true
-  },
-  category: {
-    type: String,
-    required: true
   }
 })
 
@@ -67,10 +55,9 @@ const loading = ref(true)
 
 const listLovs = async (param?: any, done?: any) => {
   loading.value = true
-  const res = await listLov({
+  const res = await listLovDefault({
     current: page.value.currentPage,
     pageSize: page.value.pageSize,
-    lovCategoryId: props.lovCategoryId,
     key: search.value.key
   })
   lovs.value = res.data.rows || []
@@ -80,10 +67,7 @@ const listLovs = async (param?: any, done?: any) => {
 }
 
 const addLovItem = async (row: any, done: any, loading: any) => {
-  const res = await addLov({
-    ...row,
-    lovCategoryId: props.lovCategoryId
-  })
+  const res = await addLovDefault({...row,})
   ElMessage.success({message: '添加成功'})
   setTimeout(async () => {
     done()
@@ -92,7 +76,7 @@ const addLovItem = async (row: any, done: any, loading: any) => {
 }
 
 const updateLovItem = async (row: any, index: any, done: any, loading: any) => {
-  await updateLov({...row})
+  await updateLovDefault({...row})
   ElMessage.success({message: '更新成功'})
   setTimeout(async () => {
     done()
@@ -103,7 +87,7 @@ const updateLovItem = async (row: any, index: any, done: any, loading: any) => {
 const delLovItem = async (row: any, index: any, done: any, loading: any) => {
   lovRef.value.$confirm(`确定删除${row.key}?`, {type: 'warning'})
       .then(async () => {
-        await deleteLov({...row})
+        await deleteLovDefault({...row})
         ElMessage.success({message: '删除成功'})
         setTimeout(async () => {
           done()
@@ -131,13 +115,6 @@ const option = ref({
   border: true,
   menuWidth: 180,
   column: [
-    {
-      label: '分组',
-      prop: 'category',
-      slot: true,
-      disabled: true,
-      value: props.category
-    },
     {
       label: '键',
       prop: 'key',

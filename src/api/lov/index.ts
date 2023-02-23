@@ -32,3 +32,21 @@ export function deleteCategory(param: any): Promise<any> {
 export function deleteLov(param: any): Promise<any> {
     return axios.post('/admin/lov/deleteLov', param)
 }
+
+
+// **************** 默认值集配置 *******************
+export function listLovDefault(param: any): Promise<any> {
+    return axios.get('/admin/lov/listLovDefault', {params: {...param}})
+}
+
+export function addLovDefault(param: any): Promise<any> {
+    return axios.post('/admin/lov/addLovDefault', {...param})
+}
+
+export function updateLovDefault(param: any): Promise<any> {
+    return axios.post('/admin/lov/updateLovDefault', param)
+}
+
+export function deleteLovDefault(param: any): Promise<any> {
+    return axios.post('/admin/lov/deleteLovDefault', param)
+}

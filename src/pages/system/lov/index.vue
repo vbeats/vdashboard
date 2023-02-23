@@ -12,6 +12,11 @@
                  @search-change="listLovCategory" @size-change="listLovCategory" @current-change="listLovCategory"
                  @row-save="addLovCategory" @row-update="updateLovCategory" @row-del="delLovCategory"
       >
+
+        <template #menu-left="{size}">
+          <el-button v-if="checkRoles('super_admin')" :size="size" icon="lock" type="warning" @click.stop="lovDefaultConfig">默认值集配置</el-button>
+        </template>
+
         <template #menu="{type,size,row}">
           <el-button v-if="checkPerms(route,'admin.lov.add')" :size="size" :type="type" icon="el-icon-connection" text @click.stop="lovConfig(row)">值集配置</el-button>
         </template>
@@ -19,6 +24,10 @@
       </avue-crud>
     </el-col>
   </el-row>
+
+  <!--   默认值集配置     -->
+  <lov-default :visible="lovDefaultVisible" v-if="lovDefaultVisible" @close-modal="closeLovModal"/>
+
 
   <!--   值集配置     -->
   <Lov :visible="lovVisible" :tenant-id="tenantId" :category="category" :lov-category-id="lovCategoryId" v-if="lovVisible" @close-modal="closeLovModal"/>
@@ -31,10 +40,11 @@ import {useRoute} from "vue-router"
 import {ref, watchEffect} from "vue";
 import {addCategory, deleteCategory, listCategory, updateCategory} from "../../../api/lov"
 import {listTenantTree} from "../../../api/tenant"
-import checkPerms from "../../../util/checkPerms"
+import {checkPerms, checkRoles} from "../../../util/permission"
 import {useTenantStore} from "../../../store/tenant"
 import {ElMessage} from "element-plus"
-import Lov from "./Lov.vue";
+import Lov from "./Lov.vue"
+import LovDefault from "./LovDefault.vue";
 
 setTitle()
 
@@ -54,6 +64,7 @@ const tenantName = ref()
 const showTenant = ref(tenantStore.tenantState.show)
 const formType = ref('add')
 const lovVisible = ref(false)
+const lovDefaultVisible = ref(false)
 const lovCategoryId = ref()
 const category = ref()
 
@@ -147,10 +158,15 @@ const lovConfig = (row: any) => {
   lovVisible.value = true
 }
 
+const lovDefaultConfig = (row: any) => {
+  lovDefaultVisible.value = true
+}
+
 const closeLovModal = () => {
   category.value = ''
   lovCategoryId.value = ''
   lovVisible.value = false
+  lovDefaultVisible.value = false
 }
 
 const permission = ref({

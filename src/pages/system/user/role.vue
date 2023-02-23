@@ -25,11 +25,11 @@
 </template>
 
 <script lang="ts" setup>
-import {ref} from "vue";
+import {ref} from "vue"
 import {list, listAdminRoles} from "../../../api/role"
-import _ from "lodash";
-import {assignAdminRoles} from "../../../api/admin";
-import {ElMessage} from "element-plus";
+import {assignAdminRoles} from "../../../api/admin"
+import {ElMessage} from "element-plus"
+import _ from "lodash"
 
 const emit = defineEmits(['closeRoleModal'])
 

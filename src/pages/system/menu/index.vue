@@ -22,7 +22,7 @@
 <script lang="ts" name="menus" setup>
 import {ref} from "vue"
 import {add, del, list, sub, update} from "../../../api/menu"
-import checkPerms from "../../../util/checkPerms"
+import {checkPerms} from "../../../util/permission"
 import {ElMessage} from "element-plus"
 import setTitle from '../../../util/title'
 import {useRoute} from "vue-router"
