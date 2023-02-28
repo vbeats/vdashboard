@@ -5,10 +5,6 @@ export function list(param: any): Promise<any> {
     return axios.get('/admin/role/list', {params: {...param}})
 }
 
-export function listAdminRoles(param: any): Promise<any> {
-    return axios.get('/admin/role/listAdminRoles', {params: {...param}})
-}
-
 export function add(param: any): Promise<any> {
     return axios.post('/admin/role/add', {...param})
 }

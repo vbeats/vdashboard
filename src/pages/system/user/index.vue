@@ -1,11 +1,11 @@
 <template>
-  <el-row>
+  <el-row :gutter="12">
     <el-col v-show="showTenant" :span="4">
       <el-card>
         <tenant @change-tenant="onTenantChange"/>
       </el-card>
     </el-col>
-    <el-col :offset="showTenant?1:0" :span="showTenant?19:24">
+    <el-col :span="showTenant?20:24">
       <avue-crud ref="userRef" v-model="form" v-model:page="page" v-model:search="search" :before-open="beforeOpen" :data="admins"
                  :option="option" :permission="permission"
                  :table-loading="loading" @refresh-change="listAdmin"
@@ -16,12 +16,12 @@
           <el-tag>{{ scope.row.tenantName }}</el-tag>
         </template>
 
-        <template #status="scope">
-          <el-tag :type="scope.row.status?'success':'danger'">{{ scope.row.status ? '正常' : '禁用' }}</el-tag>
+        <template #roleName="scope">
+          <el-tag type="danger">{{ scope.row.roleName }}</el-tag>
         </template>
 
-        <template #role="scope">
-          <el-tag v-if="scope.row.roleName&&scope.row.roleName!==''">{{ scope.row.roleName }}</el-tag>
+        <template #status="scope">
+          <el-tag :type="scope.row.status?'success':'danger'">{{ scope.row.status ? '正常' : '禁用' }}</el-tag>
         </template>
 
         <template #menu-left="{size}">
@@ -31,13 +31,10 @@
 
         <template #menu="{type,size,row}">
           <el-button v-if="checkPerms(route,'admin.user.resetpwd')" :size="size" :type="type" icon="el-icon-switch" text @click.stop="resetAdminPwd(row)">重置密码</el-button>
-          <el-button v-if="checkPerms(route,'admin.user.role')" :size="size" :type="type" icon="el-icon-connection" text @click.stop="showRoleModal(row)">角色配置</el-button>
         </template>
       </avue-crud>
     </el-col>
   </el-row>
-
-  <role :visible="roleVisible" :user-id="currentUserId" @close-role-modal="closeRoleModal" v-if="roleVisible"/>
 </template>
 
 <script lang="ts" name="user" setup>
@@ -50,7 +47,6 @@ import {listTenantTree} from "../../../api/tenant"
 import {checkPerms} from "../../../util/permission"
 import {useTenantStore} from "../../../store/tenant"
 import {ElMessage} from "element-plus"
-import Role from "./role.vue"
 
 setTitle()
 
@@ -63,7 +59,7 @@ const search = ref({
 })
 
 const userRef = ref()
-const form = ref()
+const form = ref({roleId: ''})
 
 const loading = ref(true)
 const tenantId = ref()
@@ -71,9 +67,6 @@ const tenantName = ref()
 const showTenant = ref(tenantStore.tenantState.show)
 const formType = ref('add')
 const selectRows = ref<Array<any>>([])
-const currentUserId = ref()
-
-const roleVisible = ref(false)
 
 const page = ref({
   total: 0,
@@ -208,17 +201,6 @@ const resetAdminPwd = async (row: any) => {
   })
 }
 
-// 角色分配
-const showRoleModal = async (row: any) => {
-  currentUserId.value = row.id
-  roleVisible.value = true
-}
-
-const closeRoleModal = () => {
-  currentUserId.value = ''
-  roleVisible.value = false
-}
-
 const permission = ref({
   addBtn: checkPerms(route, 'admin.user.add'),
   editBtn: checkPerms(route, 'admin.user.edit'),
@@ -226,7 +208,7 @@ const permission = ref({
 })
 const option = ref({
   border: true,
-  menuWidth: 380,
+  menuWidth: 350,
   selection: true,
   dialogWidth: '50%',
   column: [
@@ -272,6 +254,23 @@ const option = ref({
       rules: [
         {validator: validPassword, trigger: 'blur'}
       ]
+    },
+    {
+      label: '角色',
+      prop: 'roleName',
+      slot: true,
+      type: 'select',
+      props: {
+        label: 'roleName',
+        value: 'id'
+      },
+      rules: [
+        {required: true, message: '角色不能为空', trigger: 'blur'}
+      ],
+      dicUrl: '/admin/role/listAll',
+      control: (v: any, f: any) => {
+        form.value.roleId = v
+      }
     },
     {
       label: '手机号',

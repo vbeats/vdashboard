@@ -1,11 +1,11 @@
 <template>
-  <el-row>
+  <el-row :gutter="12">
     <el-col v-show="showTenant" :span="4">
       <el-card>
         <tenant @change-tenant="onTenantChange"/>
       </el-card>
     </el-col>
-    <el-col :offset="showTenant?1:0" :span="showTenant?19:24">
+    <el-col :span="showTenant?20:24">
       <avue-crud ref="lovRef" v-model="form" v-model:page="page" v-model:search="search" :before-open="beforeOpen" :data="categories"
                  :option="option" :permission="permission"
                  :table-loading="loading" @refresh-change="listLovCategory"
