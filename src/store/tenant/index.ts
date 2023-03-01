@@ -11,6 +11,9 @@ export const useTenantStore = defineStore({
     actions: {
         update(param: any) {
             this.$patch({...param})
+        },
+        reset() {
+            this.$reset()
         }
     },
 

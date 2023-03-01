@@ -2,6 +2,7 @@ import {NavigationGuardNext, RouteLocationNormalized, Router} from 'vue-router'
 import {useUserStore} from '../store/user'
 import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
+import {useTenantStore} from "../store/tenant";
 
 export function handleRouterAuth(router: Router): void {
     /* 全局路由拦截 */
@@ -18,6 +19,7 @@ export function handleRouterAuth(router: Router): void {
                 next({path: '/login'})
             }
         } else {
+            useTenantStore().reset()
             // 存在token
             next()
         }
