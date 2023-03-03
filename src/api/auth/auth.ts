@@ -15,7 +15,7 @@ export function getToken(param: AuthParam): Promise<any> {
 }
 
 export function refreshToken(param: AuthParam): Promise<any> {
-    return axios.get('/auth/oauth/refresh', {params: {...param}})
+    return axios.post('/auth/oauth/refresh', {...param})
 }
 
 // 修改个人密码等...
