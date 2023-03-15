@@ -11,11 +11,11 @@
         label-width="86px"
         status-icon
     >
-      <el-form-item label="租户编号" prop="tenantCode">
-        <el-input v-model.trim="accountForm.tenantCode" :autofocus="accountForm.tenantCode===''" placeholder="租户编号" prefix-icon="OfficeBuilding"/>
+      <el-form-item label="商户编号" prop="merchantCode">
+        <el-input v-model.trim="accountForm.merchantCode" :autofocus="accountForm.merchantCode===''" placeholder="商户编号" prefix-icon="OfficeBuilding"/>
       </el-form-item>
       <el-form-item label="账 号" prop="account">
-        <el-input v-model.trim="accountForm.account" :autofocus="accountForm.tenantCode!==''" placeholder="账号" prefix-icon="User"/>
+        <el-input v-model.trim="accountForm.account" :autofocus="accountForm.merchantCode!==''" placeholder="账号" prefix-icon="User"/>
       </el-form-item>
       <el-form-item label="密 码" prop="password">
         <el-input v-model.trim="accountForm.password" placeholder="密码" prefix-icon="Lock" show-password
@@ -63,7 +63,7 @@ const captchaImg = ref<string>('')
 const loading = ref<boolean>(false)
 
 const accountForm = reactive({
-  tenantCode: useLocalStorage('user', userStore.getUserInfo).value.tenantCode,
+  merchantCode: useLocalStorage('user', userStore.getUserInfo).value.merchantCode,
   account: '',
   password: '',
   key: '',
@@ -71,8 +71,8 @@ const accountForm = reactive({
 })
 
 const rules = reactive<FormRules>({
-  tenantCode: [
-    {required: true, message: '租户编号不能为空', trigger: 'blur'},
+  merchantCode: [
+    {required: true, message: '商户编号不能为空', trigger: 'blur'},
   ],
   account: [
     {required: true, message: '账号不能为空', trigger: 'blur'},
@@ -111,11 +111,11 @@ const login = async (formEl: FormInstance | undefined) => {
       const user = res.data.user
       emit('handleLogin', {
         id: user.id,
-        tenantId: user.tenantId,
+        merchantId: user.merchantId,
         account: accountForm.account,
         nickName: user.nickName,
         phone: user.phone,
-        tenantCode: accountForm.tenantCode,
+        merchantCode: accountForm.merchantCode,
         token: res.data.token.tokenValue,
         roles: user.roles || [],
         permissions: user.permissions || []

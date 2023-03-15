@@ -5,11 +5,11 @@ import dayjs from "dayjs";
 
 const defaultUser: User = {
     id: '',
-    tenantId: '',
+    merchantId: '',
     account: '',
     nickName: '',
     phone: '',
-    tenantCode: '',
+    merchantCode: '',
     token: '',
     expire: -1,
     roles: [],
@@ -24,9 +24,9 @@ export const useUserStore = defineStore({
 
     actions: {
         async logout() {
-            const tenantCode = this.tenantCode
+            const merchantCode = this.merchantCode
             this.$reset()
-            this.tenantCode = tenantCode
+            this.merchantCode = merchantCode
             localStorage.setItem('user', JSON.stringify(this.$state))
             const menuStore = useMenuStore()
             menuStore.$reset()

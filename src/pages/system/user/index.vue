@@ -1,19 +1,19 @@
 <template>
   <el-row :gutter="12">
-    <el-col v-show="showTenant" :span="4">
+    <el-col v-show="showMerchant" :span="4">
       <el-card>
-        <tenant @change-tenant="onTenantChange"/>
+        <merchant @change-merchant="onMerchantChange"/>
       </el-card>
     </el-col>
-    <el-col :span="showTenant?20:24">
+    <el-col :span="showMerchant?20:24">
       <avue-crud ref="userRef" v-model="form" v-model:page="page" v-model:search="search" :before-open="beforeOpen" :data="admins"
                  :option="option" :permission="permission"
                  :table-loading="loading" @refresh-change="listAdmin"
                  @search-change="listAdmin" @size-change="listAdmin" @current-change="listAdmin"
                  @row-save="addAdmin" @row-update="updateAdmin" @row-del="delAdmin" @selection-change="selectList"
       >
-        <template #tenantName="scope">
-          <el-tag>{{ scope.row.tenantName }}</el-tag>
+        <template #merchantName="scope">
+          <el-tag>{{ scope.row.merchantName }}</el-tag>
         </template>
 
         <template #roleName="scope">
@@ -38,19 +38,19 @@
 </template>
 
 <script lang="ts" name="user" setup>
-import Tenant from '../../../components/tenant/index.vue'
+import Merchant from '../../../components/merchant/index.vue'
 import setTitle from '../../../util/title'
 import {useRoute} from "vue-router"
 import {ref, watchEffect} from "vue";
 import {add, block, del, list, resetPwd, unBlock, update} from "../../../api/admin"
-import {listTenantTree} from "../../../api/tenant"
 import {checkPerms} from "../../../util/permission"
-import {useTenantStore} from "../../../store/tenant"
+import {useMerchantStore} from "../../../store/merchant"
 import {ElMessage} from "element-plus"
+import {listMerchantTree} from "../../../api/merchant";
 
 setTitle()
 
-const tenantStore = useTenantStore()
+const merchantStore = useMerchantStore()
 const route = useRoute()
 const admins = ref([])
 const search = ref({
@@ -62,9 +62,9 @@ const userRef = ref()
 const form = ref({roleId: ''})
 
 const loading = ref(true)
-const tenantId = ref()
-const tenantName = ref()
-const showTenant = ref(tenantStore.tenantState.show)
+const merchantId = ref()
+const merchantName = ref()
+const showMerchant = ref(merchantStore.merchantState.show)
 const formType = ref('add')
 const selectRows = ref<Array<any>>([])
 
@@ -79,7 +79,7 @@ const listAdmin = async (param?: any, done?: any) => {
   const res = await list({
     current: page.value.currentPage,
     pageSize: page.value.pageSize,
-    tenantId: tenantId.value,
+    merchantId: merchantId.value,
     account: search.value.account,
     phone: search.value.phone
   })
@@ -92,27 +92,27 @@ const listAdmin = async (param?: any, done?: any) => {
 await listAdmin()
 
 watchEffect(async () => {
-  tenantId.value = tenantStore.tenantState.tenantId
-  tenantName.value = tenantStore.tenantState.tenantName
-  showTenant.value = tenantStore.tenantState.show
+  merchantId.value = merchantStore.merchantState.merchantId
+  merchantName.value = merchantStore.merchantState.merchantName
+  showMerchant.value = merchantStore.merchantState.show
 })
 
-const onTenantChange = async (param: any) => {
-  tenantId.value = param.tenantId
+const onMerchantChange = async (param: any) => {
+  merchantId.value = param.merchantId
   await listAdmin()
 }
 
 const beforeOpen = async (done: any, type: any) => {
   formType.value = type
-  if ('add' === type && !tenantId.value) {
-    ElMessage.warning({message: '请先选择租户'})
+  if ('add' === type && !merchantId.value) {
+    ElMessage.warning({message: '请先选择商户'})
     return
   }
-  const res = await listTenantTree()
+  const res = await listMerchantTree()
   option.value.column.filter(v => {
-    if (v.prop === 'tenant') {
-      v.dicData = [{label: tenantName.value, value: tenantId.value}]
-      v.value = tenantName.value
+    if (v.prop === 'merchant') {
+      v.dicData = [{label: merchantName.value, value: merchantId.value}]
+      v.value = merchantName.value
     }
   })
   done && done()
@@ -121,7 +121,7 @@ const beforeOpen = async (done: any, type: any) => {
 const addAdmin = async (row: any, done: any, loading: any) => {
   const res = await add({
     ...row,
-    tenantId: tenantId.value,
+    merchantId: merchantId.value,
     password: row.password && row.password !== '' ? row.password : undefined
   })
   ElMessage.success({message: '添加成功'})
@@ -213,11 +213,11 @@ const option = ref({
   dialogWidth: '50%',
   column: [
     {
-      label: '所属租户',
-      prop: 'tenant',
+      label: '所属商户',
+      prop: 'merchant',
       type: 'select',
-      dicData: [{label: tenantName.value, value: tenantId.value}],
-      value: tenantName.value,
+      dicData: [{label: merchantName.value, value: merchantId.value}],
+      value: merchantName.value,
       hide: true,
       disabled: true,
       addDisplay: true,
@@ -233,8 +233,8 @@ const option = ref({
       ]
     },
     {
-      label: '所属租户',
-      prop: 'tenantName',
+      label: '所属商户',
+      prop: 'merchantName',
       slot: true,
       disabled: true,
       addDisplay: false,

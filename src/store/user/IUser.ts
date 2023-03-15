@@ -1,10 +1,10 @@
 export interface User {
     id?: string,
-    tenantId?: string,
+    merchantId?: string,
     account?: string
     nickName?: string
     phone?: string
-    tenantCode: string
+    merchantCode: string
     token?: string
     expire: number
     roles: Array<string>

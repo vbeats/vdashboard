@@ -40,11 +40,11 @@ declare module '@vue/runtime-core' {
     Item: typeof import('./src/components/top-msg/item.vue')['default']
     Logo: typeof import('./src/components/logo/index.vue')['default']
     Menu: typeof import('./src/components/menu/index.vue')['default']
+    Merchant: typeof import('./src/components/merchant/index.vue')['default']
     Profile: typeof import('./src/components/profile/index.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     Tabs: typeof import('./src/components/header/tabs.vue')['default']
-    Tenant: typeof import('./src/components/tenant/index.vue')['default']
     TopAccount: typeof import('./src/components/top-account/index.vue')['default']
     TopMsg: typeof import('./src/components/top-msg/index.vue')['default']
   }

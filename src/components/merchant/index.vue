@@ -8,15 +8,15 @@
 <script lang="ts" setup>
 
 import {ref} from "vue"
-import {listTenantTree, sub} from "../../api/tenant"
 import _ from "lodash"
-import {useTenantStore} from "../../store/tenant"
+import {useMerchantStore} from "../../store/merchant";
+import {listMerchantTree, sub} from "../../api/merchant";
 
-const tenantStore = useTenantStore()
+const merchantStore = useMerchantStore()
 const loading = ref(false)
-const tenants = ref<Array<any>>([])
+const merchants = ref<Array<any>>([])
 
-const emit = defineEmits(['changeTenant'])
+const emit = defineEmits(['changeMerchant'])
 
 const option = ref({
   lazy: true,
@@ -25,14 +25,14 @@ const option = ref({
   editBtn: false,
   delBtn: false,
   props: {
-    label: 'tenantName',
+    label: 'merchantName',
     value: 'id',
     children: 'children'
   },
   treeLoad: async (node: any, resolve: any) => {
     switch (node.level) {
       case 0:
-        return resolve(_.map(tenants.value, (item: any) => ({
+        return resolve(_.map(merchants.value, (item: any) => ({
           ...item, leaf: !item.hasChildren
         })))
       default:
@@ -43,21 +43,21 @@ const option = ref({
   }
 })
 
-const listTenant = async () => {
+const listMerchant = async () => {
   loading.value = true
-  const res = await listTenantTree()
-  tenants.value = res.data || []
-  if (tenants.value.length === 1 && !tenants.value[0].hasChildren) {
-    tenantStore.update({tenantId: tenants.value[0].id, tenantName: tenants.value[0].tenantName, show: false})
+  const res = await listMerchantTree()
+  merchants.value = res.data || []
+  if (merchants.value.length === 1 && !merchants.value[0].hasChildren) {
+    merchantStore.update({merchantId: merchants.value[0].id, merchantName: merchants.value[0].merchantName, show: false})
   }
   loading.value = false
 }
 
-await listTenant()
+await listMerchant()
 
 const nodeClick = (node: any) => {
-  emit('changeTenant', {tenantId: node.id})
-  tenantStore.update({tenantId: node.id, tenantName: node.tenantName})
+  emit('changeMerchant', {merchantId: node.id})
+  merchantStore.update({merchantId: node.id, merchantName: node.merchantName})
 }
 </script>
 

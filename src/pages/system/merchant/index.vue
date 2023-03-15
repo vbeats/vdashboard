@@ -1,21 +1,21 @@
 <template>
   <avue-crud ref="crud" v-model:page="page" v-model:search="search" :before-close="beforeClose"
-             :data="tenants" :option="option" :permission="permission"
+             :data="merchants" :option="option" :permission="permission"
              :table-loading="loading" @tree-load="loadSub"
-             @refresh-change="listTenant" @search-change="listTenant"
-             @size-change="listTenant" @current-change="listTenant"
-             @row-save="addTenant" @row-update="updateTenant"
+             @refresh-change="listMerchant" @search-change="listMerchant"
+             @size-change="listMerchant" @current-change="listMerchant"
+             @row-save="addMerchant" @row-update="updateMerchant"
              @selection-change="selectList"
   >
-    <template v-if="checkPerms(route,'admin.tenant.addsub')" #menu="{type,size,row}">
+    <template v-if="checkPerms(route,'admin.merchant.addsub')" #menu="{type,size,row}">
       <el-button :size="size" :type="type" icon="el-icon-arrow-down" text @click.stop="addSub(row)">新增子级</el-button>
     </template>
   </avue-crud>
 </template>
 
-<script lang="ts" name="tenant" setup>
+<script lang="ts" name="merchant" setup>
 import {ref} from "vue"
-import {add, list, sub, update} from "../../../api/tenant"
+import {add, list, sub, update} from "../../../api/merchant"
 import {checkPerms} from "../../../util/permission"
 import {ElMessage} from "element-plus"
 import setTitle from '../../../util/title'
@@ -26,10 +26,10 @@ setTitle()
 const route = useRoute()
 const crud = ref()
 
-const tenants = ref([])
+const merchants = ref([])
 const search = ref({
   code: '',
-  tenantName: ''
+  merchantName: ''
 })
 const loading = ref(true)
 const selectRows = ref([])
@@ -40,29 +40,29 @@ const page = ref({
   pageSize: 30
 })
 
-const listTenant = async (param?: any, done?: any) => {
+const listMerchant = async (param?: any, done?: any) => {
   loading.value = true
-  const res = await list({current: page.value.currentPage, pageSize: page.value.pageSize, code: search.value.code, tenantName: search.value.tenantName})
-  tenants.value = res.data.rows || []
+  const res = await list({current: page.value.currentPage, pageSize: page.value.pageSize, code: search.value.code, merchantName: search.value.merchantName})
+  merchants.value = res.data.rows || []
   page.value.total = res.data.total || 0
   loading.value = false
   done && done()
 }
 
-await listTenant()
+await listMerchant()
 
 const selectList = (rows: any) => {
   selectRows.value = rows
 }
 
-const addTenant = async (row: any, done: any, loading: any) => {
+const addMerchant = async (row: any, done: any, loading: any) => {
   const res = await add(row)
   row = {...res.data}
   ElMessage.success({message: '添加成功'})
   done(row)
 }
 
-const updateTenant = async (row: any, index: any, done: any, loading: any) => {
+const updateMerchant = async (row: any, index: any, done: any, loading: any) => {
   await update(row)
   ElMessage.success({message: '更新成功'})
   done(row)
@@ -76,7 +76,7 @@ const loadSub = async (tree: any, node: any, resolve: any) => {
 const addSub = async (row: any) => {
   option.value.column.filter(v => {
     if (v.prop === 'pid') {
-      v.dicData = [{label: row.tenantName, value: row.id}]
+      v.dicData = [{label: row.merchantName, value: row.id}]
       v.value = row.id
     }
   })
@@ -94,8 +94,8 @@ const beforeClose = (done: any, type: any) => {
 }
 
 const permission = ref({
-  addBtn: checkPerms(route, 'admin.tenant.add'),
-  editBtn: checkPerms(route, 'admin.tenant.edit'),
+  addBtn: checkPerms(route, 'admin.merchant.add'),
+  editBtn: checkPerms(route, 'admin.merchant.edit'),
   delBtn: false
 })
 
@@ -109,7 +109,7 @@ const option = ref({
   rowParentKey: 'pid',
   column: [
     {
-      label: '上级租户',
+      label: '上级商户',
       prop: 'pid',
       hide: true,
       type: 'select',
@@ -120,7 +120,7 @@ const option = ref({
       disabled: true
     },
     {
-      label: '租户编号',
+      label: '商户编号',
       prop: 'code',
       search: true,
       addDisplay: false,
@@ -128,8 +128,8 @@ const option = ref({
       disabled: true
     },
     {
-      label: '租户名称',
-      prop: 'tenantName',
+      label: '商户名称',
+      prop: 'merchantName',
       search: true,
       overHidden: true,
       rules: [

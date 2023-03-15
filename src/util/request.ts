@@ -27,7 +27,7 @@ request.interceptors.request.use((config: AxiosRequestConfig): any => {
     const userStore = storeToRefs(useUserStore())
     config.headers && (config.headers['Authorization'] = 'Bearer ' + userStore.token?.value)
     config.headers && (config.headers['x-user-id'] = userStore.id?.value || '')
-    config.headers && (config.headers['x-tenant-id'] = userStore.tenantId?.value || '')
+    config.headers && (config.headers['x-merchant-id'] = userStore.merchantId?.value || '')
 
     const data = {
         url: config.url,
