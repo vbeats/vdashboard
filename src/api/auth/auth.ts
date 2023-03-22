@@ -4,7 +4,7 @@ interface AuthParam {
     account?: string
     password?: string
     grantType: string
-    merchantCode: string
+    tenantCode: string
     key?: string
     code?: string
 }

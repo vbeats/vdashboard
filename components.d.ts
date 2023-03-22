@@ -45,6 +45,7 @@ declare module '@vue/runtime-core' {
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     Tabs: typeof import('./src/components/header/tabs.vue')['default']
+    Tenant: typeof import('./src/components/tenant/index.vue')['default']
     TopAccount: typeof import('./src/components/top-account/index.vue')['default']
     TopMsg: typeof import('./src/components/top-msg/index.vue')['default']
   }

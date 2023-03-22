@@ -1,11 +1,11 @@
 <template>
   <el-row :gutter="12">
-    <el-col v-show="showMerchant" :span="4">
+    <el-col v-show="showTenant" :span="4">
       <el-card>
-        <merchant @change-merchant="onMerchantChange"/>
+        <tenant @change-tenant="onTenantChange"/>
       </el-card>
     </el-col>
-    <el-col :span="showMerchant?20:24">
+    <el-col :span="showTenant?20:24">
       <avue-crud ref="lovRef" v-model="form" v-model:page="page" v-model:search="search" :before-open="beforeOpen" :data="categories"
                  :option="option" :permission="permission"
                  :table-loading="loading" @refresh-change="listLovCategory"
@@ -30,25 +30,25 @@
 
 
   <!--   值集配置     -->
-  <Lov :visible="lovVisible" :merchant-id="merchantId" :category="category" :lov-category-id="lovCategoryId" v-if="lovVisible" @close-modal="closeLovModal"/>
+  <Lov :visible="lovVisible" :tenant-id="tenantId" :category="category" :lov-category-id="lovCategoryId" v-if="lovVisible" @close-modal="closeLovModal"/>
 </template>
 
 <script lang="ts" name="lov" setup>
-import Merchant from '../../../components/merchant/index.vue'
+import Tenant from '../../../components/tenant/index.vue'
 import setTitle from '../../../util/title'
 import {useRoute} from "vue-router"
 import {ref, watchEffect} from "vue";
 import {addCategory, deleteCategory, listCategory, updateCategory} from "../../../api/lov"
-import {listMerchantTree} from "../../../api/merchant"
+import {listTenantTree} from "../../../api/tenant"
 import {checkPerms, checkRoles} from "../../../util/permission"
-import {useMerchantStore} from "../../../store/merchant"
+import {useTenantStore} from "../../../store/tenant"
 import {ElMessage} from "element-plus"
 import Lov from "./Lov.vue"
 import LovDefault from "./LovDefault.vue";
 
 setTitle()
 
-const merchantStore = useMerchantStore()
+const tenantStore = useTenantStore()
 const route = useRoute()
 const categories = ref([])
 const search = ref({
@@ -59,9 +59,9 @@ const lovRef = ref()
 const form = ref()
 
 const loading = ref(true)
-const merchantId = ref()
-const merchantName = ref()
-const showMerchant = ref(merchantStore.merchantState.show)
+const tenantId = ref()
+const tenantName = ref()
+const showTenant = ref(tenantStore.tenantState.show)
 const formType = ref('add')
 const lovVisible = ref(false)
 const lovDefaultVisible = ref(false)
@@ -79,7 +79,7 @@ const listLovCategory = async (param?: any, done?: any) => {
   const res = await listCategory({
     current: page.value.currentPage,
     pageSize: page.value.pageSize,
-    merchantId: merchantId.value,
+    tenantId: tenantId.value,
     category: search.value.category
   })
   categories.value = res.data.rows || []
@@ -91,27 +91,27 @@ const listLovCategory = async (param?: any, done?: any) => {
 await listLovCategory()
 
 watchEffect(async () => {
-  merchantId.value = merchantStore.merchantState.merchantId
-  merchantName.value = merchantStore.merchantState.merchantName
-  showMerchant.value = merchantStore.merchantState.show
+  tenantId.value = tenantStore.tenantState.tenantId
+  tenantName.value = tenantStore.tenantState.tenantName
+  showTenant.value = tenantStore.tenantState.show
 })
 
-const onMerchantChange = async (param: any) => {
-  merchantId.value = param.merchantId
+const onTenantChange = async (param: any) => {
+  tenantId.value = param.tenantId
   await listLovCategory()
 }
 
 const beforeOpen = async (done: any, type: any) => {
   formType.value = type
-  if ('add' === type && !merchantId.value) {
-    ElMessage.warning({message: '请先选择商户'})
+  if ('add' === type && !tenantId.value) {
+    ElMessage.warning({message: '请先选择租户'})
     return
   }
-  const res = await listMerchantTree()
+  const res = await listTenantTree()
   option.value.column.filter(v => {
-    if (v.prop === 'merchant') {
-      v.dicData = [{label: merchantName.value, value: merchantId.value}]
-      v.value = merchantName.value
+    if (v.prop === 'tenant') {
+      v.dicData = [{label: tenantName.value, value: tenantId.value}]
+      v.value = tenantName.value
     }
   })
   done && done()
@@ -120,7 +120,7 @@ const beforeOpen = async (done: any, type: any) => {
 const addLovCategory = async (row: any, done: any, loading: any) => {
   const res = await addCategory({
     ...row,
-    merchantId: merchantId.value
+    tenantId: tenantId.value
   })
   ElMessage.success({message: '添加成功'})
   setTimeout(async () => {
@@ -181,19 +181,19 @@ const option = ref({
   dialogWidth: '50%',
   column: [
     {
-      label: '所属商户',
-      prop: 'merchant',
+      label: '所属租户',
+      prop: 'tenant',
       type: 'select',
-      dicData: [{label: merchantName.value, value: merchantId.value}],
-      value: merchantName.value,
+      dicData: [{label: tenantName.value, value: tenantId.value}],
+      value: tenantName.value,
       hide: true,
       disabled: true,
       addDisplay: true,
       editDisplay: false,
     },
     {
-      label: '所属商户',
-      prop: 'merchantName',
+      label: '所属租户',
+      prop: 'tenantName',
       slot: true,
       disabled: true,
       addDisplay: false,

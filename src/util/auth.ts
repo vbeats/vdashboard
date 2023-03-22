@@ -30,7 +30,7 @@ const checkToken = async () => {
     }
 
     // token存在 过期时间小于5分钟  刷新token有效期
-    const res = refreshToken({grantType: 'password', merchantCode: user.merchantCode})
+    const res = refreshToken({grantType: 'password', tenantCode: user.tenantCode})
     await userStore.refreshToken()
 }
 

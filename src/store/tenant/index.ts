@@ -1,11 +1,11 @@
 import {defineStore} from 'pinia'
 
-export const useMerchantStore = defineStore({
-    id: 'merchant',
+export const useTenantStore = defineStore({
+    id: 'tenant',
     state: () => ({
         show: true,
-        merchantId: '',
-        merchantName: ''
+        tenantId: '',
+        tenantName: ''
     }),
 
     actions: {
@@ -18,6 +18,6 @@ export const useMerchantStore = defineStore({
     },
 
     getters: {
-        merchantState: (state) => state
+        tenantState: (state) => state
     },
 })

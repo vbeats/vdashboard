@@ -34,7 +34,7 @@ const props = defineProps({
     required: false,
     default: false
   },
-  merchantId: {
+  tenantId: {
     type: String,
     required: true
   },
